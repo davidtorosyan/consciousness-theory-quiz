@@ -56,7 +56,7 @@
         view.tab.setAttribute('aria-selected', String(active));
         view.tab.tabIndex = active ? 0 : -1;
       });
-      if (which === 'claims') requestAnimationFrame(drawEdges);
+      if (which === 'claims') requestAnimationFrame(layoutGraph);
     }
     Object.entries(views).forEach(([name, view]) => view.tab.addEventListener('click', () => showTab(name)));
 
@@ -65,6 +65,13 @@
     const claimDetail = $('labClaimDetail');
     let selectedClaim = null;
     let components = [];
+    // Fixed px slot geometry: neighbours can never overlap, whatever the
+    // viewport. Rows wider than the pane scroll horizontally in .dag-scroll.
+    const DAG_MAX_PER_ROW = 6;
+    const DAG_NODE_W = 172;
+    const DAG_SLOT_W = 188;
+    const DAG_ROW_H = 96;
+    const DAG_PAD_TOP = 16;
 
     function directChildren(id) {
       return E.claims.filter(c => (c.entails || []).includes(id)).map(c => c.id);
@@ -99,7 +106,6 @@
 
     function renderGraph() {
       const memo = new Map();
-      const MAX_PER_ROW = 6;
       components = weakComponents().map((ids, componentIndex) => {
         const levels = new Map();
         ids.forEach(id => {
@@ -107,53 +113,81 @@
           if (!levels.has(rank)) levels.set(rank, []);
           levels.get(rank).push(id);
         });
-        // Wide ranks wrap into multiple rows of at most MAX_PER_ROW nodes so
-        // dense levels stay readable instead of stacking on top of each other.
+        // Wide ranks wrap into multiple rows of at most DAG_MAX_PER_ROW nodes.
+        // Every node sits on a fixed-width px slot, so dense levels stay
+        // readable instead of stacking on top of each other.
         const rows = [];
         [...levels.keys()].sort((a, b) => a - b).forEach(rank => {
           const levelIds = levels.get(rank);
           levelIds.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
-          for (let i = 0; i < levelIds.length; i += MAX_PER_ROW) {
-            rows.push({ rank, ids: levelIds.slice(i, i + MAX_PER_ROW) });
+          for (let i = 0; i < levelIds.length; i += DAG_MAX_PER_ROW) {
+            rows.push({ rank, ids: levelIds.slice(i, i + DAG_MAX_PER_ROW) });
           }
         });
-        const height = 28 + rows.length * 88;
-        const component = document.createElement('div');
-        component.className = 'dag-component';
-        component.style.height = `${height}px`;
-        component.dataset.component = String(componentIndex);
-        component.innerHTML = `<svg aria-hidden="true"><defs><marker id="dagArrow${componentIndex}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#49615f"></path></marker></defs></svg>`;
-        rows.forEach(({ rank, ids: rowIds }, row) => {
-          rowIds.forEach((id, index) => {
+        const scroller = document.createElement('div');
+        scroller.className = 'dag-scroll';
+        scroller.setAttribute('tabindex', '0');
+        scroller.setAttribute('role', 'region');
+        scroller.setAttribute('aria-label', `Claim map cluster ${componentIndex + 1} — scroll sideways to see all claims`);
+        const inner = document.createElement('div');
+        inner.className = 'dag-component';
+        inner.style.height = `${DAG_PAD_TOP + rows.length * DAG_ROW_H + 12}px`;
+        inner.dataset.component = String(componentIndex);
+        inner.innerHTML = `<svg aria-hidden="true"><defs><marker id="dagArrow${componentIndex}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#49615f"></path></marker></defs></svg>`;
+        const rowLayouts = rows.map(({ rank, ids: rowIds }, row) => {
+          const nodes = rowIds.map((id, index) => {
             const claim = claimById.get(id);
             const button = document.createElement('button');
             button.className = `dag-node${rank === 0 ? ' root' : ''}`;
             button.dataset.claim = id;
-            button.style.left = `${((index + 0.5) / rowIds.length) * 100}%`;
-            button.style.top = `${18 + row * 88}px`;
+            button.style.top = `${DAG_PAD_TOP + row * DAG_ROW_H}px`;
             button.title = claim.text;
             button.setAttribute('aria-label', `${id}: ${claim.text}`);
             button.innerHTML = `<span class="dag-node-id">${id}</span><span class="dag-node-label">${escapeHtml(shortLabel(claim))}</span>`;
-            component.appendChild(button);
+            inner.appendChild(button);
+            return { el: button, col: index };
           });
+          return { width: rowIds.length * DAG_SLOT_W, nodes };
         });
-        return { element: component, ids, index: componentIndex };
+        scroller.appendChild(inner);
+        return {
+          element: scroller, inner, ids, index: componentIndex, rowLayouts,
+          maxRowWidth: Math.max(...rowLayouts.map(r => r.width), DAG_SLOT_W)
+        };
       });
       // Biggest clusters first: the map metaphor matters most where it is densest.
       components.sort((a, b) => b.ids.length - a.ids.length);
       components.forEach(c => graph.appendChild(c.element));
     }
 
+    // Centers each row's fixed slots in the available width, then redraws
+    // edges. Re-runs on resize and when the tab becomes visible, because a
+    // hidden tab reports zero width.
+    function layoutGraph() {
+      components.forEach(c => {
+        const avail = c.element.clientWidth || c.maxRowWidth;
+        const target = Math.max(c.maxRowWidth, avail);
+        c.inner.style.width = `${target}px`;
+        c.rowLayouts.forEach(row => {
+          const xOff = (target - row.width) / 2;
+          row.nodes.forEach(n => {
+            n.el.style.left = `${xOff + (n.col + 0.5) * DAG_SLOT_W}px`;
+          });
+        });
+      });
+      drawEdges();
+    }
+
     function drawEdges() {
       components.forEach(component => {
-        const box = component.element.getBoundingClientRect();
+        const box = component.inner.getBoundingClientRect();
         if (!box.width) return;
-        const svg = component.element.querySelector('svg');
+        const svg = component.inner.querySelector('svg');
         svg.querySelectorAll('.dag-edge').forEach(edge => edge.remove());
         component.ids.forEach(id => {
-          const child = component.element.querySelector(`[data-claim="${id}"]`);
+          const child = component.inner.querySelector(`[data-claim="${id}"]`);
           (claimById.get(id).entails || []).forEach(parentId => {
-            const parent = component.element.querySelector(`[data-claim="${parentId}"]`);
+            const parent = component.inner.querySelector(`[data-claim="${parentId}"]`);
             if (!child || !parent) return;
             const cb = child.getBoundingClientRect();
             const pb = parent.getBoundingClientRect();
@@ -221,30 +255,37 @@
     });
 
     renderGraph();
-    requestAnimationFrame(drawEdges);
-    if ('ResizeObserver' in window) new ResizeObserver(drawEdges).observe(graph);
-    else window.addEventListener('resize', drawEdges);
+    requestAnimationFrame(layoutGraph);
+    if ('ResizeObserver' in window) new ResizeObserver(() => layoutGraph()).observe(graph);
+    else window.addEventListener('resize', () => layoutGraph());
 
     /* ---------------- theory explorer ---------------- */
     const theoryList = $('labTheoryList');
     const detail = $('labDetail');
     let theoryNav = [];
 
+    let theoryFilter = '';
     function renderTheoryList() {
-      const withClaims = E.theories.map(t =>
+      const q = theoryFilter.trim().toLowerCase();
+      const matches = t => !q || t.name.toLowerCase().includes(q)
+        || (t.family || '').toLowerCase().includes(q)
+        || (t.blurb || '').toLowerCase().includes(q)
+        || (t.category || '').toLowerCase().includes(q);
+      const withClaims = E.theories.filter(matches).map(t =>
         `<button class="lab-theory-btn" data-theory="${t.id}">
           <strong>${escapeHtml(t.name)}</strong>
           <span>${escapeHtml(t.family)} · ${t.claims.length} specific claim${t.claims.length === 1 ? '' : 's'}</span>
         </button>`
       ).join('');
-      const pending = META_THEORIES.filter(t => !claimTheoryIds.has(t.id)).map(t =>
+      const pending = META_THEORIES.filter(t => !claimTheoryIds.has(t.id) && matches(t)).map(t =>
         `<button class="lab-theory-btn lab-theory-pending" data-meta="${t.id}">
           <strong>${escapeHtml(t.name)}</strong>
           <span>${escapeHtml(t.category)} · claims in progress</span>
         </button>`
       ).join('');
-      theoryList.innerHTML = withClaims +
-        (pending ? `<p class="lab-theory-group">More theories — claims in progress</p>${pending}` : '');
+      theoryList.innerHTML = (withClaims || pending)
+        ? withClaims + (pending ? `<p class="lab-theory-group">More theories — claims in progress</p>${pending}` : '')
+        : '<p class="lab-empty">No theories match that filter.</p>';
     }
     function viaWhich(theory, inheritedId) {
       return (theory.claims || []).filter(sid => sid !== inheritedId && E.ancestors(sid).has(inheritedId));
@@ -335,6 +376,10 @@
     }
     renderTheoryList();
     renderTheoryNav();
+    $('labTheorySearch').addEventListener('input', (e) => {
+      theoryFilter = e.target.value;
+      renderTheoryList();
+    });
 
     /* ---------------- claim-driven quiz ---------------- */
     const qStart = $('labQuizStart');
@@ -347,6 +392,7 @@
     let qstate = null;
     let qhistory = [];
     let qRoundCount = 0;
+    let qRound = 1;
     let lastSettledIds = [];
     let lastSettledDir = null; // 'yes' when the last answer affirmed, 'no' when it rejected
 
@@ -359,6 +405,7 @@
       qstate = E.newQuiz();
       qhistory = [];
       qRoundCount = 0;
+      qRound = 1;
       lastSettledIds = [];
       lastSettledDir = null;
       qStart.classList.add('hidden');
@@ -369,6 +416,7 @@
 
     function continueQuiz() {
       qRoundCount = 0;
+      qRound++;
       lastSettledIds = [];
       lastSettledDir = null;
       qResult.classList.add('hidden');
@@ -391,7 +439,9 @@
         return;
       }
       const claim = claimById.get(q.id);
-      $('labQCount').textContent = `${qRoundCount + 1} of ${QUIZ_ROUND_LENGTH}`;
+      $('labQCount').textContent = qRound > 1
+        ? `${qRoundCount + 1} of ${QUIZ_ROUND_LENGTH} · round ${qRound}`
+        : `${qRoundCount + 1} of ${QUIZ_ROUND_LENGTH}`;
       $('labQText').textContent = claim.text;
       $('labQPlain').textContent = `Put simply: ${claim.plain}`;
       const both = E.coverageBoth(qstate, q.id);
@@ -446,10 +496,27 @@
 
     // Gentle inconsistency note: the quiz measures alignment, not consistency,
     // but a layperson deserves to know when two affirmed claims pull apart.
+    // Before any pair exists, flag the question whose affirmation would create
+    // the first one — the useful moment is before answering, not after.
     function renderTension() {
       const el = $('labTension');
       const pairs = E.contradictions(qstate).slice(0, 2);
       if (!pairs.length) {
+        const q = currentQuestion();
+        if (q) {
+          const probe = JSON.parse(JSON.stringify(qstate));
+          E.answer(probe, q.id, 'yes');
+          const fresh = E.contradictions(probe).slice(0, 1);
+          if (fresh.length) {
+            const affNow = E.affirmed(qstate);
+            const [a, b] = fresh[0];
+            const otherId = affNow.has(a) ? a : b;
+            const other = claimById.get(otherId);
+            el.classList.remove('hidden');
+            el.textContent = `Heads up: agreeing here would pull against “${other ? other.plain : otherId}” — settled by your earlier answers. No wrong answers here; just flagging the tension before you answer.`;
+            return;
+          }
+        }
         el.textContent = '';
         el.classList.add('hidden');
         return;

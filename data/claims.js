@@ -79,7 +79,7 @@ window.CLAIMS = Object.freeze([
     short: "Ordinary physics is enough",
     text: "Consciousness is entirely explainable by ordinary matter and physics.",
     plain: "Nothing about experience needs anything beyond the physical world.",
-    contradicts: ["c6"],
+    contradicts: ["c6", "c34"],
     entails: []
   },
   {
@@ -120,7 +120,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c6",
     short: "Mind is nonphysical",
-    text: "The mind is a nonphysical substance, distinct in kind from the body.",
+    text: "Your mind is not made of physical matter at all: it is a wholly different kind of stuff from your body.",
     plain: "Mind and body are two fundamentally different kinds of thing.",
     contradicts: ["c0", "c93"],
     entails: []
@@ -255,7 +255,7 @@ window.CLAIMS = Object.freeze([
   },
   {
     id: "c25",
-    short: "intrinsic nature is (proto-)conscious",
+    short: "Matter's inside is experiential",
     text: "What the physical world is in itself — beneath what physics describes — is qualitative and experiential; that is where consciousness fits in.",
     plain: "What matter really is on the inside includes experience or its raw ingredients.",
     entails: ["c24"]
@@ -291,7 +291,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c30",
     short: "subjectless qualities",
-    text: "The fundamental ingredients of reality are qualities that belong to no subject — unexperienced qualia.",
+    text: "The fundamental ingredients of reality are qualities that belong to no subject — raw, unfelt qualities.",
     plain: "The basic building blocks have qualitative character (like redness or painfulness) but nobody experiences them.",
     entails: ["c25"]
   },
@@ -305,7 +305,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c32",
     short: "experience = brain process",
-    text: "Every conscious experience is numerically identical to a physical brain process — not merely caused by or correlated with it.",
+    text: "Every conscious experience is one and the same thing as a physical brain process ('numerically identical') — not merely caused by or correlated with it.",
     plain: "Your pain just is a brain event, the way lightning just is an electrical discharge.",
     entails: ["c0"]
   },
@@ -322,6 +322,7 @@ window.CLAIMS = Object.freeze([
     text: "Consciousness is a real part of the natural world that can't be explained away or reduced to something non-conscious.",
     plain: "Experience is genuinely real; no redescription in brain terms makes its first-person character disappear.",
     opener: true,
+    contradicts: ["c0"],
     entails: []
   },
   {
@@ -453,7 +454,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c53",
     short: "There are no real qualia",
-    text: "There are no private, indescribable inner qualities of experience — the philosophical idea of ‘qualia’ is a fiction.",
+    text: "There are no private, indescribable inner qualities of experience — the philosophical idea of 'qualia' (supposedly ineffable feels, like the redness of red) is a fiction.",
     plain: "'What it's like' isn't a special inner property — that idea is a philosophical fiction.",
     entails: []
   },
@@ -594,14 +595,14 @@ window.CLAIMS = Object.freeze([
   {
     id: "c72",
     short: "Reality is perceiving monads",
-    text: "The basic building blocks of reality are simple, partless, immaterial units — monads — each perceiving the whole universe from its own point of view, changing only from within.",
+    text: "The basic building blocks of reality are tiny mind-like units — Leibniz called them 'monads': simple, partless, non-material, each perceiving the whole universe from its own point of view, changing only from within.",
     plain: "Everything is made of tiny mind-like units, each mirroring the whole universe inside itself.",
     entails: []
   },
   {
     id: "c73",
     short: "No real interaction",
-    text: "No monad ever acts on another; mind and body only seem to interact because God set every monad's inner unfolding to run in perfect pre-established harmony.",
+    text: "No monad ever acts on another; mind and body only seem to interact because God wound every monad up at creation to unfold in perfect sync — a 'pre-established harmony', like two clocks that always agree without ever touching.",
     plain: "Nothing in the universe ever truly affects anything else — it's all choreographed in advance.",
     entails: []
   },
@@ -685,7 +686,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c85",
     short: "Experience is where it seems",
-    text: "Experiences are located (roughly) where they seem to be: a pain is in the foot, not in the brain — the phenomenal world is the physical world as experienced, not something inside the head.",
+    text: "Experiences are located (roughly) where they seem to be: a pain is in the foot, not in the brain — the world you experience is the physical world as experienced, not something inside the head.",
     plain: "Your pain really is in your foot — experience isn't locked inside the skull.",
     entails: []
   },
@@ -741,7 +742,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c93",
     short: "Mental events are physical",
-    text: "Every particular mental event — this pain, that thought — is numerically identical with a physical event in the brain; there is no extra mental stuff.",
+    text: "Every particular mental event — this pain, that thought — is one and the same thing as a physical event in the brain ('numerically identical'); there is no extra mental stuff.",
     plain: "Each of your thoughts just is a physical brain event.",
     contradicts: ["c6"],
     entails: []
@@ -785,14 +786,14 @@ window.CLAIMS = Object.freeze([
   {
     id: "c99",
     short: "Information is fundamental",
-    text: "Information is an ontologically fundamental feature of reality — not just a description we impose, but part of the basic furniture of the world.",
+    text: "Information is a basic building block of reality itself — not just a description we impose, but part of the fundamental furniture of the world.",
     plain: "Information isn't just a human idea — it's woven into reality itself.",
     entails: []
   },
   {
     id: "c100",
     short: "Information's two faces",
-    text: "Every informational state has two aspects: a physical aspect (realized in brains, computers, and other systems) and a phenomenal aspect (realized as subjective experience) — the same information, two faces.",
+    text: "Every informational state has two aspects: a physical aspect (realized in brains, computers, and other systems) and an experiential aspect (realized as subjective experience) — the same information, two faces.",
     plain: "Information has an outside (physical) and an inside (felt) — same coin, two sides.",
     entails: ["c99"]
   },
@@ -806,7 +807,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c103",
     short: "Tiny unconscious perceptions add up",
-    text: "Beneath awareness the mind holds countless tiny unconscious perceptions — petites perceptions — too faint to notice on their own, that add up to conscious experience.",
+    text: "Beneath awareness the mind holds countless tiny unconscious perceptions — Leibniz called them 'petites perceptions', little perceptions — too faint to notice on their own, that add up to conscious experience.",
     plain: "Like the roar of the sea built from tiny unheard wave-sounds, experience is built from countless tiny unnoticed perceptions.",
     entails: ["c72"]
   },
@@ -820,7 +821,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c105",
     short: "Inner striving drives change",
-    text: "Each monad changes only from within, driven by an inner striving — appetition — that carries it from one perception to the next.",
+    text: "Each monad changes only from within, driven by an inner striving — Leibniz's word was 'appetition' — that carries it from one perception to the next.",
     plain: "Each tiny unit is self-propelled: an inner push carries it from one perception to the next.",
     entails: ["c72"]
   },
@@ -1108,7 +1109,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c146",
     short: "Idealism is metaphysically necessary",
-    text: "It is metaphysically necessary — true in all possible worlds — that every fundamental entity is conscious and every fundamental property is a phenomenal property.",
+    text: "It is metaphysically necessary — true in all possible worlds — that every fundamental entity is conscious and every fundamental property is an experiential property.",
     plain: "It couldn't have been otherwise: reality had to be mind-first, in every possible world.",
     entails: ["c1"]
   },
@@ -1143,7 +1144,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c151",
     short: "Consciousness is on/off",
-    text: "There are no borderline cases of phenomenal consciousness itself — it is an on/off matter — and the best explanation of that sharpness is that consciousness is irreducible.",
+    text: "There are no borderline cases of consciousness itself — it is an on/off matter — and the best explanation of that sharpness is that consciousness is irreducible.",
     plain: "Awareness isn't a dimmer switch — it's on or off, and that sharpness means it's fundamental.",
     entails: ["c150"]
   },
@@ -1178,7 +1179,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c156",
     short: "Phenomenal qualities are relational",
-    text: "The richness of experience — its phenomenal qualities — is relationally constituted: how a microsubject relates to other microsubjects determines what its experience is like.",
+    text: "The richness of experience — its experiential qualities — is relationally constituted: how a microsubject relates to other microsubjects determines what its experience is like.",
     plain: "How experience feels comes from relations between tiny minds, not from each one on its own.",
     entails: []
   },
@@ -1199,14 +1200,14 @@ window.CLAIMS = Object.freeze([
   {
     id: "c159",
     short: "Spacetime emerges from prototime",
-    text: "Spacetime is not fundamental: it emerges from a deeper, aspatial, quasi-temporal dimension — 'prototime' — in which quantum entanglement keeps its coherence.",
+    text: "Spacetime is not fundamental: it emerges from a deeper level of reality — 'prototime', outside ordinary space and time — in which quantum entanglement keeps its coherence.",
     plain: "Space and time are not the bottom layer; they grow out of a deeper timeless entanglement.",
     entails: []
   },
   {
     id: "c160",
     short: "Quantum events have inner feeling",
-    text: "Quantum states and events carry an internal phenomenal aspect: beneath the mathematics of quantum mechanics lies a proto-experiential character to physical events themselves.",
+    text: "Quantum states and events carry an internal experiential aspect: beneath the mathematics of quantum mechanics lies a proto-experiential character to physical events themselves.",
     plain: "Quantum events aren't just numbers — they have an inner, experience-like side.",
     entails: ["c25"]
   },
@@ -1220,7 +1221,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c162",
     short: "Classical physics has no room",
-    text: "Classical mechanistic determinism leaves no room for anything non-epiphenomenal: it has no intrinsic aspects and no novelty; quantum probabilistic determinism is needed for consciousness to matter.",
+    text: "Classical mechanistic determinism leaves no room for consciousness to make a difference: on that picture experience would be a powerless side-effect — it has no inner nature and no novelty; quantum probabilistic determinism is needed for consciousness to matter.",
     plain: "Old-school clockwork physics leaves no room for experience to do anything — quantum physics does.",
     entails: []
   },
@@ -1255,7 +1256,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c167",
     short: "Experience is never superposed",
-    text: "Experience is always determinate, never superposed: you never experience a blur of two outcomes — and it is this phenomenal definiteness that the physics of measurement must account for.",
+    text: "Experience is always determinate, never superposed: you never experience a blur of two outcomes — and it is this definiteness of experience that the physics of measurement must account for.",
     plain: "You never experience 'both at once' — experience is always one definite thing.",
     entails: []
   },
@@ -1332,7 +1333,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c178",
     short: "Everything enfolds in implicate order",
-    text: "Reality has an enfolded 'implicate order' underlying the unfolded 'explicate order' of ordinary experience: everything is in a process of folding and unfolding — a universal flux.",
+    text: "Reality has a deeper enfolded level — the 'implicate order' — underlying the unfolded world of separate things we ordinarily experience — the 'explicate order': everything is in a process of folding and unfolding — a universal flux.",
     plain: "The everyday world is an unfolding of a deeper, enfolded order where everything is connected.",
     entails: []
   },
@@ -1353,7 +1354,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c181",
     short: "Pure quantum states are conscious",
-    text: "A quantum system in a pure state is conscious of its own state: quantum information describes the subjective inner reality of quantum systems — definite, private, and knowable only through qualia.",
+    text: "A quantum system in a pure state is conscious of its own state: quantum information describes the subjective inner reality of quantum systems — definite, private, and knowable only through felt quality.",
     plain: "A quantum system in a pure state feels its own state from the inside.",
     entails: []
   },
@@ -1374,7 +1375,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c184",
     short: "Possibles are real",
-    text: "Possibility is a real feature of nature: 'possibles' — real maybe-states of nature, what Kauffman calls Res potentia — are ontologically real: not merely descriptions of what could happen, but what becomes actual (the ordinary physical world, Res extensa).",
+    text: "Possibility is a real feature of nature: 'possibles' — real maybe-states of nature, what Kauffman calls Res potentia — are genuinely real: not merely descriptions of what could happen, but what becomes actual (the ordinary physical world, Res extensa).",
     plain: "Possibilities are real things, not just ideas — they wait, as possibilities, to become actual.",
     entails: []
   },
@@ -1401,8 +1402,8 @@ window.CLAIMS = Object.freeze([
   },
   {
     id: "c188",
-    short: "ZPF carries phenomenal qualities",
-    text: "The quantum vacuum's zero-point field has an intrinsic side: it carries phenomenal qualities — a sentient background field of potential consciousness.",
+    short: "The zero-point field carries feeling",
+    text: "The quantum vacuum's zero-point field (ZPF) has an intrinsic side: it carries felt qualities — a sentient background field of potential consciousness.",
     plain: "Empty space isn't empty — the quantum vacuum itself carries the raw stuff of feeling.",
     entails: ["c25"]
   },
@@ -1479,7 +1480,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c199",
     short: "Mind mirrors field architecture",
-    text: "The brain builds nested spatiotemporal operations from local electromagnetic fields; operational modules (OMs) are functionally isomorphic to phenomenal architecture, each presenting specific content.",
+    text: "The brain builds nested space-and-time patterns from local electromagnetic fields; operational modules (OMs) mirror the structure of experience one-to-one, each presenting specific content.",
     plain: "Brain activity organizes into nested 3D electric patterns — and those patterns mirror the structure of your experience.",
     entails: []
   },
@@ -1500,14 +1501,14 @@ window.CLAIMS = Object.freeze([
   {
     id: "c202",
     short: "Reentrant signaling weaves the dynamic core",
-    text: "Massively parallel, reciprocal reentrant signaling among neuronal groups — especially between thalamus and cortex — integrates distributed brain areas into a unitary, ever-changing dynamic core, whose metastable states carry the moment-to-moment unity of experience.",
+    text: "Massively parallel signals looping back and forth between neuronal groups — 'reentrant signaling', especially between thalamus and cortex — integrate distributed brain areas into one unified, ever-changing core; its shifting semi-stable states carry the moment-to-moment unity of experience.",
     plain: "The brain constantly talks back to itself across wide networks, weaving scattered areas into one coherent scene after another.",
     entails: ["c0"]
   },
   {
     id: "c203",
-    short: "Qualia are the brain's discriminations",
-    text: "Qualia are high-order discriminations made by neural systems in a multidimensional space of signals: differences in what something feels like are differences in the neural structure and dynamics underlying it.",
+    short: "Feelings are the brain's distinctions",
+    text: "What philosophers call 'qualia' are fine-grained distinctions made by neural systems among signals: differences in what something feels like are differences in the neural structure and dynamics underlying it.",
     plain: "What a feeling feels like just is the brain telling things apart — change the telling-apart, change the feeling.",
     entails: ["c0"]
   },
@@ -1549,7 +1550,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c209",
     short: "Being conscious needs no self",
-    text: "Reflective self-awareness is a luxury of big-brained species, not the defining property of consciousness; basic phenomenal experience requires no self-model and no awareness of being aware.",
+    text: "Reflective self-awareness is a luxury of big-brained species, not the defining property of consciousness; basic experience requires no self-model and no awareness of being aware.",
     plain: "You don't need a self to be conscious — raw experience comes before any sense of 'I'.",
     entails: []
   },
@@ -1584,7 +1585,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c214",
     short: "Consciousness resolves action conflicts",
-    text: "The evolved function of phenomenal consciousness is to provide a common field in which otherwise encapsulated systems with mutually incompatible action tendencies can jointly constrain skeletal-muscle output — integration happens at the shared output channel, not among the content generators.",
+    text: "The evolved function of consciousness is to provide a common arena where otherwise separate brain systems — with conflicting urges about what to do — can jointly settle on one bodily action: integration happens at the shared output channel, not among the content generators.",
     plain: "Consciousness exists for one job: when different brain systems want your body to do opposite things, it gives them one shared stage to settle it.",
     entails: ["c0"]
   },
@@ -1689,14 +1690,14 @@ window.CLAIMS = Object.freeze([
   {
     id: "c229",
     short: "Self-awareness woven into experience",
-    text: "Consciousness requires the functional integration of two representations into one state: a first-order representation of the world and a higher-order representation of that very representation — neither side alone suffices.",
+    text: "Consciousness requires weaving two things into one state: the brain's picture of the world, and the brain's picture of that very picture — neither side alone suffices.",
     plain: "The 'what' of experience and the 'I'm aware of it' part must be woven into one thing. One without the other isn't consciousness.",
     entails: ["c228"]
   },
   {
     id: "c230",
     short: "Mind represents its own states",
-    text: "A mental state becomes conscious when the brain forms a higher-order representation — a representation of its own first-order representations. Consciousness is the mind's representation of itself.",
+    text: "A mental state becomes conscious when the brain doesn't just picture the world but pictures its own picturing — it forms a thought about its own thoughts. Consciousness is the mind's awareness of itself.",
     plain: "Experience happens when your brain forms a picture of its own activity — a representation one level up.",
     entails: []
   },
@@ -1731,7 +1732,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c235",
     short: "There is no self",
-    text: "There is no such thing as a self — nobody ever had or was one. What exists is a 'phenomenal self': an ongoing process, the content of the brain's transparent self-model, which refers to nothing real.",
+    text: "There is no such thing as a self — nobody ever had or was one. What exists is a 'self-model': an ongoing process — the brain's transparent model of a self — which refers to nothing real.",
     plain: "The 'me' in your experience is a brain-built model, not a thing. Nobody ever was a self.",
     entails: []
   },
@@ -1745,7 +1746,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c237",
     short: "A thought about your own representing",
-    text: "Phenomenal consciousness consists in a thought-like higher-order representation of a representation — with content like 'I, myself, am having this representation' — rather than a higher-order thought about a sensation directly.",
+    text: "Your consciousness of something consists in a thought-like state about your own representing — with content like 'I, myself, am having this representation' — rather than a thought about the sensation directly.",
     plain: "You're conscious of red when your brain holds the claim-like thought 'I myself am representing red' — a representation about your representing, not about red itself.",
     entails: ["c45"]
   },
@@ -1759,7 +1760,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c239",
     short: "Introspection fabricates phenomenality",
-    text: "It is an introspective illusion that experience contains special phenomenal properties. What exists is functional neural processes — a complex informational engagement with the world — not an inner realm of 'what-it-is-like' qualities.",
+    text: "It is an introspective illusion that experience contains special 'what-it-is-like' qualities. What exists is functional neural processes — a complex informational engagement with the world — not an inner realm of ineffable feels.",
     plain: "It strongly seems like experiences have special inner qualities. That seeming is itself the illusion.",
     entails: ["c53"]
   },
@@ -1801,7 +1802,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c245",
     short: "Introspection is rigged",
-    text: "Introspection systematically misleads about its own targets: we believe in phenomenal properties because phenomenal introspection applies concepts that frame ordinary brain states as epistemologically special — the seeming is produced by our naive theory of mind, not by anything real.",
+    text: "Introspection systematically misleads about its own targets: we believe in special 'what-it-is-like' qualities because introspection applies concepts that frame ordinary brain states as knowable in a special way — the seeming is produced by our naive theory of mind, not by anything real.",
     plain: "Looking inward tells a false story. Your brain's own concepts paint ordinary neural states as magically special-feeling.",
     entails: ["c53"]
   },
@@ -1857,7 +1858,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c253",
     short: "No inner theater",
-    text: "There is no central 'Cartesian theater' and no inner observer: no headquarters where it all comes together; the self is a 'center of narrative gravity' — a story the drafts tell.",
+    text: "There is no central inner screen — no 'Cartesian theater' — and no inner observer: no headquarters where it all comes together; the self is a 'center of narrative gravity' — a story the drafts tell.",
     plain: "There's no tiny audience inside your head watching your thoughts — the 'self' is the story they tell.",
     entails: []
   },
@@ -2025,7 +2026,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c277",
     short: "Stories have causal power",
-    text: "Consciousness is narrative awareness: stories — sequential, causally coherent structures — are not epiphenomenal but real causal scaffolding of the mind, operating at the emergent level where experience lives.",
+    text: "Consciousness is narrative awareness: stories — sequential, causally coherent structures — are not powerless byproducts ('epiphenomena') but real causal scaffolding of the mind, operating at the emergent level where experience lives.",
     plain: "Your inner story isn't just decoration. The narrative your mind tells has real causal power — it's part of what runs you.",
     entails: ["c276"]
   }

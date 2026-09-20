@@ -15,7 +15,7 @@ const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
 const NEED_IDS = ['labQuizStart', 'labQuizMain', 'labQuizResult', 'labQuizBegin', 'labQuizRestart',
   'labQuizContinue', 'labContinueNote', 'labAgree', 'labDisagree', 'labSkip', 'labQBack', 'labQText', 'labQPlain', 'labQCount',
   'labQCoverage', 'labSettled', 'labSettledBy', 'labTension', 'labScores', 'labResultList', 'labClaimGraph',
-  'labClaimDetail', 'labTheoryList', 'labDetail', 'labBack', 'labTabClaims', 'labTabTheories',
+  'labClaimDetail', 'labTheoryList', 'labTheorySearch', 'labDetail', 'labBack', 'labTabClaims', 'labTabTheories',
   'labClaims', 'labTheories', 'quizCountLine', 'exploreDek', 'updateBanner', 'updateReload'];
 
 function matches(el, sel) {
@@ -106,6 +106,11 @@ function click(env, id, event) {
 const text = (env, id) => env.els.get(id).textContent;
 const html = (env, id) => env.els.get(id).innerHTML;
 const hidden = (env, id) => env.els.get(id).classList.contains('hidden');
+function fireInput(env, id, value) {
+  const el = env.els.get(id);
+  el.value = value;
+  (el._listeners.input || []).forEach((fn) => fn({ target: el }));
+}
 
 // ---------------------------------------------------------------- checks
 let failures = 0;
@@ -131,6 +136,16 @@ async function main() {
   const withClaims = (listHtml.match(/data-theory="/g) || []).length;
   const pending = (listHtml.match(/data-meta="/g) || []).length;
   check(withClaims === M && pending === 120 - M, `theory list: ${M} with claims + ${120 - M} pending (got ${withClaims}+${pending})`);
+
+  // theory search filter
+  fireInput(env, 'labTheorySearch', 'integrated information');
+  const filteredHtml = html(env, 'labTheoryList');
+  const filteredCount = (filteredHtml.match(/data-theory="/g) || []).length;
+  check(filteredCount >= 1 && filteredCount < withClaims, `theory search filters the list (got ${filteredCount})`);
+  check(filteredHtml.toLowerCase().includes('integrated information'), 'theory search finds IIT');
+  fireInput(env, 'labTheorySearch', 'zzz-no-such-theory');
+  check(html(env, 'labTheoryList').includes('No theories match'), 'theory search shows empty state');
+  fireInput(env, 'labTheorySearch', '');
 
   // claim detail headers
   click(env, 'labClaimGraph', { target: { closest: () => ({ dataset: { claim: 'c9' } }) } });
@@ -242,21 +257,24 @@ async function main() {
   check(railRows === 8, `rail shows top 8 theories during quiz (got ${railRows})`);
   check(html(env, 'labScores').includes('112 more theories'), 'rail notes the remaining theories');
 
-  // round cap + continue + tension note (all-agree run)
+  // round cap + continue + tension notes (all-agree run)
   click(env, 'labQuizRestart');
-  let sawTension = false, answered = 0;
+  let sawTension = false, sawPreNudge = false, answered = 0;
   while (hidden(env, 'labQuizResult') && answered < 20) {
-    if (text(env, 'labTension').length > 0) sawTension = true;
+    const t = text(env, 'labTension');
+    if (t.length > 0) sawTension = true;
+    if (t.includes('would pull against')) sawPreNudge = true;
     click(env, 'labAgree');
     answered++;
   }
   check(answered === 12 && !hidden(env, 'labQuizResult'), `quiz stops after a 12-question round (answered ${answered})`);
   check(sawTension, 'tension note appears when affirming contradictory claims');
+  check(sawPreNudge, 'pre-answer heads-up appears before affirming a contradictory claim');
   check(!hidden(env, 'labQuizContinue'), 'continue button offered after a round');
   check(text(env, 'labContinueNote').includes('Based on 12 answers'), 'continue note cites answer count');
   click(env, 'labQuizContinue');
   check(!hidden(env, 'labQuizMain') && hidden(env, 'labQuizResult'), 'continue resumes the quiz');
-  check(text(env, 'labQCount') === '1 of 12', 'new round restarts progress');
+  check(text(env, 'labQCount') === '1 of 12 · round 2', 'round 2 counter names the round: ' + text(env, 'labQCount'));
 
   // complete the quiz
   click(env, 'labQuizRestart');

@@ -215,6 +215,7 @@
       for (const q of (c.contradicts || [])) {
         if (!byId.has(q)) problems.push(`claim ${c.id} contradicts unknown claim ${q}`);
         else if (q === c.id) problems.push(`claim ${c.id} contradicts itself`);
+        else if (!((byId.get(q).contradicts || []).includes(c.id))) problems.push(`claim ${c.id} contradicts ${q} but ${q} does not list ${c.id} back`);
       }
     }
     // Cycle detection (DFS on child -> parent edges).
@@ -234,6 +235,19 @@
     for (const t of theories) {
       for (const c of (t.claims || [])) {
         if (!byId.has(c)) problems.push(`theory ${t.name} lists unknown claim ${c}`);
+      }
+      // A theory must not affirm both sides of a contradiction pair, directly
+      // or through entailment — that would make it internally inconsistent.
+      const full = theoryFullClaims(claims, t);
+      const seenPairs = new Set();
+      for (const cid of full) {
+        for (const q of ((byId.get(cid) || {}).contradicts || [])) {
+          if (!full.has(q)) continue;
+          const key = [cid, q].sort().join('|');
+          if (seenPairs.has(key)) continue;
+          seenPairs.add(key);
+          problems.push(`theory ${t.name} affirms both ${cid} and ${q}, which contradict each other`);
+        }
       }
     }
     return problems;

@@ -395,16 +395,19 @@
     .dag-root-key::before { content: ""; width: 11px; height: 11px; border: 2px solid var(--coral); }
     .claim-graph {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: 1fr;
       gap: 20px;
       align-items: start;
       margin-bottom: 30px;
     }
-    .dag-component {
-      position: relative;
-      min-width: 0;
+    .dag-scroll {
+      overflow-x: auto;
       border-top: 1px solid var(--line);
       background: #0f1718;
+    }
+    .dag-component {
+      position: relative;
+      min-width: 100%;
     }
     .dag-component svg {
       position: absolute;
@@ -418,7 +421,7 @@
     .dag-node {
       position: absolute;
       z-index: 1;
-      width: min(43%, 152px);
+      width: 172px;
       min-height: 58px;
       padding: 8px 9px;
       border: 1px solid #40504f;
@@ -440,9 +443,21 @@
     .claim-detail-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 24px; }
     .claim-detail-groups .lab-chip-row { margin-bottom: 0; }
     .lab-theory-btn.active { border-color: var(--cyan); background: #192627; }
+    .lab-search {
+      width: 100%;
+      margin: 10px 0 12px;
+      padding: 9px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel-2);
+      color: var(--ink);
+      font: inherit;
+      font-size: 14px;
+    }
+    .lab-search::placeholder { color: var(--muted); }
+    .lab-search:focus { outline: none; border-color: var(--cyan); }
     @media (max-width: 860px) {
       .lab-explorer, .lab-quiz-grid, .lab-claim-cols, .claim-detail-groups { grid-template-columns: 1fr; }
-      .claim-graph { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     @media (max-width: 560px) {
       .claims-lab { margin-top: 48px; padding-top: 36px; }
@@ -453,9 +468,8 @@
       .lab-explorer { gap: 24px; }
       .lab-claim-title { font-size: 20px; }
       .lab-score-top { align-items: flex-start; }
-      .claim-graph { grid-template-columns: 1fr; gap: 14px; }
+      .claim-graph { gap: 14px; }
       .dag-key { align-items: flex-start; flex-direction: column; gap: 8px; }
-      .dag-node { width: min(44%, 150px); }
     }
       /* Quiz-first landing (round 1 restructure) */
     .quiz-section { padding: 36px 0 8px; }
