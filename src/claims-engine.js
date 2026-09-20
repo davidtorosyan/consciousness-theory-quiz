@@ -100,11 +100,17 @@
   // How many claims would an answer to `id` settle?
   // yes -> itself + undecided ancestors; no -> itself + undecided descendants.
   function coverage(claims, state, id) {
+    const both = coverageBoth(claims, state, id);
+    return Math.max(both.yes, both.no);
+  }
+
+  // Per-direction coverage, so the UI can say honestly what each answer does.
+  function coverageBoth(claims, state, id) {
     const und = new Set(undecided(claims, state));
     let ancCount = 0, descCount = 0;
     for (const a of ancestors(claims, id)) if (und.has(a)) ancCount++;
     for (const d of descendants(claims, id)) if (und.has(d)) descCount++;
-    return Math.max(ancCount, descCount) + 1;
+    return { yes: ancCount + 1, no: descCount + 1 };
   }
 
   // Greedy: the undecided, unskipped claim with the highest coverage.
@@ -200,7 +206,7 @@
 
   const api = {
     ancestors, descendants, theoryFullClaims,
-    newQuiz, affirmed, rejected, undecided, coverage,
+    newQuiz, affirmed, rejected, undecided, coverage, coverageBoth,
     nextQuestion, answer, undo, skip, unskip, score, validate
   };
 
@@ -218,6 +224,7 @@
       rejected: (state) => api.rejected(claims, state),
       undecided: (state) => api.undecided(claims, state),
       coverage: (state, id) => api.coverage(claims, state, id),
+      coverageBoth: (state, id) => api.coverageBoth(claims, state, id),
       nextQuestion: (state) => api.nextQuestion(claims, state),
       answer: (state, id, yesNo) => api.answer(state, id, yesNo),
       undo: (state, id) => api.undo(state, id),

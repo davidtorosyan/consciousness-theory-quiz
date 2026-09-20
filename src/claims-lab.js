@@ -10,13 +10,23 @@
       'labAgree', 'labDisagree', 'labSkip', 'labQBack', 'labQText', 'labQPlain', 'labQCount',
       'labQCoverage', 'labSettled', 'labSettledBy', 'labScores', 'labResultList', 'labClaimGraph',
       'labClaimDetail', 'labTheoryList', 'labDetail', 'labBack', 'labTabClaims', 'labTabTheories',
-      'labClaims', 'labTheories', 'quizCountLine', 'exploreDek'];
+      'labClaims', 'labTheories', 'quizCountLine', 'exploreDek', 'updateBanner', 'updateReload'];
     if (!window.ClaimsEngine || !window.CLAIMS || need.some(id => !$(id))) {
       const el = $('quizCountLine') || $('labQuizStart');
       if (el) el.textContent = 'The site just updated — please reload the page to get the latest version.';
       return;
     }
     const E = window.ClaimsEngine.bound();
+    // Freshness check: the HTML shell can lag behind deploys (CDN cache), so
+    // ask the server what the latest build is and offer a reload if newer.
+    try {
+      fetch('version.json?fresh=' + Date.now()).then(r => r.json()).then(v => {
+        if (v && typeof v.build === 'number' && v.build > (window.SITE_BUILD || 0)) {
+          $('updateBanner').classList.remove('hidden');
+        }
+      }).catch(() => {});
+    } catch (e) { /* offline or file:// — stay quiet */ }
+    $('updateReload').addEventListener('click', () => location.reload());
     const claimById = new Map(E.claims.map(c => [c.id, c]));
     const theoryById = new Map(E.theories.map(t => [t.id, t]));
     const META_THEORIES = window.THEORIES_120 || [];
@@ -165,11 +175,11 @@
         <p class="lab-plain">Put simply: ${escapeHtml(c.plain)}</p>
         <div class="claim-detail-groups">
           <div>
-            <p class="micro">Broader claims this entails</p>
+            <p class="micro">↑ What this implies (broader claims)</p>
             ${parents.length ? `<div class="lab-chip-row">${parents.map(p => claimChip(p)).join('')}</div>` : '<p class="lab-empty">Nothing — this is a base claim.</p>'}
           </div>
           <div>
-            <p class="micro">More specific claims that entail this</p>
+            <p class="micro">↓ What implies this (more specific claims)</p>
             ${children.length ? `<div class="lab-chip-row">${children.map(child => claimChip(child)).join('')}</div>` : '<p class="lab-empty">Nothing depends directly on it yet.</p>'}
           </div>
           <div>
@@ -351,7 +361,8 @@
       $('labQCount').textContent = String(qhistory.length + 1).padStart(2, '0');
       $('labQText').textContent = claim.text;
       $('labQPlain').textContent = `Put simply: ${claim.plain}`;
-      $('labQCoverage').textContent = `Answering settles ${q.coverage} claim${q.coverage === 1 ? '' : 's'} — the most informative question right now.`;
+      const both = E.coverageBoth(qstate, q.id);
+      $('labQCoverage').textContent = `Agreeing settles ${both.yes} claim${both.yes === 1 ? '' : 's'} · disagreeing settles ${both.no} — the most informative question right now.`;
       const affN = E.affirmed(qstate).size;
       const rejN = E.rejected(qstate).size;
       $('labSettled').textContent = (affN + rejN)
@@ -364,10 +375,10 @@
 
     function renderSettledBy() {
       const el = $('labSettledBy');
-      if (!lastSettledIds.length) { el.textContent = ''; return; }
+      if (!lastSettledIds.length) { el.textContent = 'That settles just this claim.'; return; }
       const labels = lastSettledIds.map(id => {
         const c = claimById.get(id);
-        return c ? (c.short || c.text) : id;
+        return c ? c.plain : id;
       });
       el.textContent = `That also settled: ${labels.join(' · ')}.`;
     }
@@ -397,6 +408,7 @@
         const pct = result.total ? Math.round(100 * result.agreed / result.total) : 0;
         return `<div class="lab-score-row">
           <div class="lab-score-top"><strong>${escapeHtml(result.theory.name)}</strong><span>${result.agreed} of ${result.total}</span></div>
+          ${result.theory.blurb ? `<div class="lab-score-blurb">${escapeHtml(result.theory.blurb)}</div>` : ''}
           <div class="lab-score-bar"><span style="width:${pct}%"></span></div>
           ${result.disagreed ? `<small>${result.disagreed} rejected</small>` : ''}
         </div>`;
@@ -414,6 +426,7 @@
         <div class="lab-result-row${index === 0 ? ' top' : ''}">
           <span class="lab-result-rank">${index + 1}</span>
           <div><strong>${escapeHtml(result.theory.name)}</strong>
+          ${result.theory.blurb ? `<p class="lab-result-blurb">${escapeHtml(result.theory.blurb)}</p>` : ''}
           <p>${line}</p>
           <button class="text-btn" data-inspect="${result.theory.id}">Inspect this theory’s claims</button></div>
         </div>`;

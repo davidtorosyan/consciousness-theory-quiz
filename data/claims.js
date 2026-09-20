@@ -61,7 +61,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c3",
     short: "One cosmic mind",
-    text: "Reality is one single cosmic mind, and individual people are dissociated parts of it.",
+    text: "Reality is one single cosmic mind, and individual people are split-off parts of it — like alters of one mind.",
     plain: "We're like whirlpools in one stream of consciousness — separate-looking, but one water.",
     entails: ["c1", "c2"]
   },
@@ -103,7 +103,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c9",
     short: "Experience is fundamental",
-    text: "Conscious experience is a fundamental, irreducible feature of nature, like mass or charge.",
+    text: "Conscious experience is a fundamental, irreducible feature of reality — not built out of anything more basic.",
     plain: "Experience is basic furniture of the universe, not built out of something else.",
     entails: []
   },
@@ -125,7 +125,7 @@ window.CLAIMS = Object.freeze([
     id: "c12",
     short: "Experience is causal structure",
     text: "A conscious experience is identical to a particular kind of cause-and-effect structure in a physical system — one so tightly integrated it can't be divided into independent parts.",
-    plain: "Consciousness is how a system's parts hang together as one irreducible whole. (IIT measures this integration as Φ, 'phi'.)",
+    plain: "Consciousness is how a system's parts hang together as one irreducible whole.",
     entails: ["c0", "c13"]
   },
   {
@@ -173,7 +173,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c19",
     short: "one substance, two aspects",
-    text: "There is exactly one fundamental reality (Spinoza called it God-or-Nature); individual minds and bodies are the same reality seen under two different aspects — the mental and the physical.",
+    text: "There is exactly one fundamental reality; individual minds and bodies are that same reality seen under two different aspects — the mental and the physical.",
     plain: "There's only one reality, and mind and body are the same thing seen two ways — thought and extension are two views of one thing.",
     entails: []
   },
@@ -208,14 +208,14 @@ window.CLAIMS = Object.freeze([
   {
     id: "c24",
     short: "physics is only structural",
-    text: "Physics describes only the structure and relations of matter — never its hidden intrinsic nature.",
+    text: "Physics describes only how matter relates and behaves — never what matter is in itself.",
     plain: "Science tells us what matter does, never what it is in itself.",
     entails: []
   },
   {
     id: "c25",
     short: "intrinsic nature is (proto-)conscious",
-    text: "The hidden intrinsic nature of the physical world is qualitative or experiential — that is where consciousness fits in.",
+    text: "What the physical world is in itself — beneath what physics describes — is qualitative and experiential; that is where consciousness fits in.",
     plain: "What matter really is on the inside includes experience or its raw ingredients.",
     entails: ["c24"]
   },
@@ -257,8 +257,8 @@ window.CLAIMS = Object.freeze([
   {
     id: "c31",
     short: "awareness of organized qualities",
-    text: "Consciousness arises when an awareness-conferring structure (such as higher-order representation) makes organized qualities available to a subject.",
-    plain: "You become conscious of qualities when your brain's higher-order machinery presents them to you — experience is awareness of qualia.",
+    text: "Consciousness arises when a higher-order structure in the mind — a kind of inner monitor — makes organized qualities available to you as a subject.",
+    plain: "You become conscious of qualities when your mind's inner monitor presents them to you.",
     entails: ["c30"]
   },
   {
@@ -299,7 +299,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c37",
     short: "The separate self is a construction",
-    text: "The ordinary experiencing 'I' is a construction produced by superimposing the witnessing awareness onto the psychophysical apparatus.",
+    text: "The ordinary experiencing 'I' is a construction: witnessing awareness gets superimposed — laid over and confused with — the body-mind, producing the sense of a separate experiencer.",
     plain: "The 'me' that seems to have experiences is a useful fiction, not the real you.",
     entails: ["c35"]
   },
@@ -355,15 +355,15 @@ window.CLAIMS = Object.freeze([
   {
     id: "c45",
     short: "Consciousness needs a higher thought",
-    text: "A mental state is conscious only when you have a higher-order thought that you are in that state — being aware of the state is what makes it conscious.",
+    text: "A mental state is conscious only when the mind forms a thought about being in that state — that higher thought is what makes it conscious.",
     plain: "A feeling becomes conscious when your mind registers 'I'm having this feeling' — even if that registration is itself unconscious.",
     entails: []
   },
   {
     id: "c46",
     short: "Qualities can exist unconsciously",
-    text: "Mental qualities (the raw feel of red, say) can exist without being conscious; they become conscious only through the higher-order awareness of them.",
-    plain: "Your brain can carry the quality of redness without you being conscious of it — consciousness is the higher-order noticing.",
+    text: "Mental qualities (the raw feel of red, say) can exist without being conscious; they become conscious only through the mind’s awareness of them.",
+    plain: "Your brain can carry the quality of redness without you being conscious of it — consciousness is the noticing.",
     entails: ["c45"]
   },
   {
@@ -411,7 +411,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c53",
     short: "There are no real qualia",
-    text: "There are no qualia as traditionally conceived — no private, ineffable, intrinsic felt properties; they are philosophers' inventions.",
+    text: "There are no private, indescribable inner qualities of experience — the philosophical idea of ‘qualia’ is a fiction.",
     plain: "'What it's like' isn't a special inner property — that idea is a philosophical fiction.",
     entails: []
   },
@@ -564,37 +564,37 @@ window.CLAIMS = Object.freeze([
   "Panpsychism", "Materialism", "Information").
 */
 window.CLAIM_THEORIES = Object.freeze([
-  { id:  1, name: "Analytic idealism",               family: "Idealism",      claims: ["c3"] },
-  { id:  3, name: "Conscious realism",               family: "Idealism",      claims: ["c4", "c5"] },
-  { id:  4, name: "Substance dualism",               family: "Dualism",       claims: ["c7", "c8"] },
-  { id:  5, name: "Naturalistic / property dualism", family: "Dualism",       claims: ["c10", "c11"] },
-  { id: 19, name: "Integrated Information Theory",   family: "Information",   claims: ["c12", "c14"] },
-  { id:  6, name: "Interactionist dualism",          family: "Dualism",       claims: ["c15", "c16"] },
-  { id:  7, name: "Emergent dualism",                family: "Dualism",       claims: ["c17", "c18", "c8"] },
-  { id:  8, name: "Spinozan dual-aspect monism",     family: "Neutral monism",claims: ["c20", "c21"] },
-  { id:  9, name: "Jamesian neutral monism",         family: "Neutral monism",claims: ["c23"] },
-  { id: 10, name: "Russellian monism",               family: "Neutral monism",claims: ["c25"] },
-  { id: 11, name: "Micropsychism",                   family: "Panpsychism",   claims: ["c27"] },
-  { id: 12, name: "Cosmopsychism",                   family: "Panpsychism",   claims: ["c28"] },
-  { id: 13, name: "Panprotopsychism / panqualityism",family: "Panpsychism",   claims: ["c31"] },
-  { id: 14, name: "Mind–brain identity theory",      family: "Materialism",   claims: ["c32"] },
-  { id: 15, name: "Biological naturalism",           family: "Materialism",   claims: ["c33", "c34"] },
-  { id:  2, name: "Advaita Vedānta nondualism",      family: "Idealism",       claims: ["c36", "c37", "c38"] },
-  { id: 16, name: "Non-reductive physicalism / strong emergence", family: "Materialism",    claims: ["c39", "c40"] },
-  { id: 17, name: "Functionalism / computationalism", family: "Materialism",    claims: ["c42"] },
-  { id: 18, name: "Global Workspace Theory",         family: "Materialism",    claims: ["c43", "c44"] },
-  { id: 20, name: "Higher-order thought theory",     family: "Materialism",    claims: ["c46"] },
-  { id: 22, name: "Predictive processing",           family: "Materialism",    claims: ["c48", "c49"] },
-  { id: 25, name: "Electromagnetic-field theory",    family: "Materialism",    claims: ["c50", "c51", "c52"] },
-  { id: 27, name: "Illusionism",                     family: "Materialism",    claims: ["c54"] },
-  { id: 42, name: "Interactive (Cartesian) dualism",   family: "Dualism",         claims: ["c55"] },
-  { id: 43, name: "Hylomorphism",                      family: "Dualism",         claims: ["c56", "c57"] },
-  { id: 44, name: "Avicenna's self-present soul",      family: "Dualism",         claims: ["c36", "c7", "c58"] },
-  { id: 45, name: "Malebranche's occasionalism",       family: "Dualism",         claims: ["c6", "c60"] },
-  { id: 46, name: "Bergson's duration dualism",        family: "Dualism",         claims: ["c61", "c62"] },
-  { id: 47, name: "Sāṃkhya witness dualism",           family: "Dualism",         claims: ["c63", "c64", "c65"] },
-  { id: 51, name: "Trialism",                          family: "Dualism",         claims: ["c66"] },
-  { id: 52, name: "Epiphenomenalism",                  family: "Materialism",     claims: ["c33", "c67", "c68"] },
-  { id: 53, name: "Whitehead's process theory",        family: "Neutral monism",  claims: ["c69", "c70", "c71"] },
-  { id: 54, name: "Leibniz's monads",                  family: "Neutral monism",  claims: ["c45", "c72", "c73"] }
+  { id:  1, name: "Analytic idealism", blurb: "Everything is the inner life of one universal mind.",               family: "Idealism",      claims: ["c3"] },
+  { id:  3, name: "Conscious realism", blurb: "Reality is made of conscious agents interacting.",               family: "Idealism",      claims: ["c4", "c5"] },
+  { id:  4, name: "Substance dualism", blurb: "Mind and body are two fundamentally different kinds of stuff.",               family: "Dualism",       claims: ["c7", "c8"] },
+  { id:  5, name: "Naturalistic / property dualism", blurb: "Consciousness is a real non-physical property of brains.", family: "Dualism",       claims: ["c10", "c11"] },
+  { id: 19, name: "Integrated Information Theory", blurb: "Consciousness is how integrated a system's cause-and-effect structure is.",   family: "Information",   claims: ["c12", "c14"] },
+  { id:  6, name: "Interactionist dualism", blurb: "A non-physical mind genuinely moves the brain.",          family: "Dualism",       claims: ["c15", "c16"] },
+  { id:  7, name: "Emergent dualism", blurb: "The soul emerges from the brain but isn't reducible to it.",                family: "Dualism",       claims: ["c17", "c18", "c8"] },
+  { id:  8, name: "Spinozan dual-aspect monism", blurb: "Mind and body are two aspects of one single reality.",     family: "Neutral monism",claims: ["c20", "c21"] },
+  { id:  9, name: "Jamesian neutral monism", blurb: "Mind and matter are both built from neutral raw experience.",         family: "Neutral monism",claims: ["c23"] },
+  { id: 10, name: "Russellian monism", blurb: "Physics describes behavior; experience is what matter is inside.",               family: "Neutral monism",claims: ["c25"] },
+  { id: 11, name: "Micropsychism", blurb: "Tiny particles have tiny bits of experience that combine into ours.",                   family: "Panpsychism",   claims: ["c27"] },
+  { id: 12, name: "Cosmopsychism", blurb: "The whole universe is one conscious mind; we are its parts.",                   family: "Panpsychism",   claims: ["c28"] },
+  { id: 13, name: "Panprotopsychism / panqualityism", blurb: "Matter has proto-experiential ingredients that combine into consciousness.",family: "Panpsychism",   claims: ["c31"] },
+  { id: 14, name: "Mind–brain identity theory", blurb: "Conscious states just are brain states.",      family: "Materialism",   claims: ["c32"] },
+  { id: 15, name: "Biological naturalism", blurb: "Consciousness is a biological feature of brains, like digestion.",           family: "Materialism",   claims: ["c33", "c34"] },
+  { id:  2, name: "Advaita Vedānta nondualism", blurb: "Pure awareness alone is real; the separate self is an illusion.",      family: "Idealism",       claims: ["c36", "c37", "c38"] },
+  { id: 16, name: "Non-reductive physicalism / strong emergence", blurb: "Consciousness emerges from matter and is something genuinely new.", family: "Materialism",    claims: ["c39", "c40"] },
+  { id: 17, name: "Functionalism / computationalism", blurb: "The mind is what the brain does — its functions, not its stuff.", family: "Materialism",    claims: ["c42"] },
+  { id: 18, name: "Global Workspace Theory", blurb: "Consciousness is information broadcast brain-wide for all systems to use.",         family: "Materialism",    claims: ["c43", "c44"] },
+  { id: 20, name: "Higher-order thought theory", blurb: "A thought is conscious when the mind thinks about having it.",     family: "Materialism",    claims: ["c46"] },
+  { id: 22, name: "Predictive processing", blurb: "The brain predicts incoming signals; consciousness is the winning prediction.",           family: "Materialism",    claims: ["c48", "c49"] },
+  { id: 25, name: "Electromagnetic-field theory", blurb: "Consciousness is the brain's electromagnetic field.",    family: "Materialism",    claims: ["c50", "c51", "c52"] },
+  { id: 27, name: "Illusionism", blurb: "Consciousness as we imagine it doesn't exist; it's a useful illusion.",                     family: "Materialism",    claims: ["c54"] },
+  { id: 42, name: "Interactive (Cartesian) dualism", blurb: "An immaterial soul interacts with the body, physics permitting.",   family: "Dualism",         claims: ["c55"] },
+  { id: 43, name: "Hylomorphism", blurb: "The soul is the living form of the body, not a separate thing.",                      family: "Dualism",         claims: ["c56", "c57"] },
+  { id: 44, name: "Avicenna's self-present soul", blurb: "The self knows itself directly, needs no senses, and survives death.",      family: "Dualism",         claims: ["c36", "c7", "c58"] },
+  { id: 45, name: "Malebranche's occasionalism", blurb: "Only God truly causes anything; mind and body never touch.",       family: "Dualism",         claims: ["c6", "c60"] },
+  { id: 46, name: "Bergson's duration dualism", blurb: "The brain filters consciousness; real time is lived duration.",        family: "Dualism",         claims: ["c61", "c62"] },
+  { id: 47, name: "Sāṃkhya witness dualism", blurb: "Consciousness is a pure silent witness; the mind itself is material.",           family: "Dualism",         claims: ["c63", "c64", "c65"] },
+  { id: 51, name: "Trialism", blurb: "Reality has three basic domains, not one or two.",                          family: "Dualism",         claims: ["c66"] },
+  { id: 52, name: "Epiphenomenalism", blurb: "The brain causes consciousness, but consciousness causes nothing.",                  family: "Materialism",     claims: ["c33", "c67", "c68"] },
+  { id: 53, name: "Whitehead's process theory", blurb: "Reality is made of events with inner experience, not static stuff.",        family: "Neutral monism",  claims: ["c69", "c70", "c71"] },
+  { id: 54, name: "Leibniz's monads", blurb: "Everything is made of tiny perceiving units in pre-set harmony.",                  family: "Neutral monism",  claims: ["c45", "c72", "c73"] }
 ]);
