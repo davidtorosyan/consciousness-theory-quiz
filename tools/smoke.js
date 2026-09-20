@@ -283,6 +283,8 @@ async function main() {
   const railRows = (html(env, 'labScores').match(/lab-score-row/g) || []).length;
   check(railRows === 8, `rail shows top 8 theories during quiz (got ${railRows})`);
   check(html(env, 'labScores').includes('112 more theories'), 'rail notes the remaining theories');
+  const railFracs = (html(env, 'labScores').match(/<span>\d+ of \d+<\/span>/g) || []).length;
+  check(railFracs === railRows, `every rail row shows an X-of-Y fraction (got ${railFracs}/${railRows})`);
 
   // round cap + continue + tension notes (all-agree run)
   click(env, 'labQuizRestart');
@@ -316,6 +318,12 @@ async function main() {
   check(html(env, 'labResultList').includes('data-inspect'), 'results have inspect-claims buttons');
   check((html(env, 'labResultList').match(/<span class="vh">/g) || []).length === M,
     'inspect buttons carry a screen-reader-only theory name');
+  // every result row must explain its own ranking — no silent rows
+  const resHtml = html(env, 'labResultList');
+  const resRows = (resHtml.match(/class="lab-result-row/g) || []).length;
+  const resLines = (resHtml.match(/You agree with \d+ of its|You reject \d+ of its|None of this theory's claims came up/g) || []).length;
+  check(resRows === M, `results render all ${M} theories (got ${resRows})`);
+  check(resLines === M, `every result row explains its alignment (got ${resLines}/${resRows})`);
 
   // untouched theories: a fresh all-skip run leaves every theory untouched
   click(env, 'labQuizRestart');

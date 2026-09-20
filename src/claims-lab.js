@@ -141,9 +141,10 @@
             button.className = `dag-node${rank === 0 ? ' root' : ''}`;
             button.dataset.claim = id;
             button.style.top = `${DAG_PAD_TOP + row * DAG_ROW_H}px`;
-            // No title attribute: the aria-label already carries the full claim
-            // text, and a title would expose it a second time to screen readers.
-            button.setAttribute('aria-label', `${id}: ${claim.text}`);
+            // No title attribute: the aria-label carries the claim. Lead with the
+            // short label (the node's visible identifier) so assistive tech
+            // gets the same primary label sighted users see, then the full text.
+            button.setAttribute('aria-label', `${id}: ${shortLabel(claim)}. ${claim.text}`);
             button.innerHTML = `<span class="dag-node-id">${id}</span><span class="dag-node-label">${escapeHtml(shortLabel(claim))}</span>`;
             inner.appendChild(button);
             return { el: button, col: index };
