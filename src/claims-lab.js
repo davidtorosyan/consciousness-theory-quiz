@@ -147,13 +147,15 @@
             button.className = `dag-node${rank === 0 ? ' root' : ''}`;
             button.dataset.claim = id;
             button.style.top = `${DAG_PAD_TOP + row * DAG_ROW_H}px`;
-            // No title attribute: the aria-label carries the claim. Lead with the
-            // short label (the node's visible identifier) so assistive tech
-            // gets the same primary label sighted users see, then the full text.
-            // data-plain feeds a CSS-only hover tooltip for sighted users, so
-            // jargon-y short labels get an in-context plain-language gloss
-            // without duplicating anything for assistive tech.
-            button.setAttribute('aria-label', `${id}: ${shortLabel(claim)}. ${claim.text}`);
+            // No title attribute and no internal claim id in the aria-label:
+            // the short label (the node's visible identifier) leads so
+            // assistive tech gets the same primary label sighted users see,
+            // then the full text. The data-claim attribute carries the id
+            // for clicks. data-plain feeds a CSS-only hover tooltip for
+            // sighted users, so jargon-y short labels get an in-context
+            // plain-language gloss without duplicating anything for
+            // assistive tech.
+            button.setAttribute('aria-label', `${shortLabel(claim)}. ${claim.text}`);
             button.setAttribute('data-plain', `Put simply: ${claim.plain}`);
             button.innerHTML = `<span class="dag-node-label">${escapeHtml(shortLabel(claim))}</span>`;
             inner.appendChild(button);
@@ -290,10 +292,16 @@
     let theoryFilter = '';
     function renderTheoryList() {
       const q = theoryFilter.trim().toLowerCase();
-      const matches = t => !q || t.name.toLowerCase().includes(q)
-        || (t.family || '').toLowerCase().includes(q)
-        || (t.blurb || '').toLowerCase().includes(q)
-        || (t.category || '').toLowerCase().includes(q);
+      // Word-boundary matching: searching "dualism" must not match
+      // "nondualism" — different word, different theory.
+      const qRe = q
+        ? new RegExp(`(^|[^\\p{L}\\p{N}])${q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'iu')
+        : null;
+      const matches = t => !qRe
+        || qRe.test(t.name || '')
+        || qRe.test(t.family || '')
+        || qRe.test(t.blurb || '')
+        || qRe.test(t.category || '');
       const withClaims = E.theories.filter(matches).map(t => {
         const fullN = E.theoryFullClaims(t).size;
         return `<button class="lab-theory-btn" data-theory="${t.id}">
@@ -361,7 +369,6 @@
       const descendants = [...E.descendants(id)];
       const affirming = E.theories.filter(t => E.theoryFullClaims(t).has(id));
       detail.innerHTML = `
-        <p class="micro">Claim ${id}</p>
         <h3 class="lab-claim-title">${escapeHtml(c.text)}</h3>
         <p class="lab-plain">Put simply: ${escapeHtml(c.plain)}</p>
         <div class="lab-claim-cols"><div><p class="micro">↑ Broader claims this leads to</p>${ancestors.length ? `<div class="lab-chip-row">${ancestors.map(a => claimChip(a)).join('')}</div>` : '<p class="lab-empty">Nothing — this is a base claim.</p>'}</div><div><p class="micro">↓ More specific claims built on this</p>${descendants.length ? `<div class="lab-chip-row">${descendants.map(d => claimChip(d)).join('')}</div>` : '<p class="lab-empty">Nothing depends on this yet.</p>'}</div></div>
@@ -419,8 +426,16 @@
     let qstate = null;
     let qhistory = [];
     let forcedQuestionId = null; // Back re-shows the exact popped question instead of re-deriving
+    let shownQuestionId = null; // the question currently on screen — answers/skips act on it, never re-derive
     let qRoundCount = 0;
     let qRound = 1;
+    // Skipped questions get one more chance at round end instead of
+    // vanishing silently: revisitLeft counts down the re-asked ones, and a
+    // second skip is final (it stays skipped and the results say so).
+    let revisitLeft = 0;
+    let revisitTotal = 0;
+    let revisitDone = new Set(); // claim ids already re-asked — never re-queue twice
+    let revisitQueue = []; // re-queued claim ids, asked first so the revisit is literal
     let restartArmed = false;
     let restartTimer = null;
     // Mid-round restart is a two-step tap: the first arms it ("tap again"),
@@ -443,6 +458,10 @@
       qhistory = [];
       qRoundCount = 0;
       qRound = 1;
+      revisitLeft = 0;
+      revisitTotal = 0;
+      revisitDone = new Set();
+      revisitQueue = [];
       lastSettledIds = [];
       lastSettledDir = null;
       qStart.classList.add('hidden');
@@ -463,6 +482,10 @@
       qRoundCount = 0;
       qRound++;
       qhistory = [];
+      revisitLeft = 0;
+      revisitTotal = 0;
+      revisitDone = new Set();
+      revisitQueue = [];
       lastSettledIds = [];
       lastSettledDir = null;
       qResult.classList.add('hidden');
@@ -477,23 +500,58 @@
         forcedQuestionId = null;
         return q;
       }
+      // During the revisit pass, the re-queued claims go first so the
+      // "another chance" promise is literal, not just pool-level.
+      if (revisitQueue.length) {
+        const settled = new Set([...E.affirmed(qstate), ...E.rejected(qstate), ...Object.keys(qstate.skipped || {})]);
+        revisitQueue = revisitQueue.filter(id => !settled.has(id));
+        const next = revisitQueue.shift();
+        if (next) return { id: next };
+      }
       return E.nextQuestion(qstate);
     }
 
     function renderQuestion() {
-      if (qRoundCount >= QUIZ_ROUND_LENGTH) {
-        renderResults(false);
-        return;
+      // Back re-asks the exact popped question; the revisit machinery below
+      // must not interfere with that.
+      if (qRoundCount >= QUIZ_ROUND_LENGTH && !forcedQuestionId) {
+        // A skipped question must not vanish silently: re-ask it before
+        // results. The re-ask pass is bounded (one question each), and a
+        // second skip is final. Propagation may have settled a re-queued
+        // claim meanwhile — drop those so the pass never asks a fresh
+        // question under a "revisiting" label.
+        if (revisitQueue.length) {
+          const settled = new Set([...E.affirmed(qstate), ...E.rejected(qstate), ...Object.keys(qstate.skipped || {})]);
+          revisitQueue = revisitQueue.filter(id => !settled.has(id));
+          if (!revisitQueue.length) revisitLeft = 0;
+        }
+        if (revisitLeft === 0) {
+          const skipped = Object.keys(qstate.skipped || {}).filter(id => !revisitDone.has(id));
+          if (skipped.length) {
+            skipped.forEach(id => { E.unskip(qstate, id); revisitDone.add(id); });
+            revisitQueue = skipped.slice();
+            revisitLeft = skipped.length;
+            revisitTotal = skipped.length;
+            lastSettledIds = [];
+            lastSettledDir = 'revisit';
+          } else {
+            renderResults(false);
+            return;
+          }
+        }
       }
       const q = currentQuestion();
+      shownQuestionId = q ? q.id : null;
       if (!q) {
         renderResults(true);
         return;
       }
       const claim = claimById.get(q.id);
-      $('labQCount').textContent = qRound > 1
-        ? `${qRoundCount + 1} of ${QUIZ_ROUND_LENGTH} · round ${qRound}`
-        : `${qRoundCount + 1} of ${QUIZ_ROUND_LENGTH}`;
+      $('labQCount').textContent = revisitLeft > 0
+        ? `Revisiting a skipped question — ${revisitTotal - revisitLeft + 1} of ${revisitTotal}`
+        : (qRound > 1
+          ? `${qRoundCount + 1} of ${QUIZ_ROUND_LENGTH} · round ${qRound}`
+          : `${qRoundCount + 1} of ${QUIZ_ROUND_LENGTH}`);
       $('labQText').textContent = claim.text;
       $('labQPlain').textContent = `Put simply: ${claim.plain}`;
       const both = E.coverageBoth(qstate, q.id);
@@ -513,6 +571,7 @@
     function renderSettledBy() {
       const el = $('labSettledBy');
       if (!lastSettledDir) { el.textContent = ''; return; }
+      if (lastSettledDir === 'revisit') { el.textContent = 'You skipped some questions earlier — here’s another chance at them before your results.'; return; }
       if (lastSettledDir === 'skip') { el.textContent = 'Last question: skipped — nothing decided.'; return; }
       if (!lastSettledIds.length) { el.textContent = 'Last question: that decided just this claim.'; return; }
       const labels = lastSettledIds.map(id => {
@@ -525,12 +584,16 @@
     }
 
     function answerQuestion(yesNo) {
-      const q = currentQuestion();
+      // Act on the question on screen, not a re-derived one: re-deriving
+      // mid-round could pick a different claim than the user just read.
+      const q = shownQuestionId ? { id: shownQuestionId } : currentQuestion();
+      shownQuestionId = null;
       if (!q) return;
       const before = new Set([...E.affirmed(qstate), ...E.rejected(qstate)]);
       E.answer(qstate, q.id, yesNo);
       qhistory.push({ id: q.id, action: 'answer' });
       qRoundCount++;
+      if (revisitLeft > 0) revisitLeft--;
       lastSettledIds = [...E.affirmed(qstate), ...E.rejected(qstate)]
         .filter(id => !before.has(id) && id !== q.id);
       lastSettledDir = yesNo;
@@ -538,11 +601,13 @@
     }
 
     function skipQuestion() {
-      const q = currentQuestion();
+      const q = shownQuestionId ? { id: shownQuestionId } : currentQuestion();
+      shownQuestionId = null;
       if (!q) return;
       E.skip(qstate, q.id);
       qhistory.push({ id: q.id, action: 'skip' });
       qRoundCount++;
+      if (revisitLeft > 0) revisitLeft--;
       lastSettledIds = [];
       lastSettledDir = 'skip';
       renderQuestion();
@@ -598,13 +663,20 @@
         : '');
     }
 
+    // Results cite their own basis honestly: answers given, skips named,
+    // claims settled — never a bare answer count after a skipped question.
+    function basisLine() {
+      const answered = Object.keys(qstate.answers).length;
+      const decided = E.affirmed(qstate).size + E.rejected(qstate).size;
+      const skippedN = Object.keys(qstate.skipped || {}).length;
+      return `Based on ${answered} answer${answered === 1 ? '' : 's'} from you${skippedN ? ` (${skippedN} skipped)` : ''} — ${decided} claim${decided === 1 ? '' : 's'} settled in total.`;
+    }
+
     function renderResults(exhausted) {
       qMain.classList.add('hidden');
       qResult.classList.remove('hidden');
       $('labQuizResume').classList.add('hidden');
-      const answered = Object.keys(qstate.answers).length;
-      const decided = E.affirmed(qstate).size + E.rejected(qstate).size;
-      const basisLine = `Based on ${answered} answer${answered === 1 ? '' : 's'} from you — ${decided} claim${decided === 1 ? '' : 's'} settled in total.`;
+      const bl = basisLine();
       $('labQuizContinue').classList.toggle('hidden', exhausted);
       $('labResultKicker').textContent = 'Your result · alignment, not elimination';
       if (exhausted) {
@@ -614,7 +686,7 @@
         $('labContinueNote').textContent = 'Your answers settled the remaining questions on their own — every claim they could decide is decided.';
       } else {
         $('labResultTitle').textContent = 'Where your answers land';
-        $('labContinueNote').textContent = `${basisLine} Keep going any time for a sharper picture.`;
+        $('labContinueNote').textContent = `${bl} Keep going any time for a sharper picture.`;
       }
       qMain.classList.add('hidden');
       qResult.classList.remove('hidden');
@@ -672,9 +744,7 @@
       $('labQuizContinue').classList.add('hidden');
       $('labResultKicker').textContent = 'Live ranking · not the final result';
       $('labResultTitle').textContent = 'Where your answers land so far';
-      const answered = Object.keys(qstate.answers).length;
-      const decided = E.affirmed(qstate).size + E.rejected(qstate).size;
-      $('labContinueNote').textContent = `Based on ${answered} answer${answered === 1 ? '' : 's'} from you — ${decided} claim${decided === 1 ? '' : 's'} settled in total.`;
+      $('labContinueNote').textContent = basisLine();
       const top = E.score(qstate)[0];
       if (top && top.agreed === 0) {
         // Scores are sorted best-first, so a zero top score means every
@@ -703,9 +773,14 @@
     $('labQBack').addEventListener('click', () => {
       const last = qhistory.pop();
       if (!last) return;
+      const inRevisit = qRoundCount > QUIZ_ROUND_LENGTH && revisitTotal > 0;
       if (last.action === 'skip') E.unskip(qstate, last.id);
       else E.undo(qstate, last.id);
       qRoundCount = Math.max(0, qRoundCount - 1);
+      if (inRevisit) revisitLeft = Math.min(revisitTotal, revisitLeft + 1);
+      // Backing into the round discards the revisit pass: the un-skipped
+      // claims are simply back in the question pool, so nothing vanishes.
+      if (qRoundCount < QUIZ_ROUND_LENGTH) { revisitLeft = 0; revisitTotal = 0; revisitDone = new Set(); revisitQueue = []; }
       forcedQuestionId = last.id;
       lastSettledIds = [];
       lastSettledDir = null;

@@ -339,6 +339,57 @@ async function main() {
     check(text(env, 'labQText') !== qs || !hidden(env, 'labQuizResult'), 'skip advances');
   }
 
+  // skipped questions are re-asked at round end instead of vanishing silently
+  restartQuiz(env);
+  for (let i = 0; i < 11; i++) click(env, 'labAgree');
+  check(hidden(env, 'labQuizResult'), '11 answers do not end the round early');
+  const skippedQ = text(env, 'labQText');
+  click(env, 'labSkip'); // skip question 12 of 12
+  check(hidden(env, 'labQuizResult'), 'round does not end on a skipped 12th question');
+  check(text(env, 'labQCount') === 'Revisiting a skipped question — 1 of 1',
+    'skipped question is re-asked at round end: ' + text(env, 'labQCount'));
+  check(text(env, 'labQText') === skippedQ, 'the re-asked question is the skipped one, not a fresh pick');
+  check(text(env, 'labSettledBy').includes('another chance'),
+    'revisit explains itself: ' + text(env, 'labSettledBy').slice(0, 70));
+  click(env, 'labSkip'); // skip again — final
+  check(!hidden(env, 'labQuizResult'), 'second skip is final and ends the round');
+  check(text(env, 'labContinueNote').includes('(1 skipped)'),
+    'results name the skip in the basis line: ' + text(env, 'labContinueNote').slice(0, 90));
+
+  // two skips: every skipped question gets exactly one more chance, then stays skipped
+  restartQuiz(env);
+  click(env, 'labSkip'); click(env, 'labSkip');
+  for (let i = 0; i < 10; i++) click(env, 'labAgree');
+  // finish the round however the engine routes it (revisit pass, propagation, or straight to results)
+  let rguard = 0;
+  while (hidden(env, 'labQuizResult') && rguard++ < 8) click(env, 'labSkip');
+  check(!hidden(env, 'labQuizResult'), 'two skips still end the round');
+  check(text(env, 'labContinueNote').includes('(2 skipped)'),
+    'both skips named in the basis line: ' + text(env, 'labContinueNote').slice(0, 90));
+
+  // theory filter: word-boundary matching, so "dualism" skips "nondualism"
+  fireInput(env, 'labTheorySearch', 'dualism');
+  const dualHtml = html(env, 'labTheoryList');
+  check(dualHtml.toLowerCase().includes('dualism') && !dualHtml.toLowerCase().includes('nondualism'),
+    'theory search matches whole words ("dualism" finds dualists, not nondualists)');
+  fireInput(env, 'labTheorySearch', '');
+
+  // content: round-22 jargon audit — the fixed claims must carry inline glosses
+  const claimsSrc = read('data/claims.js');
+  const glosses = ['expectations flowing down from higher brain areas',
+    'waves adding together and canceling out', 'has ontological priority)',
+    'particles sitting in two states at once', 'an ordinary computer running step-by-step code',
+    'the moment quantum possibilities snap into one outcome', 'parts vibrating in sync',
+    'fast rhythmic firing', 'firing in lockstep rhythm', 'the felt quality of experience',
+    'small vertical teams of neurons', 'maps tied to movement and sensing',
+    'gained when another process scans them'];
+  const missing = glosses.filter(g => !claimsSrc.includes(g));
+  check(missing.length === 0, `all 13 inline jargon glosses present${missing.length ? ' (missing: ' + missing.join('; ') + ')' : ''}`);
+
+  // claim groups show a visible scrollbar affordance, not hover-only chrome
+  check(read('styles.css').includes('.dag-scroll::-webkit-scrollbar-thumb'),
+    'claim-group scrollers have a visible styled scrollbar');
+
   // engine-level: contradictions + validation
   const mContra = CE.newQuiz();
   CE.answer(mContra, 'c0', 'yes');

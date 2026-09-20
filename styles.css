@@ -412,7 +412,14 @@
       overflow-x: auto;
       border-top: 1px solid var(--line);
       background: #0f1718;
+      /* The "scroll sideways to see all" label needs a visible affordance:
+         an always-visible slim scrollbar, not just hover-only chrome. */
+      scrollbar-width: thin;
+      scrollbar-color: #7aa39f rgba(255, 255, 255, 0.08);
     }
+    .dag-scroll::-webkit-scrollbar { height: 10px; }
+    .dag-scroll::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.06); }
+    .dag-scroll::-webkit-scrollbar-thumb { background: #7aa39f; border-radius: 5px; }
     .dag-component {
       position: relative;
       min-width: 100%;

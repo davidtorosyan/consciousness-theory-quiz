@@ -412,7 +412,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c47",
     short: "The brain is a prediction engine",
-    text: "The brain is fundamentally a prediction machine: top-down predictions about the causes of sensory input are constantly compared against bottom-up prediction errors.",
+    text: "The brain is fundamentally a prediction machine: top-down predictions (expectations flowing down from higher brain areas) about the causes of sensory input are constantly compared against bottom-up prediction errors (mismatches flowing up from the senses).",
     plain: "Your brain doesn't passively receive the world — it predicts it, then corrects its guesses.",
     entails: []
   },
@@ -440,7 +440,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c51",
     short: "Fields bind experience together",
-    text: "Electromagnetic fields bind distributed neural activity into unified conscious experience through their physical properties of superposition and interference.",
+    text: "Electromagnetic fields bind distributed neural activity into unified conscious experience through their physical properties of superposition and interference (waves adding together and canceling out).",
     plain: "The field stitches scattered brain activity into one seamless experience — it's the physical glue.",
     entails: []
   },
@@ -707,7 +707,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c88",
     short: "Neutral ground unknowable",
-    text: "The psychophysically neutral reality underlying mind and matter cannot be apprehended directly at all — it is the condition of knowledge, not an object of it; neither mind nor matter has ontological priority.",
+    text: "The reality underlying mind and matter — neutral, neither mental nor physical — cannot be apprehended directly at all: it is the condition of knowledge, not an object of it; neither mind nor matter is more fundamental (has ontological priority).",
     plain: "The deep reality behind mind and matter exists, but can never be directly known.",
     entails: []
   },
@@ -892,7 +892,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c115",
     short: "Microtubule collapses are experience",
-    text: "Quantum superpositions inside neuronal microtubules collapse at a gravity-linked threshold, and each such collapse is a primitive moment of conscious experience.",
+    text: "Quantum superpositions (particles sitting in two states at once) inside neuronal microtubules (tiny tubes forming the cell's skeleton) collapse at a gravity-linked threshold, and each such collapse is a primitive moment of conscious experience.",
     plain: "Tiny quantum collapses inside brain cells are the atoms of experience.",
     entails: ["c114"]
   },
@@ -1312,7 +1312,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c175",
     short: "Classical computers can't be conscious",
-    text: "A classical Turing machine may become intelligent but can never become conscious: sentience requires a quantum computer as its substrate.",
+    text: "A classical Turing machine (an ordinary computer running step-by-step code) may become intelligent but can never become conscious: sentience requires a quantum computer as its substrate (its physical basis).",
     plain: "Regular computers will never wake up — only quantum computers could.",
     entails: []
   },
@@ -1326,7 +1326,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c177",
     short: "Quantum collapse is consciousness's gap",
-    text: "Wave-function collapse is a causal gap in physics that a non-physical consciousness could fill without violating known physics: consciousness collapses the wave function precisely where physics goes silent.",
+    text: "Wave-function collapse (the moment quantum possibilities snap into one outcome) is a causal gap in physics that a non-physical consciousness could fill without violating known physics: consciousness collapses the wave function precisely where physics goes silent.",
     plain: "Collapse is the one place physics leaves open — and consciousness fills it.",
     entails: ["c166"]
   },
@@ -1431,7 +1431,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c192",
     short: "Consciousness is nested EM fields",
-    text: "Consciousness just is a nested hierarchy of interacting electromagnetic fields; resonance builds the hierarchy, field shapes are qualia (your feelings, like the redness of red), and fields causally shape neural firing directly through the field itself — one field pushing neurons around without synapses (this direct field-to-neuron push is what scientists call ephaptic coupling).",
+    text: "Consciousness just is a nested hierarchy of interacting electromagnetic fields; resonance (parts vibrating in sync) builds the hierarchy, field shapes are qualia (your feelings, like the redness of red), and fields causally shape neural firing directly through the field itself — one field pushing neurons around without synapses (this direct field-to-neuron push is what scientists call ephaptic coupling).",
     plain: "Consciousness is literally layers of resonating electric and magnetic fields — their shapes are your feelings.",
     entails: ["c191","c50","c52"]
   },
@@ -1452,7 +1452,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c195",
     short: "Synchrony binds perception",
-    text: "Consciousness is transient large-scale neuronal synchronization: distributed processing is bound into unified percepts by synchronized firing, especially gamma-band.",
+    text: "Consciousness is transient large-scale neuronal synchronization: distributed processing is bound into unified percepts by synchronized firing, especially gamma-band (fast rhythmic firing).",
     plain: "Brain regions firing in sync — that's what stitches scattered processing into one conscious picture.",
     entails: []
   },
@@ -1473,7 +1473,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c198",
     short: "Oscillations make mind",
-    text: "Neurons oscillating in phase, resonating with distant groups, are the neurobiological root of cognition; the brain's internal reality is generated from these oscillations.",
+    text: "Neurons oscillating in phase (firing in lockstep rhythm), resonating with distant groups, are the neurobiological root of cognition; the brain's internal reality is generated from these oscillations.",
     plain: "When distant brain cells hum in sync, that synchrony is the root of thought — the mind is built from coordinated rhythms.",
     entails: []
   },
@@ -1508,7 +1508,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c203",
     short: "Feelings are the brain's distinctions",
-    text: "What philosophers call 'qualia' are fine-grained distinctions made by neural systems among signals: differences in what something feels like are differences in the neural structure and dynamics underlying it.",
+    text: "What philosophers call 'qualia' (the felt quality of experience — what red feels like) are fine-grained distinctions made by neural systems among signals: differences in what something feels like are differences in the neural structure and dynamics underlying it.",
     plain: "What a feeling feels like just is the brain telling things apart — change the telling-apart, change the feeling.",
     entails: ["c0"]
   },
@@ -1522,7 +1522,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c205",
     short: "Thousands of cortical columns vote",
-    text: "The neocortex does not build one central model of the world: roughly 150,000 cortical columns each learn complete models of objects and concepts using sensorimotor reference frames, and unified perception is the consensus they reach by voting — no central processor anywhere.",
+    text: "The neocortex does not build one central model of the world: roughly 150,000 cortical columns (small vertical teams of neurons) each learn complete models of objects and concepts using sensorimotor reference frames (maps tied to movement and sensing), and unified perception is the consensus they reach by voting — no central processor anywhere.",
     plain: "Your brain runs thousands of little world-models at once and lets them vote — perception is whatever they agree on.",
     entails: ["c0"]
   },
@@ -1669,7 +1669,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c226",
     short: "Mental states can go unscanned",
-    text: "Perceptions, intentions, and organized purposive action can all proceed without introspective awareness — much mental activity is never scanned — so introspective consciousness is a relational property some states acquire, not an intrinsic glow of all experience.",
+    text: "Perceptions, intentions, and organized purposive action can all proceed without introspective awareness — much mental activity is never scanned — so introspective consciousness is a relational property some states acquire (gained when another process scans them), not an intrinsic glow of all experience.",
     plain: "Your brain does plenty of perceiving and deciding with nobody home — being scanned is the exception, not the rule.",
     entails: ["c225"]
   },
