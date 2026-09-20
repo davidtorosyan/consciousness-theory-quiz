@@ -128,7 +128,12 @@
         scroller.className = 'dag-scroll';
         scroller.setAttribute('tabindex', '0');
         scroller.setAttribute('role', 'region');
-        scroller.setAttribute('aria-label', `Claim map cluster ${componentIndex + 1} — scroll sideways to see all claims`);
+        // Name the group after its most general claim(s) so the label means
+        // something, instead of exposing the internal component index.
+        const rootShorts = (levels.get(0) || []).slice(0, 2)
+          .map(id => shortLabel(claimById.get(id))).join(' · ');
+        scroller.setAttribute('aria-label',
+          `Claim group about “${rootShorts}” — ${ids.length} connected claims, scroll sideways to see all`);
         const inner = document.createElement('div');
         inner.className = 'dag-component';
         inner.style.height = `${DAG_PAD_TOP + rows.length * DAG_ROW_H + 12}px`;
@@ -393,6 +398,7 @@
     const QUIZ_RAIL_TOP = 8;
     let qstate = null;
     let qhistory = [];
+    let forcedQuestionId = null; // Back re-shows the exact popped question instead of re-deriving
     let qRoundCount = 0;
     let qRound = 1;
     let lastSettledIds = [];
@@ -429,6 +435,11 @@
     }
 
     function currentQuestion() {
+      if (forcedQuestionId) {
+        const q = { id: forcedQuestionId };
+        forcedQuestionId = null;
+        return q;
+      }
       return E.nextQuestion(qstate);
     }
 
@@ -449,11 +460,11 @@
       $('labQText').textContent = claim.text;
       $('labQPlain').textContent = `Put simply: ${claim.plain}`;
       const both = E.coverageBoth(qstate, q.id);
-      $('labQCoverage').textContent = `Agreeing settles ${both.yes} claim${both.yes === 1 ? '' : 's'} · disagreeing settles ${both.no} — the most informative question right now.`;
+      $('labQCoverage').textContent = `Why this question: one answer decides several claims at once — yes decides ${both.yes}, no decides ${both.no}.`;
       const affN = E.affirmed(qstate).size;
       const rejN = E.rejected(qstate).size;
       $('labSettled').textContent = (affN + rejN)
-        ? `Settled so far: ${affN} agreed · ${rejN} rejected · ${E.claims.length - affN - rejN} open`
+        ? `Decided so far: ${affN} agreed · ${rejN} rejected · ${E.claims.length - affN - rejN} open`
         : '';
       $('labQBack').classList.toggle('hidden', qhistory.length === 0);
       renderSettledBy();
@@ -463,15 +474,15 @@
 
     function renderSettledBy() {
       const el = $('labSettledBy');
-      if (lastSettledDir === 'skip') { el.textContent = 'Skipped — nothing settled.'; return; }
-      if (!lastSettledIds.length) { el.textContent = 'That settles just this claim.'; return; }
+      if (lastSettledDir === 'skip') { el.textContent = 'Skipped — nothing decided.'; return; }
+      if (!lastSettledIds.length) { el.textContent = 'That decides just this claim.'; return; }
       const labels = lastSettledIds.map(id => {
         const c = claimById.get(id);
         return c ? c.plain : id;
       }).join(' · ');
       el.textContent = lastSettledDir === 'no'
         ? `That also ruled out: ${labels} — they were built on the claim you rejected.`
-        : `That also settled: ${labels} — they follow from the claim you agreed with.`;
+        : `That also decided: ${labels} — they follow from the claim you agreed with.`;
     }
 
     function answerQuestion(yesNo) {
@@ -591,6 +602,7 @@
       if (last.action === 'skip') E.unskip(qstate, last.id);
       else E.undo(qstate, last.id);
       qRoundCount = Math.max(0, qRoundCount - 1);
+      forcedQuestionId = last.id;
       lastSettledIds = [];
       lastSettledDir = null;
       renderQuestion();

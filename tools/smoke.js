@@ -185,8 +185,8 @@ async function main() {
   check(claimText.get(text(env, 'labQText')) === 'c34', 'first question is the gentle opener (c34), not c0');
   check(text(env, 'labQCount') === '1 of 12', 'progress shows question N of 12: ' + text(env, 'labQCount'));
   check(text(env, 'labQPlain').startsWith('Put simply:'), 'put-simply line renders');
-  check(text(env, 'labQCoverage').includes('Agreeing settles') && text(env, 'labQCoverage').includes('disagreeing settles'),
-    'coverage copy is per-direction: ' + text(env, 'labQCoverage').slice(0, 80));
+  check(text(env, 'labQCoverage').includes('Why this question') && text(env, 'labQCoverage').includes('yes decides') && text(env, 'labQCoverage').includes('no decides'),
+    'coverage copy is per-direction and plain-language: ' + text(env, 'labQCoverage').slice(0, 90));
 
   // back button
   const q1 = text(env, 'labQText');
@@ -198,6 +198,16 @@ async function main() {
   check(text(env, 'labQText') === q1, 'back returns to previous question');
   check(text(env, 'labQCount') === '1 of 12', 'counter decrements on back: ' + text(env, 'labQCount'));
   click(env, 'labAgree'); // re-answer, move on
+
+  // skip -> back must return the exact skipped question, not a re-derived one
+  const qs1 = text(env, 'labQText');
+  click(env, 'labSkip');
+  const qs2 = text(env, 'labQText');
+  check(qs1 !== qs2, 'skipping advances to the next question');
+  click(env, 'labQBack');
+  check(text(env, 'labQText') === qs1, 'back after skip returns the exact skipped question');
+  check(text(env, 'labQCount') === '2 of 12', 'counter decrements on back after skip');
+  click(env, 'labSkip'); // skip again, move on
 
   check(html(env, 'labScores').includes(' of '), 'live alignment scores render');
   check(html(env, 'labScores').includes('lab-score-blurb'), 'live scores show theory blurbs');
@@ -224,12 +234,12 @@ async function main() {
       CE.answer(mirrorA, q.id, 'yes');
       const t = text(env, 'labSettledBy');
       sawAffirm = true;
-      check(t.startsWith('That also settled:') && t.endsWith('they follow from the claim you agreed with.'),
+      check(t.startsWith('That also decided:') && t.endsWith('they follow from the claim you agreed with.'),
         'affirm trace explains direction: ' + t.slice(0, 100));
     } else {
       click(env, 'labSkip');
       CE.skip(mirrorA, q.id);
-      check(text(env, 'labSettledBy') === 'Skipped — nothing settled.', 'skip line renders');
+      check(text(env, 'labSettledBy') === 'Skipped — nothing decided.', 'skip line renders');
     }
   }
   check(sawAffirm, 'observed an affirm-propagation trace');
@@ -256,10 +266,10 @@ async function main() {
       CE.answer(mirrorB, q.id, 'yes');
       const t = text(env, 'labSettledBy');
       if (newAnc.length) {
-        check(t.startsWith('That also settled:') && t.endsWith('they follow from the claim you agreed with.'),
+        check(t.startsWith('That also decided:') && t.endsWith('they follow from the claim you agreed with.'),
           'affirm trace explains direction: ' + t.slice(0, 100));
       } else {
-        check(t === 'That settles just this claim.', 'no-propagation line renders');
+        check(t === 'That decides just this claim.', 'no-propagation line renders');
       }
     }
   }
