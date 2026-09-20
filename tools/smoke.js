@@ -140,6 +140,21 @@ async function main() {
   const pending = (listHtml.match(/data-meta="/g) || []).length;
   check(withClaims === M && pending === 120 - M, `theory list: ${M} with claims + ${120 - M} pending (got ${withClaims}+${pending})`);
 
+  // jargon regression guard: removed terms must not reappear unglossed
+  const banned = ['numerically identical', 'subpersonal', 'prime mover', 'explanatory gap', 'non-separability'];
+  const bad = [];
+  for (const c of CLAIMS) {
+    const hay = `${c.text} ${c.short || ''} ${c.plain || ''}`.toLowerCase();
+    for (const b of banned) if (hay.includes(b)) bad.push(`${c.id}:${b}`);
+  }
+  for (const t of THEORIES) {
+    const hay = `${t.name} ${t.blurb || ''}`.toLowerCase();
+    for (const b of banned) if (hay.includes(b)) bad.push(`theory${t.id}:${b}`);
+  }
+  check(bad.length === 0, `no regressed jargon in claims/theories${bad.length ? ' (' + bad.slice(0, 6).join(', ') + ')' : ''}`);
+  const badShorts = CLAIMS.filter(c => (c.short || '').startsWith('Phenomenal')).map(c => c.id);
+  check(badShorts.length === 0, `no short label leads with unglossed 'Phenomenal'${badShorts.length ? ' (' + badShorts.join(',') + ')' : ''}`);
+
   // theory search filter
   fireInput(env, 'labTheorySearch', 'integrated information');
   const filteredHtml = html(env, 'labTheoryList');

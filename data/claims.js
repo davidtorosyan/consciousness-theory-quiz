@@ -742,7 +742,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c93",
     short: "Mental events are physical",
-    text: "Every particular mental event — this pain, that thought — is one and the same thing as a physical event in the brain ('numerically identical'); there is no extra mental stuff.",
+    text: "Every particular mental event — this pain, that thought — is one and the same thing as a physical event in the brain: a single event, not two linked things; there is no extra mental stuff.",
     plain: "Each of your thoughts just is a physical brain event.",
     contradicts: ["c6"],
     entails: []
@@ -842,7 +842,7 @@ window.CLAIMS = Object.freeze([
   },
   {
     id: "c108",
-    short: "Phenomenal character is representational content",
+    short: "What experience feels like is its content",
     text: "What an experience feels like is nothing more than what it represents — its content about the world.",
     plain: "How it feels is fully fixed by what it's about.",
     entails: ["c107"]
@@ -1053,7 +1053,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c138",
     short: "No self-illuminating core",
-    text: "Awareness is not self-intimating in any way that could ground certainty: it has no privileged reflexive access to itself, so experience can never be its own foundation.",
+    text: "Awareness does not reveal itself directly ('self-intimating') in any way that could ground certainty: it has no privileged inside access to itself, so experience can never be its own foundation.",
     plain: "Your awareness can't vouch for itself from the inside — there's no inner bedrock.",
     entails: ["c137"]
   },
@@ -1074,7 +1074,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c141",
     short: "Relations are primary, things secondary",
-    text: "Everything is relational, and what we call things — the relata — are secondary to relationship; subjects and objects co-arise, and neither is prior.",
+    text: "Everything is relational, and what we call things are secondary to relationships — 'relata' is the philosopher's word for the things so related; subjects and objects arise together, and neither comes first.",
     plain: "Relationships come first; the 'things' in them come second — including you and the world you meet.",
     entails: []
   },
@@ -1157,7 +1157,7 @@ window.CLAIMS = Object.freeze([
   },
   {
     id: "c153",
-    short: "Phenomenal properties have causal powers",
+    short: "Felt-experience properties have causal powers",
     text: "Felt-experience properties — 'phenomenal' properties, what experiences feel like from the inside — are not causally idle: they are the very things that make matter behave as it does.",
     plain: "How things feel isn't a side-show — feelings are what make matter move.",
     entails: ["c25"]
@@ -1165,21 +1165,21 @@ window.CLAIMS = Object.freeze([
   {
     id: "c154",
     short: "Subjects don't combine",
-    text: "Simple subjects do not fuse into a larger subject: complex experience is constituted relationally at the micro-level, without any new macrosubject ever forming.",
+    text: "Simple subjects do not fuse into a larger subject: complex experience is made what it is by relationships at the micro-level, without any new larger subject ever forming.",
     plain: "Small minds don't merge into a big mind — your full experience is built from relations between them.",
     entails: []
   },
   {
     id: "c155",
     short: "Simples have bare perspective",
-    text: "Fundamental simples possess a bare, intrinsic consciousness-as-such — a point of view with no rich content of its own — which is what makes them subjects at all.",
+    text: "The simplest, partless building blocks of reality ('simples') possess a bare, basic consciousness — a point of view with no rich content of its own — which is what makes them subjects at all.",
     plain: "The tiniest building blocks have a bare inner point of view, nothing richer.",
     entails: ["c25"]
   },
   {
     id: "c156",
-    short: "Phenomenal qualities are relational",
-    text: "The richness of experience — its experiential qualities — is relationally constituted: how a microsubject relates to other microsubjects determines what its experience is like.",
+    short: "Felt qualities are relational",
+    text: "The richness of experience — its experiential qualities — is made what it is by relationships: how a microsubject (a tiny subject) relates to other microsubjects determines what its experience is like.",
     plain: "How experience feels comes from relations between tiny minds, not from each one on its own.",
     entails: []
   },
@@ -1214,7 +1214,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c161",
     short: "Entanglement dissolves the combination problem",
-    text: "Quantum indeterminacy and entanglement dissolve panpsychism's subject-summing combination problem: classical assumptions about how parts compose wholes simply don't apply at the quantum level.",
+    text: "Quantum indeterminacy and entanglement dissolve panpsychism's combination problem — the puzzle of how many tiny subjects add up to one unified subject: classical assumptions about how parts compose wholes simply don't apply at the quantum level.",
     plain: "Quantum entanglement makes the 'how do small minds add up?' problem disappear.",
     entails: []
   },
@@ -1298,7 +1298,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c173",
     short: "Superposition structure fixes qualia",
-    text: "The qualitative character of experience is fixed by the structure of the superposition: from the inside, phenomenology is classical and definite even though its substrate is quantum.",
+    text: "The qualitative character of experience is fixed by the structure of the superposition: from the inside, experience is classical and definite even though its substrate is quantum.",
     plain: "What an experience feels like is set by the shape of its quantum superposition.",
     entails: ["c172"]
   },
@@ -1389,14 +1389,14 @@ window.CLAIMS = Object.freeze([
   {
     id: "c186",
     short: "Neural qubits are nuclear spins",
-    text: "Nuclear spins of phosphorus atoms can serve as neural qubits — the brain may store and process quantum information in biochemistry, with phosphate ions as qubit transporters.",
+    text: "Nuclear spins of phosphorus atoms can serve as neural qubits — 'qubits' are the basic units of quantum information, like bits but quantum; the brain may store and process quantum information in biochemistry, with phosphate ions carrying the qubits around.",
     plain: "Atoms of phosphorus in the brain could work as quantum bits.",
     entails: []
   },
   {
     id: "c187",
     short: "Posner molecules shield qubits",
-    text: "Posner molecules (calcium-phosphate clusters) protect phosphorus nuclear-spin qubits from decoherence long enough for quantum processing in the brain.",
+    text: "Posner molecules (calcium-phosphate clusters) protect phosphorus nuclear-spin qubits from decoherence — the environment scrambling their delicate quantum behavior — long enough for quantum processing in the brain.",
     plain: "Tiny phosphate clusters in the brain could shield these quantum bits from noise long enough to compute.",
     entails: ["c186"]
   },
@@ -1557,28 +1557,28 @@ window.CLAIMS = Object.freeze([
   {
     id: "c210",
     short: "The thalamus generates experience",
-    text: "Felt consciousness — 'phenomenal' consciousness, what experience feels like from the inside — is generated by thalamic dynamics: synchronized activity in dorsal-thalamic neurons, gated and coordinated by the thalamic reticular nucleus, rather than by cortex alone. The cortex computes representational content, but the thalamus displays and thereby experiences it.",
+    text: "Felt consciousness — 'phenomenal' consciousness, what experience feels like from the inside — is generated in the thalamus, the brain's central relay hub: rhythmic, synchronized firing of thalamic neurons — switched on and off by a thin shell of control neurons wrapped around it (the reticular nucleus) — rather than by the cortex alone. The cortex computes what things represent, but the thalamus displays it, and that displaying is the experiencing.",
     plain: "Your cortex does the math, but it's the thalamus — the brain's central hub — where the experiencing actually happens.",
     entails: ["c0"]
   },
   {
     id: "c211",
     short: "We experience results, never processes",
-    text: "Consciousness never has introspective access to the computations that produce it — saccadic suppression, inattentional blindness, the sudden arrival of solutions and emotions all show we experience only the results of cortical processing, never the processing itself.",
+    text: "Consciousness never has introspective access to the computations that produce it — saccadic suppression (vision switching off during rapid eye movements), inattentional blindness, the sudden arrival of solutions and emotions all show we experience only the results of cortical processing, never the processing itself.",
     plain: "You're never aware of your brain computing — only of the finished answers it hands you.",
     entails: []
   },
   {
     id: "c212",
     short: "Apical dendrites gate awareness",
-    text: "Apical dendrites of layer-5 pyramidal neurons perform nonlinear integration of top-down and bottom-up input streams: when distal and proximal signals coincide, dendritic calcium spikes amplify the response, and this cellular coincidence detection gates what enters conscious perception.",
+    text: "Awareness is gated by a coincidence detector inside single neurons: when a pyramidal neuron's far-reaching branches (its 'apical' dendrites, carrying top-down context) receive signals at the same moment as its near branches (carrying bottom-up sensory input), the neuron fires an amplified burst — a calcium spike — and that burst is what lets information into conscious perception.",
     plain: "Inside single brain cells, the branch-tips act as gatekeepers — when top-down and bottom-up signals meet there, perception is born.",
     entails: ["c0"]
   },
   {
     id: "c213",
-    short: "Breaking dendrite–soma coupling breaks consciousness",
-    text: "Conscious states require intact coupling between dendrites and cell bodies: general anesthesia disrupts exactly this dendritic-somatic coupling, blocking consciousness without silencing overall brain activity.",
+    short: "Breaking branch–body coupling breaks consciousness",
+    text: "Conscious states require intact coupling between a neuron's branches (dendrites) and its cell body: general anesthesia disrupts exactly this branch-to-body coupling, blocking consciousness without silencing overall brain activity.",
     plain: "Knock out the link between a cell's branches and its body and consciousness vanishes — even while the brain keeps humming.",
     entails: ["c212"]
   },
@@ -1598,7 +1598,7 @@ window.CLAIMS = Object.freeze([
   },
   {
     id: "c216",
-    short: "Phenomenal states are action urges",
+    short: "Felt states are action urges",
     text: "The contents of felt experience — 'phenomenal' contents, what experiences feel like — are inclinations and urges bound to action plans: the urge to hold your breath, the pull of pain withdrawal, not detached sensory qualities. What becomes conscious is precisely what bears on conflicting action tendencies.",
     plain: "What you're aware of isn't scenery — it's urges: your brain's competing plans of action, felt from the inside.",
     entails: []
@@ -1759,7 +1759,7 @@ window.CLAIMS = Object.freeze([
   },
   {
     id: "c239",
-    short: "Introspection fabricates phenomenality",
+    short: "Introspection fabricates 'what-it-is-like'",
     text: "It is an introspective illusion that experience contains special 'what-it-is-like' qualities. What exists is functional neural processes — a complex informational engagement with the world — not an inner realm of ineffable feels.",
     plain: "It strongly seems like experiences have special inner qualities. That seeming is itself the illusion.",
     entails: ["c53"]
@@ -2005,7 +2005,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c274",
     short: "Meanings live in the body",
-    text: "Meaning shows up in the body before any judgment: the world presents itself as solicitations, possibilities, obstacles, and bodily powers — a field of significance the lived body understands pre-reflectively, not a neutral array of data awaiting interpretation.",
+    text: "Meaning shows up in the body before any judgment: the world presents itself as invitations to act ('solicitations'), possibilities, obstacles, and bodily powers — a field of significance the lived body understands without thinking about it, not a neutral array of data awaiting interpretation.",
     plain: "Before you think 'that cup is grabbable,' your body already knows. The world speaks to your body first — in urges and possibilities.",
     entails: ["c273"]
   },
@@ -2101,10 +2101,10 @@ window.CLAIM_THEORIES = Object.freeze([
   { id: 40, name: "Builes's modal idealism", blurb: "It is metaphysically necessary that everything fundamental is conscious — possible worlds are divine thoughts.", family: "Idealism", claims: ["c147"], caveat: "The 'ideal observer' sustaining possible worlds is presented in the CTT entry as divine; Builes's argument requires an ideal observer, which may be divine or a structurally similar observer." },
   { id: 61, name: "A. Harris's fundamental-field panpsychism", blurb: "Consciousness is a fundamental field, like spacetime; subjects need the right arrangement.", family: "Panpsychism", claims: ["c149"], caveat: "Harris herself remains split between brain-based and panpsychic explanations and is not convinced panpsychism is correct — she presents it as a valid category of possible solutions." },
   { id: 62, name: "Tye's irreducible consciousness*", blurb: "Phenomenal consciousness is on/off and irreducible; fundamental 'consciousness*' scales up into complex minds.", family: "Panpsychism", claims: ["c151","c152"] },
-  { id: 63, name: "Mørch's phenomenal-powers panpsychism", blurb: "Phenomenal properties aren't idle — they are the causal powers that make matter behave.", family: "Panpsychism", claims: ["c153"] },
-  { id: 64, name: "Kadić's monadic panpsychism", blurb: "Micro-subjects don't combine — complex experience is relationally constituted between them.", family: "Panpsychism", claims: ["c154","c155","c156"] },
+  { id: 63, name: "Mørch's phenomenal-powers panpsychism", blurb: "Felt-experience properties aren't idle — they are the causal powers that make matter behave.", family: "Panpsychism", claims: ["c153"] },
+  { id: 64, name: "Kadić's monadic panpsychism", blurb: "Micro-subjects don't combine — complex experience is made what it is by relationships between them.", family: "Panpsychism", claims: ["c154","c155","c156"] },
   { id: 65, name: "Schneider–Bailey entangled superpsychism", blurb: "The deepest level hosts a superconscious entangled megaobject; spacetime emerges from prototime.", family: "Panpsychism", claims: ["c158","c159"] },
-  { id: 66, name: "Gambini–Pullin quantum panprotopsychism", blurb: "Quantum events have inner phenomenal aspects; entanglement dissolves the combination problem.", family: "Panpsychism", claims: ["c160","c161","c162"] },
+  { id: 66, name: "Gambini–Pullin quantum panprotopsychism", blurb: "Quantum events have inner felt aspects; entanglement dissolves the combination problem.", family: "Panpsychism", claims: ["c160","c161","c162"] },
   { id: 67, name: "Reber's cellular basis of consciousness", blurb: "Sentience began with life: every living cell has a primitive mind; minds can't be computed.", family: "Panpsychism", claims: ["c163","c164"] },
   { id: 68, name: "Wigner–von Neumann consciousness-collapse", blurb: "The quantum measurement chain terminates in conscious experience; mind acts on physics.", family: "Quantum", claims: ["c166","c167"], caveat: "Wigner later abandoned this hypothesis after decoherence removed its motivation, and recent scholarship argues the 'consciousness causes collapse' reading of von Neumann is overstated — he formalized the measurement chain but ascribed no causal power to the observer's 'abstract ego.'" },
   { id: 69, name: "Stapp's quantum collapse via questions", blurb: "Conscious attention — asking yes-or-no questions of nature — collapses the wave function.", family: "Quantum", claims: ["c169","c170","c171"] },

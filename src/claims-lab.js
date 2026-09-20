@@ -562,7 +562,7 @@
           : `You agree with ${result.agreed} of its ${result.total} claims${result.disagreed ? `, and reject ${result.disagreed}` : ''}.`;
         return `
         <div class="lab-result-row${index === 0 ? ' top' : ''}">
-          <span class="lab-result-rank">${index + 1}</span>
+          <span class="lab-result-rank">#${index + 1}</span>
           <div><strong>${escapeHtml(result.theory.name)}</strong>
           ${result.theory.blurb ? `<p class="lab-result-blurb">${escapeHtml(result.theory.blurb)}</p>` : ''}
           <p>${line}</p>
