@@ -15,6 +15,7 @@ const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
 const NEED_IDS = ['labQuizStart', 'labQuizMain', 'labQuizResult', 'labQuizBegin', 'labQuizRestart',
   'labQuizContinue', 'labContinueNote', 'labAgree', 'labDisagree', 'labSkip', 'labQBack', 'labQText', 'labQPlain', 'labQCount',
   'labQCoverage', 'labSettled', 'labSettledBy', 'labTension', 'labScores', 'labResultList', 'labClaimGraph',
+  'labQRanking', 'labQuizResume',
   'labClaimDetail', 'labTheoryList', 'labTheorySearch', 'labDetail', 'labBack', 'labTabClaims', 'labTabTheories',
   'labClaims', 'labTheories', 'quizCountLine', 'exploreDek', 'updateBanner', 'updateReload'];
 
@@ -132,6 +133,11 @@ async function main() {
   check(text(env, 'exploreDek').includes(`${N} claims`) && text(env, 'exploreDek').includes(`${M} theories mapped so far`),
     'explorer dek is dynamic');
   check(env.els.get('labClaimGraph').querySelectorAll('.dag-node').length === N, `graph rendered ${N} claim nodes`);
+  const scrollers = env.els.get('labClaimGraph').querySelectorAll('.dag-scroll');
+  const badPlural = [...scrollers].filter(s => (s.getAttribute('aria-label') || '').includes('1 connected claims'));
+  check(scrollers.length > 0 && badPlural.length === 0, `claim group labels pluralize correctly (${scrollers.length} groups)`);
+  const internalIds = [...scrollers].filter(s => (s.getAttribute('aria-label') || '').includes('Claim map cluster'));
+  check(internalIds.length === 0, 'no internal cluster ids leak into group labels');
   const firstNode = env.els.get('labClaimGraph').querySelectorAll('.dag-node')[0];
   check(firstNode.title === '' && firstNode.getAttribute('title') === undefined,
     'graph node buttons carry no title (claim text exposed once to screen readers)');
@@ -234,12 +240,12 @@ async function main() {
       CE.answer(mirrorA, q.id, 'yes');
       const t = text(env, 'labSettledBy');
       sawAffirm = true;
-      check(t.startsWith('That also decided:') && t.endsWith('they follow from the claim you agreed with.'),
-        'affirm trace explains direction: ' + t.slice(0, 100));
+      check(t.startsWith('Last question: that also decided:') && t.endsWith('they follow from the claim you agreed with.'),
+        'affirm trace explains direction: ' + t.slice(0, 110));
     } else {
       click(env, 'labSkip');
       CE.skip(mirrorA, q.id);
-      check(text(env, 'labSettledBy') === 'Skipped — nothing decided.', 'skip line renders');
+      check(text(env, 'labSettledBy') === 'Last question: skipped — nothing decided.', 'skip line renders');
     }
   }
   check(sawAffirm, 'observed an affirm-propagation trace');
@@ -258,18 +264,18 @@ async function main() {
       CE.answer(mirrorB, q.id, 'no');
       const t = text(env, 'labSettledBy');
       sawReject = true;
-      check(t.startsWith('That also ruled out:') && t.endsWith('they were built on the claim you rejected.'),
-        'reject trace explains direction: ' + t.slice(0, 100));
+      check(t.startsWith('Last question: that also ruled out:') && t.endsWith('they were built on the claim you rejected.'),
+        'reject trace explains direction: ' + t.slice(0, 110));
     } else {
       const newAnc = [...CE.ancestors(CLAIMS, q.id)].filter((id) => !settled.has(id));
       click(env, 'labAgree');
       CE.answer(mirrorB, q.id, 'yes');
       const t = text(env, 'labSettledBy');
       if (newAnc.length) {
-        check(t.startsWith('That also decided:') && t.endsWith('they follow from the claim you agreed with.'),
-          'affirm trace explains direction: ' + t.slice(0, 100));
+        check(t.startsWith('Last question: that also decided:') && t.endsWith('they follow from the claim you agreed with.'),
+          'affirm trace explains direction: ' + t.slice(0, 110));
       } else {
-        check(t === 'That decides just this claim.', 'no-propagation line renders');
+        check(t === 'Last question: that decided just this claim.', 'no-propagation line renders');
       }
     }
   }
@@ -314,6 +320,16 @@ async function main() {
   click(env, 'labQuizContinue');
   check(!hidden(env, 'labQuizMain') && hidden(env, 'labQuizResult'), 'continue resumes the quiz');
   check(text(env, 'labQCount') === '1 of 12 · round 2', 'round 2 counter names the round: ' + text(env, 'labQCount'));
+  // mid-round ranking peek (round 2+): results over current answers, resume returns untouched
+  check(!hidden(env, 'labQRanking'), 'round 2 offers a current-ranking peek');
+  const rqBefore = text(env, 'labQText');
+  click(env, 'labQRanking');
+  check(!hidden(env, 'labQuizResult') && hidden(env, 'labQuizMain'), 'ranking peek shows the results view');
+  check(!hidden(env, 'labQuizResume') && hidden(env, 'labQuizContinue'), 'peek offers resume, not continue');
+  check(html(env, 'labResultList').includes('You agree with'), 'peek renders the live ranking');
+  click(env, 'labQuizResume');
+  check(!hidden(env, 'labQuizMain') && hidden(env, 'labQuizResult'), 'resume returns to the quiz');
+  check(text(env, 'labQText') === rqBefore, 'resume restores the same question');
   const mainScroll = env.els.get('labQuizMain')._scrollArgs;
   check(!!mainScroll && mainScroll[0] && mainScroll[0].block === 'start',
     'continuing scrolls the new question into view');

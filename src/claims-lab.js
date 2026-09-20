@@ -9,6 +9,7 @@
     const need = ['labQuizStart', 'labQuizMain', 'labQuizResult', 'labQuizBegin', 'labQuizRestart',
       'labQuizContinue', 'labContinueNote', 'labAgree', 'labDisagree', 'labSkip', 'labQBack', 'labQText', 'labQPlain', 'labQCount',
       'labQCoverage', 'labSettled', 'labSettledBy', 'labTension', 'labScores', 'labResultList', 'labClaimGraph',
+      'labQRanking', 'labQuizResume',
       'labClaimDetail', 'labTheoryList', 'labDetail', 'labBack', 'labTabClaims', 'labTabTheories',
       'labClaims', 'labTheories', 'quizCountLine', 'exploreDek', 'updateBanner', 'updateReload'];
     if (!window.ClaimsEngine || !window.CLAIMS || need.some(id => !$(id))) {
@@ -133,7 +134,7 @@
         const rootShorts = (levels.get(0) || []).slice(0, 2)
           .map(id => shortLabel(claimById.get(id))).join(' · ');
         scroller.setAttribute('aria-label',
-          `Claim group about “${rootShorts}” — ${ids.length} connected claims, scroll sideways to see all`);
+          `Claim group about “${rootShorts}” — ${ids.length} connected claim${ids.length === 1 ? '' : 's'}, scroll sideways to see all`);
         const inner = document.createElement('div');
         inner.className = 'dag-component';
         inner.style.height = `${DAG_PAD_TOP + rows.length * DAG_ROW_H + 12}px`;
@@ -467,6 +468,8 @@
         ? `Decided so far: ${affN} agreed · ${rejN} rejected · ${E.claims.length - affN - rejN} open`
         : '';
       $('labQBack').classList.toggle('hidden', qhistory.length === 0);
+      // From round 2 on there is a ranking worth revisiting mid-round.
+      $('labQRanking').classList.toggle('hidden', qRound < 2);
       renderSettledBy();
       renderTension();
       renderScores();
@@ -474,15 +477,16 @@
 
     function renderSettledBy() {
       const el = $('labSettledBy');
-      if (lastSettledDir === 'skip') { el.textContent = 'Skipped — nothing decided.'; return; }
-      if (!lastSettledIds.length) { el.textContent = 'That decides just this claim.'; return; }
+      if (!lastSettledDir) { el.textContent = ''; return; }
+      if (lastSettledDir === 'skip') { el.textContent = 'Last question: skipped — nothing decided.'; return; }
+      if (!lastSettledIds.length) { el.textContent = 'Last question: that decided just this claim.'; return; }
       const labels = lastSettledIds.map(id => {
         const c = claimById.get(id);
         return c ? c.plain : id;
       }).join(' · ');
       el.textContent = lastSettledDir === 'no'
-        ? `That also ruled out: ${labels} — they were built on the claim you rejected.`
-        : `That also decided: ${labels} — they follow from the claim you agreed with.`;
+        ? `Last question: that also ruled out: ${labels} — they were built on the claim you rejected.`
+        : `Last question: that also decided: ${labels} — they follow from the claim you agreed with.`;
     }
 
     function answerQuestion(yesNo) {
@@ -562,6 +566,7 @@
     function renderResults(exhausted) {
       qMain.classList.add('hidden');
       qResult.classList.remove('hidden');
+      $('labQuizResume').classList.add('hidden');
       const answered = Object.keys(qstate.answers).length;
       $('labQuizContinue').classList.toggle('hidden', exhausted);
       $('labContinueNote').textContent = exhausted
@@ -589,6 +594,21 @@
     $('labQuizBegin').addEventListener('click', startQuiz);
     $('labQuizRestart').addEventListener('click', startQuiz);
     $('labQuizContinue').addEventListener('click', continueQuiz);
+    // Mid-round peek at the ranking (round 2+): shows the results view over
+    // current answers, with a way back that resumes the round untouched.
+    $('labQRanking').addEventListener('click', () => {
+      renderResults(false);
+      $('labQuizContinue').classList.add('hidden');
+      const answered = Object.keys(qstate.answers).length;
+      $('labContinueNote').textContent = `Based on ${answered} answer${answered === 1 ? '' : 's'} so far.`;
+      $('labQuizResume').classList.remove('hidden');
+    });
+    $('labQuizResume').addEventListener('click', () => {
+      $('labQuizResume').classList.add('hidden');
+      qResult.classList.add('hidden');
+      qMain.classList.remove('hidden');
+      renderQuestion();
+    });
     $('labAgree').addEventListener('click', () => answerQuestion('yes'));
     $('labDisagree').addEventListener('click', () => answerQuestion('no'));
     $('labSkip').addEventListener('click', skipQuestion);
