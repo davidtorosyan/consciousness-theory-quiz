@@ -46,6 +46,10 @@
   Yogacara, Nagarjuna, McGilchrist, Campbell Big TOE, Goswami, Builes,
   A. Harris, Tye, and Morch (pre-merge draft deleted; notes at
   data/claims-batch7-notes.md).
+  Batch 8 (c154-c183, theories 64/65/66/67/68/69/70/71/72/73) added Kadić,
+  Schneider-Bailey, Gambini-Pullin, Reber, Wigner-von Neumann, Stapp, Neven,
+  Chalmers-McQueen, Bohm, and Faggin (pre-merge draft deleted; notes at
+  data/claims-batch8-notes.md).
 */
 window.CLAIMS_VERSION = '6';
 
@@ -1128,6 +1132,216 @@ window.CLAIMS = Object.freeze([
     text: "Phenomenal properties are not causally idle: they are essentially powerful — the categorical bases of causal powers — they are the very things that make matter behave as it does.",
     plain: "How things feel isn't a side-show — feelings are what make matter move.",
     entails: ["c25"]
+  },
+  {
+    id: "c154",
+    short: "Subjects don't combine",
+    text: "Simple subjects do not fuse into a larger subject: complex experience is constituted relationally at the micro-level, without any new macrosubject ever forming.",
+    plain: "Small minds don't merge into a big mind — your full experience is built from relations between them.",
+    entails: []
+  },
+  {
+    id: "c155",
+    short: "Simples have bare perspective",
+    text: "Fundamental simples possess a bare, intrinsic consciousness-as-such — a point of view with no rich content of its own — which is what makes them subjects at all.",
+    plain: "The tiniest building blocks have a bare inner point of view, nothing richer.",
+    entails: ["c25"]
+  },
+  {
+    id: "c156",
+    short: "Phenomenal qualities are relational",
+    text: "The richness of experience — its phenomenal qualities — is relationally constituted: how a microsubject relates to other microsubjects determines what its experience is like.",
+    plain: "How experience feels comes from relations between tiny minds, not from each one on its own.",
+    entails: []
+  },
+  {
+    id: "c157",
+    short: "Deepest level is superconscious",
+    text: "The fundamental level of reality hosts a 'superconscious' state — more coherent, more integrated, and more conscious than any mind inside spacetime.",
+    plain: "At the deepest level of reality there is a consciousness greater than any brain's.",
+    entails: []
+  },
+  {
+    id: "c158",
+    short: "Entangled megaobject is superconscious",
+    text: "A timeless, non-spatiotemporal, holistically entangled 'megaobject' — underlying spacetime itself — exhibits maximal coherence, zero entropy, and the highest form of conscious resonance.",
+    plain: "Beneath space and time sits one perfectly coherent entangled whole, and it is the most conscious thing there is.",
+    entails: ["c157"]
+  },
+  {
+    id: "c159",
+    short: "Spacetime emerges from prototime",
+    text: "Spacetime is not fundamental: it emerges from a deeper, aspatial, quasi-temporal dimension — 'prototime' — in which quantum entanglement keeps its coherence.",
+    plain: "Space and time are not the bottom layer; they grow out of a deeper timeless entanglement.",
+    entails: []
+  },
+  {
+    id: "c160",
+    short: "Quantum events have inner feeling",
+    text: "Quantum states and events carry an internal phenomenal aspect: beneath the mathematics of quantum mechanics lies a proto-experiential character to physical events themselves.",
+    plain: "Quantum events aren't just numbers — they have an inner, experience-like side.",
+    entails: ["c25"]
+  },
+  {
+    id: "c161",
+    short: "Entanglement dissolves the combination problem",
+    text: "Quantum indeterminacy and entanglement dissolve panpsychism's subject-summing combination problem: classical assumptions about how parts compose wholes simply don't apply at the quantum level.",
+    plain: "Quantum entanglement makes the 'how do small minds add up?' problem disappear.",
+    entails: []
+  },
+  {
+    id: "c162",
+    short: "Classical physics has no room",
+    text: "Classical mechanistic determinism leaves no room for anything non-epiphenomenal: it has no intrinsic aspects and no novelty; quantum probabilistic determinism is needed for consciousness to matter.",
+    plain: "Old-school clockwork physics leaves no room for experience to do anything — quantum physics does.",
+    entails: []
+  },
+  {
+    id: "c163",
+    short: "Life is sentient from start",
+    text: "Sentience emerged with life itself: even single-celled organisms are conscious in a primitive way — flexible cell walls, sensitivity to surroundings, and self-movement are the biological foundations of mind.",
+    plain: "Consciousness didn't appear with brains — the first living cells already had a glimmer of it.",
+    entails: ["c165"]
+  },
+  {
+    id: "c164",
+    short: "Minds can't be computed",
+    text: "Mental states are intrinsically hardware-dependent: they cannot be captured by a computer program, so no artificial intelligence running the right algorithm could be conscious.",
+    plain: "You can't program consciousness into being — minds need living biology, not software.",
+    entails: []
+  },
+  {
+    id: "c165",
+    short: "All experience is consciousness",
+    text: "All experience is mental: every organism that experiences anything has a mind — experience and consciousness are the same thing at every level of life.",
+    plain: "If it experiences, it's conscious — full stop.",
+    entails: []
+  },
+  {
+    id: "c166",
+    short: "Consciousness ends the quantum chain",
+    text: "The quantum measurement chain — system, apparatus, sense organ, brain — terminates only in a conscious observer: no purely physical stopping point is privileged.",
+    plain: "Trace the chain from particle to brain and it only ends when someone consciously sees a result.",
+    entails: ["c168"]
+  },
+  {
+    id: "c167",
+    short: "Experience is never superposed",
+    text: "Experience is always determinate, never superposed: you never experience a blur of two outcomes — and it is this phenomenal definiteness that the physics of measurement must account for.",
+    plain: "You never experience 'both at once' — experience is always one definite thing.",
+    entails: []
+  },
+  {
+    id: "c168",
+    short: "Consciousness acts on physics",
+    text: "Consciousness is not merely affected by physics but acts on it: since the physical world manifestly acts on consciousness, a reciprocal influence must exist — and the quantum collapse is where it shows itself.",
+    plain: "Mind doesn't just receive from physics — it pushes back, at the quantum collapse.",
+    entails: []
+  },
+  {
+    id: "c169",
+    short: "Questions collapse the wave function",
+    text: "Conscious acts of attending — 'asking questions' of nature — collapse the wave function: by posing yes-or-no questions, an observer selects which quantum possibility becomes actual.",
+    plain: "Paying attention is asking nature a question — and the question collapses the quantum possibilities.",
+    entails: ["c166"]
+  },
+  {
+    id: "c170",
+    short: "Physics doesn't pick the question",
+    text: "Nothing in quantum mechanics determines which question gets asked: the choice of the experiment — what to measure, what to attend to — is a causal gap that physics cannot close.",
+    plain: "Physics never says which question to ask — that choice comes from somewhere else.",
+    entails: []
+  },
+  {
+    id: "c171",
+    short: "Classical physics makes mind idle",
+    text: "Under classical physics the physical universe is a closed mechanism with nothing for consciousness to do — so consciousness would have to be an illusion or a passive, functionless spectator.",
+    plain: "If the universe were classical clockwork, your mind would be a useless spectator.",
+    entails: []
+  },
+  {
+    id: "c172",
+    short: "Superposition formation is experience",
+    text: "Conscious experience arises whenever a quantum superposition forms — not at collapse, not in computation: the physical substrate of a conscious moment is the creation of a superposition.",
+    plain: "A moment of experience is born when a quantum superposition forms — not when it collapses.",
+    entails: []
+  },
+  {
+    id: "c173",
+    short: "Superposition structure fixes qualia",
+    text: "The qualitative character of experience is fixed by the structure of the superposition: from the inside, phenomenology is classical and definite even though its substrate is quantum.",
+    plain: "What an experience feels like is set by the shape of its quantum superposition.",
+    entails: ["c172"]
+  },
+  {
+    id: "c174",
+    short: "Entanglement binds experience",
+    text: "Entanglement is the only true binding agent in physics: it creates holistic states whose parts are fundamentally interconnected, and so it is what binds experience into one unity.",
+    plain: "What holds your whole experience together is quantum entanglement.",
+    entails: []
+  },
+  {
+    id: "c175",
+    short: "Classical computers can't be conscious",
+    text: "A classical Turing machine may become intelligent but can never become conscious: sentience requires a quantum computer as its substrate.",
+    plain: "Regular computers will never wake up — only quantum computers could.",
+    entails: []
+  },
+  {
+    id: "c176",
+    short: "Collapse needs a consciousness measure",
+    text: "A precise consciousness-collapse theory needs a quantitative measure of consciousness — such as integrated information — to specify exactly when and how fast collapse occurs.",
+    plain: "To make collapse-by-consciousness exact, you need a meter for how conscious something is.",
+    entails: []
+  },
+  {
+    id: "c177",
+    short: "Quantum collapse is consciousness's gap",
+    text: "Wave-function collapse is a causal gap in physics that a non-physical consciousness could fill without violating known physics: consciousness collapses the wave function precisely where physics goes silent.",
+    plain: "Collapse is the one place physics leaves open — and consciousness fills it.",
+    entails: ["c166"]
+  },
+  {
+    id: "c178",
+    short: "Everything enfolds in implicate order",
+    text: "Reality has an enfolded 'implicate order' underlying the unfolded 'explicate order' of ordinary experience: everything is in a process of folding and unfolding — a universal flux.",
+    plain: "The everyday world is an unfolding of a deeper, enfolded order where everything is connected.",
+    entails: []
+  },
+  {
+    id: "c179",
+    short: "Mind and matter share ground",
+    text: "Mind and matter are not two independent things: both are projections of a common higher-dimensional ground that is neither mind nor body — and it is their shared ground, not causation, that relates them.",
+    plain: "Mind and body are two projections of one deeper ground that is neither.",
+    entails: ["c178"]
+  },
+  {
+    id: "c180",
+    short: "Reality is undivided wholeness",
+    text: "Reality is an undivided, dynamic, alive wholeness in which observer and observed actively participate with each other — not a machine of independent parts.",
+    plain: "Reality is one living whole, not a machine of separate pieces.",
+    entails: []
+  },
+  {
+    id: "c181",
+    short: "Pure quantum states are conscious",
+    text: "A quantum system in a pure state is conscious of its own state: quantum information describes the subjective inner reality of quantum systems — definite, private, and knowable only through qualia.",
+    plain: "A quantum system in a pure state feels its own state from the inside.",
+    entails: []
+  },
+  {
+    id: "c182",
+    short: "Seities are conscious agents",
+    text: "Fundamental quantum-conscious agents — 'seities' or consciousness units — predate spacetime itself; physical laws, fields, and lived experience all emerge from their interactions.",
+    plain: "Tiny conscious agents came before space and time — everything else grew from them.",
+    entails: ["c181"]
+  },
+  {
+    id: "c183",
+    short: "Quantum mind can't be computed",
+    text: "Consciousness, free will, and creativity are non-algorithmic properties of quantum reality: no machine can ever have them or create them by mechanical means.",
+    plain: "Real creativity and free will aren't algorithms — no machine can ever have them.",
+    entails: []
   }
 ]);
 
@@ -1201,4 +1415,14 @@ window.CLAIM_THEORIES = Object.freeze([
   { id: 61, name: "A. Harris's fundamental-field panpsychism", blurb: "Consciousness is a fundamental field, like spacetime; subjects need the right arrangement.", family: "Panpsychism", claims: ["c149"], caveat: "Harris herself remains split between brain-based and panpsychic explanations and is not convinced panpsychism is correct — she presents it as a valid category of possible solutions." },
   { id: 62, name: "Tye's irreducible consciousness*", blurb: "Phenomenal consciousness is on/off and irreducible; fundamental 'consciousness*' scales up into complex minds.", family: "Panpsychism", claims: ["c151","c152"] },
   { id: 63, name: "Mørch's phenomenal-powers panpsychism", blurb: "Phenomenal properties aren't idle — they are the causal powers that make matter behave.", family: "Panpsychism", claims: ["c153"] },
+  { id: 64, name: "Kadić's monadic panpsychism", blurb: "Micro-subjects don't combine — complex experience is relationally constituted between them.", family: "Panpsychism", claims: ["c154","c155","c156"] },
+  { id: 65, name: "Schneider–Bailey entangled superpsychism", blurb: "The deepest level hosts a superconscious entangled megaobject; spacetime emerges from prototime.", family: "Panpsychism", claims: ["c158","c159"] },
+  { id: 66, name: "Gambini–Pullin quantum panprotopsychism", blurb: "Quantum events have inner phenomenal aspects; entanglement dissolves the combination problem.", family: "Panpsychism", claims: ["c160","c161","c162"] },
+  { id: 67, name: "Reber's cellular basis of consciousness", blurb: "Sentience began with life: every living cell has a primitive mind; minds can't be computed.", family: "Panpsychism", claims: ["c163","c164"] },
+  { id: 68, name: "Wigner–von Neumann consciousness-collapse", blurb: "The quantum measurement chain terminates in conscious experience; mind acts on physics.", family: "Quantum", claims: ["c166","c167"], caveat: "Wigner later abandoned this hypothesis after decoherence removed its motivation, and recent scholarship argues the 'consciousness causes collapse' reading of von Neumann is overstated — he formalized the measurement chain but ascribed no causal power to the observer's 'abstract ego.'" },
+  { id: 69, name: "Stapp's quantum collapse via questions", blurb: "Conscious attention — asking yes-or-no questions of nature — collapses the wave function.", family: "Quantum", claims: ["c169","c170","c171"] },
+  { id: 70, name: "Neven's superposition formation", blurb: "A conscious moment is born when a quantum superposition forms — not at collapse.", family: "Quantum", claims: ["c173","c174","c175"] },
+  { id: 71, name: "Chalmers–McQueen quantum collapse", blurb: "Consciousness fills the causal gap at wave-function collapse; a precise measure is needed.", family: "Quantum", claims: ["c176","c177"] },
+  { id: 72, name: "Bohm's implicate order", blurb: "Everything enfolds in an implicate order; mind and matter are projections of one ground.", family: "Quantum", claims: ["c179","c180"] },
+  { id: 73, name: "Faggin's quantum-information panpsychism", blurb: "Pure quantum states are conscious; seities — conscious agents — predate spacetime.", family: "Quantum", claims: ["c182","c183"] },
 ]);
