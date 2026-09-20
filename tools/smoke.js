@@ -230,7 +230,7 @@ async function main() {
 
   // complete the quiz
   let guard = 0;
-  while (hidden(env, 'labQuizResult') && guard++ < 200) click(env, 'labAgree');
+  while (hidden(env, 'labQuizResult') && guard++ < N + 50) click(env, 'labAgree');
   check(!hidden(env, 'labQuizResult'), 'quiz completes to results screen');
   check(html(env, 'labResultList').includes('You agree with'), 'results use X-of-Y alignment framing');
   check(html(env, 'labResultList').includes('lab-result-blurb'), 'results rows show theory blurbs');
@@ -239,7 +239,7 @@ async function main() {
   // untouched theories: a fresh all-skip run leaves every theory untouched
   click(env, 'labQuizRestart');
   guard = 0;
-  while (hidden(env, 'labQuizResult') && guard++ < 200) click(env, 'labSkip');
+  while (hidden(env, 'labQuizResult') && guard++ < N + 50) click(env, 'labSkip');
   check(!hidden(env, 'labQuizResult'), 'all-skip run completes');
   const untouched = (html(env, 'labResultList').match(/None of this theory's claims came up/g) || []).length;
   check(untouched === M, `all ${M} theories explain themselves when untouched (got ${untouched})`);

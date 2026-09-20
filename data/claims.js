@@ -50,6 +50,10 @@
   Schneider-Bailey, Gambini-Pullin, Reber, Wigner-von Neumann, Stapp, Neven,
   Chalmers-McQueen, Bohm, and Faggin (pre-merge draft deleted; notes at
   data/claims-batch8-notes.md).
+  Batch 9 (c184-c200, theories 74-83) added Kauffman, Fisher, Keppler, Becker,
+  General Resonance Theory, Miller, Singer-Melloni, Pockett, Llinas, and
+  Operational Architectonics (pre-merge draft deleted; notes at
+  data/claims-batch9-notes.md).
 */
 window.CLAIMS_VERSION = '6';
 
@@ -1342,6 +1346,125 @@ window.CLAIMS = Object.freeze([
     text: "Consciousness, free will, and creativity are non-algorithmic properties of quantum reality: no machine can ever have them or create them by mechanical means.",
     plain: "Real creativity and free will aren't algorithms — no machine can ever have them.",
     entails: []
+  },
+  {
+    id: "c184",
+    short: "Possibles are real",
+    text: "Possibility is a real feature of nature: 'possibles' (Res potentia) exist beyond spacetime — not merely as descriptions of what could happen, but as what becomes actual (Res extensa).",
+    plain: "Possibilities are real things, not just ideas — they exist outside space and time, waiting to become actual.",
+    entails: []
+  },
+  {
+    id: "c185",
+    short: "Mind turns possibles into actuals",
+    text: "Mind mediates the conversion of possibles into actuals — mind actualizes Res potentia into Res extensa — so mind cannot be a purely classical phenomenon.",
+    plain: "Mind is what turns real possibilities into actual things, so mind must involve physics beyond the classical.",
+    entails: ["c184","c168"]
+  },
+  {
+    id: "c186",
+    short: "Neural qubits are nuclear spins",
+    text: "Nuclear spins of phosphorus atoms can serve as neural qubits — the brain may store and process quantum information in biochemistry, with phosphate ions as qubit transporters.",
+    plain: "Atoms of phosphorus in the brain could work as quantum bits.",
+    entails: []
+  },
+  {
+    id: "c187",
+    short: "Posner molecules shield qubits",
+    text: "Posner molecules (calcium-phosphate clusters) protect phosphorus nuclear-spin qubits from decoherence long enough for quantum processing in the brain.",
+    plain: "Tiny phosphate clusters in the brain could shield these quantum bits from noise long enough to compute.",
+    entails: ["c186"]
+  },
+  {
+    id: "c188",
+    short: "ZPF carries phenomenal qualities",
+    text: "The quantum vacuum's zero-point field has an intrinsic side: it carries phenomenal qualities — a sentient background field of potential consciousness.",
+    plain: "Empty space isn't empty — the quantum vacuum itself carries the raw stuff of feeling.",
+    entails: ["c25"]
+  },
+  {
+    id: "c189",
+    short: "Brain tunes into ZPF modes",
+    text: "The brain acts as a resonant oscillator that selectively excites specific modes of the zero-point field; a conscious state is the selective amplification of particular field modes.",
+    plain: "The brain works like a radio tuning into the vacuum's frequencies — each conscious state is a tuned-in mode.",
+    entails: ["c188"]
+  },
+  {
+    id: "c190",
+    short: "Slow DC body fields hold experience",
+    text: "Phenomenal experience emerges from continuous, slow direct-current electromagnetic fields of the whole body — not merely from discrete synaptic transmissions.",
+    plain: "Your experience rides on slow electric currents running through your whole body, not just the brain's on-off neural chatter.",
+    entails: []
+  },
+  {
+    id: "c191",
+    short: "Resonance combines micro-consciousness",
+    text: "Shared resonance — matched oscillation frequencies in proximity — combines micro-conscious entities into macro-conscious wholes, solving the combination problem.",
+    plain: "Small bits of consciousness merge into yours when their vibrations fall into sync — resonance is the glue.",
+    entails: ["c25"]
+  },
+  {
+    id: "c192",
+    short: "Consciousness is nested EM fields",
+    text: "Consciousness just is a nested hierarchy of interacting electromagnetic fields; resonance builds the hierarchy, field shapes are qualia, and fields causally shape neural firing (ephaptic coupling).",
+    plain: "Consciousness is literally layers of resonating electric and magnetic fields — their shapes are your feelings.",
+    entails: ["c191","c50","c52"]
+  },
+  {
+    id: "c193",
+    short: "Brain computes with traveling waves",
+    text: "Traveling brain waves perform analog computations — doing math through wave interference — that organize cortical activity quickly and flexibly.",
+    plain: "Brain waves don't just ripple — they compute, like analog computers made of waves.",
+    entails: []
+  },
+  {
+    id: "c194",
+    short: "Waves organize neural firing",
+    text: "Large-scale wave patterns modulate huge populations of neurons in both directions; consciousness is the tip of this bidirectional analog iceberg.",
+    plain: "Waves and neurons push each other around — consciousness is the visible tip of that deep dynamic.",
+    entails: ["c193"]
+  },
+  {
+    id: "c195",
+    short: "Synchrony binds perception",
+    text: "Consciousness is transient large-scale neuronal synchronization: distributed processing is bound into unified percepts by synchronized firing, especially gamma-band.",
+    plain: "Brain regions firing in sync — that's what stitches scattered processing into one conscious picture.",
+    entails: []
+  },
+  {
+    id: "c196",
+    short: "Integration, no separate workspace",
+    text: "Conscious processing is a highly integrated processing mode — there is no separate workspace; reportability is a natural consequence of the integration itself.",
+    plain: "No special brain stage is needed — once processing is integrated enough, it's conscious and reportable.",
+    entails: ["c195"]
+  },
+  {
+    id: "c197",
+    short: "Consciousness is a spatial pattern",
+    text: "Consciousness is a thing, not a process: specific 3D spatial electromagnetic patterns, generated by unconscious neural processing; all neural processing itself is unconscious — consciousness is separable from attention and cognition.",
+    plain: "Consciousness isn't something the brain does — it's a 3D electric pattern the brain holds; all the doing is unconscious.",
+    entails: ["c50"]
+  },
+  {
+    id: "c198",
+    short: "Oscillations make mind",
+    text: "Neurons oscillating in phase, resonating with distant groups, are the neurobiological root of cognition; the brain's internal reality is generated from these oscillations.",
+    plain: "When distant brain cells hum in sync, that synchrony is the root of thought — the mind is built from coordinated rhythms.",
+    entails: []
+  },
+  {
+    id: "c199",
+    short: "Mind mirrors field architecture",
+    text: "The brain builds nested spatiotemporal operations from local electromagnetic fields; operational modules (OMs) are functionally isomorphic to phenomenal architecture, each presenting specific content.",
+    plain: "Brain activity organizes into nested 3D electric patterns — and those patterns mirror the structure of your experience.",
+    entails: []
+  },
+  {
+    id: "c200",
+    short: "Consciousness emerges from field patterns",
+    text: "Conscious experience emerges only when specific hierarchical electromagnetic-field patterns are present — emergentist monism: constituted by operational-level fields, not reducible to neurons.",
+    plain: "Experience shows up when the brain's fields hit the right nested patterns — the fields constitute it, neurons alone don't.",
+    entails: ["c50"]
   }
 ]);
 
@@ -1425,4 +1548,14 @@ window.CLAIM_THEORIES = Object.freeze([
   { id: 71, name: "Chalmers–McQueen quantum collapse", blurb: "Consciousness fills the causal gap at wave-function collapse; a precise measure is needed.", family: "Quantum", claims: ["c176","c177"] },
   { id: 72, name: "Bohm's implicate order", blurb: "Everything enfolds in an implicate order; mind and matter are projections of one ground.", family: "Quantum", claims: ["c179","c180"] },
   { id: 73, name: "Faggin's quantum-information panpsychism", blurb: "Pure quantum states are conscious; seities — conscious agents — predate spacetime.", family: "Quantum", claims: ["c182","c183"] },
+  { id: 74, name: "Kauffman's possibles-to-actuals", blurb: "Mind turns real possibilities into actual things — consciousness can't be purely classical.", family: "Quantum", claims: ["c185"], caveat: "The CTT theory page was not reachable during research; drafted from the CTT all-theories index description plus Kauffman's scholarly summaries, and flagged for re-audit against the live page." },
+  { id: 75, name: "Fisher's quantum cognition", blurb: "Phosphorus atoms in the brain could work as quantum bits, shielded by Posner molecules.", family: "Quantum", claims: ["c187"], caveat: "The CTT theory page was not reachable during research; drafted from Fisher's arXiv paper and scholarly summaries, and flagged for re-audit against the live page." },
+  { id: 76, name: "Keppler's zero-point field", blurb: "Empty space carries the raw stuff of feeling; the brain tunes into its frequencies.", family: "Quantum", claims: ["c189"], caveat: "The CTT theory page was not reachable during research; drafted from Keppler's own published summary of the theory, and flagged for re-audit against the live page." },
+  { id: 77, name: "Becker's analog body electric", blurb: "Slow electric currents through the whole body — not just neural chatter — are experience.", family: "Materialism", claims: ["c190"], caveat: "The CTT theory page was not reachable during research; drafted from the quiz's existing summary of Becker, and flagged for re-audit against the live page." },
+  { id: 78, name: "Hunt and Schooler's General Resonance Theory", blurb: "Consciousness is nested resonating electric fields; resonance merges small minds into yours.", family: "Panpsychism", claims: ["c192"], caveat: "Filed under Panpsychism for the theory's explicit axiom that rudimentary experience is fundamental to all physical stuff — though the seat of consciousness is electromagnetic fields, bridging to EM-field materialist theories." },
+  { id: 79, name: "Miller's analog brain waves", blurb: "Brain waves compute like analog machines — consciousness is the tip of the wave-iceberg.", family: "Materialism", claims: ["c194"], caveat: "The CTT theory page was not reachable during research; drafted from 2026 scholarly and press summaries of the J. Neuroscience paper, and flagged for re-audit against the live page." },
+  { id: 80, name: "Singer–Melloni large-scale synchrony", blurb: "Brain regions firing in sync stitch scattered processing into one conscious picture.", family: "Materialism", claims: ["c196"], caveat: "The CTT theory page was not reachable during research; drafted from Singer's binding-by-synchrony paper and Melloni's integration framing, and flagged for re-audit against the live page." },
+  { id: 81, name: "Pockett's EM patterns", blurb: "Consciousness is a 3D electric pattern — a thing, not a process; all processing is unconscious.", family: "Materialism", claims: ["c197"] },
+  { id: 82, name: "Llinás's mindness oscillations", blurb: "Coordinated rhythms of neurons humming in sync are the root of thought.", family: "Materialism", claims: ["c198"] },
+  { id: 83, name: "Fingelkurts and Fingelkurts' Operational Architectonics", blurb: "Brain activity organizes into nested 3D field patterns that mirror experience itself.", family: "Materialism", claims: ["c199","c200"] },
 ]);
