@@ -54,6 +54,10 @@
   General Resonance Theory, Miller, Singer-Melloni, Pockett, Llinas, and
   Operational Architectonics (pre-merge draft deleted; notes at
   data/claims-batch9-notes.md).
+  Batch 10 (c201-c227, theories 84-93) added Edelman, Hawkins, Merker (reusing
+  c111), Ward-Min, Dendritic Integration Theory, Morsella, Prinz (c217->c44),
+  Bunge (materialist not physicalist; lists c221, no c0 entailment), Hobbes,
+  and Armstrong (pre-merge draft deleted; notes at data/claims-batch10-notes.md).
 */
 window.CLAIMS_VERSION = '6';
 
@@ -1465,6 +1469,195 @@ window.CLAIMS = Object.freeze([
     text: "Conscious experience emerges only when specific hierarchical electromagnetic-field patterns are present — emergentist monism: constituted by operational-level fields, not reducible to neurons.",
     plain: "Experience shows up when the brain's fields hit the right nested patterns — the fields constitute it, neurons alone don't.",
     entails: ["c50"]
+  },
+  {
+    id: "c201",
+    short: "The brain is a selectional system",
+    text: "The brain is not an instructional computer but a selectional system: it generates vast numbers of variant neural circuits, and experience differentially selects among them by strengthening the synapses of the variants that match novel signals.",
+    plain: "The brain doesn't run programs — it grows lots of candidate circuits and lets experience pick the winners.",
+    entails: ["c0"]
+  },
+  {
+    id: "c202",
+    short: "Reentrant signaling weaves the dynamic core",
+    text: "Massively parallel, reciprocal reentrant signaling among neuronal groups — especially between thalamus and cortex — integrates distributed brain areas into a unitary, ever-changing dynamic core, whose metastable states carry the moment-to-moment unity of experience.",
+    plain: "The brain constantly talks back to itself across wide networks, weaving scattered areas into one coherent scene after another.",
+    entails: ["c0"]
+  },
+  {
+    id: "c203",
+    short: "Qualia are the brain's discriminations",
+    text: "Qualia are high-order discriminations made by neural systems in a multidimensional space of signals: differences in what something feels like are differences in the neural structure and dynamics underlying it.",
+    plain: "What a feeling feels like just is the brain telling things apart — change the telling-apart, change the feeling.",
+    entails: ["c0"]
+  },
+  {
+    id: "c204",
+    short: "Primary consciousness needs no language",
+    text: "Primary consciousness — the remembered present of integrated perceptual, motor, and memory events — requires no language, narrative, or explicit sense of self; higher-order consciousness with self and time travel is a later, separate evolutionary achievement.",
+    plain: "Animals can be conscious without words, stories, or a sense of self — basic awareness comes first, the inner narrator later.",
+    entails: []
+  },
+  {
+    id: "c205",
+    short: "Thousands of cortical columns vote",
+    text: "The neocortex does not build one central model of the world: roughly 150,000 cortical columns each learn complete models of objects and concepts using sensorimotor reference frames, and unified perception is the consensus they reach by voting — no central processor anywhere.",
+    plain: "Your brain runs thousands of little world-models at once and lets them vote — perception is whatever they agree on.",
+    entails: ["c0"]
+  },
+  {
+    id: "c206",
+    short: "Awareness is remembered model states",
+    text: "Moment-to-moment awareness is the continuous formation and recall of memories of the brain's own recent model states; any system that models the world, continuously stores its model's states, and recalls them will be conscious.",
+    plain: "Being aware is your brain constantly remembering what it just did — any machine doing that would be conscious too.",
+    entails: []
+  },
+  {
+    id: "c207",
+    short: "The right machine would be conscious",
+    text: "Consciousness requires only the right functional architecture: machines built on thousand-brains principles — modeling, voting, self-recording — would be conscious, though affectless, lacking evolved subcortical drives.",
+    plain: "Build a machine that models and remembers its states the right way and it would be conscious — feeling nothing, but aware.",
+    entails: ["c206"]
+  },
+  {
+    id: "c208",
+    short: "Consciousness is an analog control space",
+    text: "An ancient upper-brainstem system implements an analog 'reality space': a simulated body nested in a simulated world around an implicit ego-center, integrating perception, motivation, and action to match needs to opportunities — and the way this simulation is structured is what makes it a conscious mode of functioning.",
+    plain: "Deep in the old brain sits a live simulation of your body inside a world, built to steer action — and that simulation is where basic experience lives.",
+    entails: []
+  },
+  {
+    id: "c209",
+    short: "Being conscious needs no self",
+    text: "Reflective self-awareness is a luxury of big-brained species, not the defining property of consciousness; basic phenomenal experience requires no self-model and no awareness of being aware.",
+    plain: "You don't need a self to be conscious — raw experience comes before any sense of 'I'.",
+    entails: []
+  },
+  {
+    id: "c210",
+    short: "The thalamus generates experience",
+    text: "Phenomenal consciousness is generated by thalamic dynamics — synchronized activity in dorsal-thalamic neurons, gated and coordinated by the thalamic reticular nucleus — rather than by cortex alone: the cortex computes representational content, but the thalamus displays and thereby experiences it.",
+    plain: "Your cortex does the math, but it's the thalamus — the brain's central hub — where the experiencing actually happens.",
+    entails: ["c0"]
+  },
+  {
+    id: "c211",
+    short: "We experience results, never processes",
+    text: "Consciousness never has introspective access to the computations that produce it — saccadic suppression, inattentional blindness, the sudden arrival of solutions and emotions all show we experience only the results of cortical processing, never the processing itself.",
+    plain: "You're never aware of your brain computing — only of the finished answers it hands you.",
+    entails: []
+  },
+  {
+    id: "c212",
+    short: "Apical dendrites gate awareness",
+    text: "Apical dendrites of layer-5 pyramidal neurons perform nonlinear integration of top-down and bottom-up input streams: when distal and proximal signals coincide, dendritic calcium spikes amplify the response, and this cellular coincidence detection gates what enters conscious perception.",
+    plain: "Inside single brain cells, the branch-tips act as gatekeepers — when top-down and bottom-up signals meet there, perception is born.",
+    entails: ["c0"]
+  },
+  {
+    id: "c213",
+    short: "Breaking dendrite–soma coupling breaks consciousness",
+    text: "Conscious states require intact coupling between dendrites and cell bodies: general anesthesia disrupts exactly this dendritic-somatic coupling, blocking consciousness without silencing overall brain activity.",
+    plain: "Knock out the link between a cell's branches and its body and consciousness vanishes — even while the brain keeps humming.",
+    entails: ["c212"]
+  },
+  {
+    id: "c214",
+    short: "Consciousness resolves action conflicts",
+    text: "The evolved function of phenomenal consciousness is to provide a common field in which otherwise encapsulated systems with mutually incompatible action tendencies can jointly constrain skeletal-muscle output — integration happens at the shared output channel, not among the content generators.",
+    plain: "Consciousness exists for one job: when different brain systems want your body to do opposite things, it gives them one shared stage to settle it.",
+    entails: ["c0"]
+  },
+  {
+    id: "c215",
+    short: "The conscious field is passive",
+    text: "The conscious field never reasons, plans, initiates action, or exercises executive control — unconscious processes generate all contents and select and execute every response; the field's entire contribution is making incompatible contents simultaneously available to the action system.",
+    plain: "Consciousness never decides anything — it's a passive stage where the real (unconscious) deciding gets its material.",
+    entails: []
+  },
+  {
+    id: "c216",
+    short: "Phenomenal states are action urges",
+    text: "Phenomenal contents are inclinations and urges bound to action plans — the urge to hold your breath, the pull of pain withdrawal — not detached sensory qualities; what becomes conscious is precisely what bears on conflicting action tendencies.",
+    plain: "What you're aware of isn't scenery — it's urges: your brain's competing plans of action, felt from the inside.",
+    entails: []
+  },
+  {
+    id: "c217",
+    short: "Attention engenders experience",
+    text: "Consciousness is generated by one and only one process: attention — the making of an integrated representation of a stimulus' properties available to working memory; without attention's change in information flow, nothing is experienced.",
+    plain: "Attention doesn't just find consciousness — it makes it. Nothing unattended ever reaches experience.",
+    entails: ["c44"]
+  },
+  {
+    id: "c218",
+    short: "Consciousness lives at the intermediate level",
+    text: "Consciousness always arises at the intermediate stage of perceptual processing — after features but before concepts — where representations are integrated into a point-of-view-retaining format; it is neither raw sensation nor abstract thought.",
+    plain: "Experience sits at the middle layer of vision: richer than raw pixels, less abstract than ideas — always from a point of view.",
+    entails: []
+  },
+  {
+    id: "c219",
+    short: "All consciousness is perceptual",
+    text: "All consciousness is perceptual in nature: we have no direct experience of our thoughts, no experience of motor commands, and no experience of a conscious self — experience functions to make perceptual information available for flexible behavior.",
+    plain: "Everything you're conscious of is a kind of perceiving — you never directly experience your own thoughts or a 'self'.",
+    entails: []
+  },
+  {
+    id: "c220",
+    short: "Mental states are plastic brain states",
+    text: "Mental states form a distinguished subset of brain states — precisely those exhibiting neural plasticity, especially learning — with no separate mental entity anywhere; mind is a collection of functions of an extremely complex central nervous system.",
+    plain: "Mind is what a learning brain does — mental states are brain states that learn, full stop, no soul added.",
+    entails: []
+  },
+  {
+    id: "c221",
+    short: "Emergence is real but material",
+    text: "The mental is an emergent property of the nervous system: a property possessed by the whole system but not by its components, ontologically reducible to matter without being epistemologically reducible to physics — materialist, but not physicalist.",
+    plain: "Mind really emerges from the brain — genuinely new, yet made of nothing but matter; physics alone just can't tell the whole story.",
+    entails: ["c220"]
+  },
+  {
+    id: "c222",
+    short: "Sensation is motion in matter",
+    text: "Sensation, imagination, memory, thought, emotion, and deliberation are all motions of matter in an embodied organism: external pressure produces inward motion, met by the body's outward endeavor, and that bodily motion is the felt appearance — no immaterial soul, no explanatory gap acknowledged.",
+    plain: "Everything mental is matter in motion — a feeling is literally a movement in your body, caused by the world's pressure on you.",
+    entails: ["c0"]
+  },
+  {
+    id: "c223",
+    short: "Qualities live in the perceiver",
+    text: "Sensible qualities are not in objects: colors and sounds are only motions in objects, while the appearances themselves — the phantasms — lie wholly in the perceiving body.",
+    plain: "Red isn't in the apple — it's in you. The world has only motion; the colors and sounds are your body's doing.",
+    entails: ["c222"]
+  },
+  {
+    id: "c224",
+    short: "Imagination and memory are decaying sense",
+    text: "Imagination is sensory motion persisting and weakening after its external cause is gone; memory is that identical decaying motion noticed as past; dreams, trains of thought, and deliberation are sequences of such motions.",
+    plain: "Imagining is just old sensations fading slowly; remembering is noticing that they're old — all mind is recycled motion.",
+    entails: ["c222"]
+  },
+  {
+    id: "c225",
+    short: "An inner sense scans the mind",
+    text: "Introspective consciousness is a perception-like inner sense: one neural process scanning and representing another, producing non-inferential information about the mind's current states — a first-order state becomes introspectively conscious when it is the object of such a scan.",
+    plain: "Part of your brain watches the rest of it — when a brain state gets scanned by this inner sense, you become aware of it.",
+    entails: ["c0"]
+  },
+  {
+    id: "c226",
+    short: "Mental states can go unscanned",
+    text: "Perceptions, intentions, and organized purposive action can all proceed without introspective awareness — much mental activity is never scanned — so introspective consciousness is a relational property some states acquire, not an intrinsic glow of all experience.",
+    plain: "Your brain does plenty of perceiving and deciding with nobody home — being scanned is the exception, not the rule.",
+    entails: ["c225"]
+  },
+  {
+    id: "c227",
+    short: "The scanner needn't be conscious",
+    text: "The higher-order monitoring state need not itself be conscious — it may in turn be monitored, but no infinite regress follows, because being the object of a scan is what confers introspective consciousness, not being scanned while conscious.",
+    plain: "The inner eye doesn't need to see itself — the watching can stop at any level without a paradox.",
+    entails: ["c225"]
   }
 ]);
 
@@ -1558,4 +1751,14 @@ window.CLAIM_THEORIES = Object.freeze([
   { id: 81, name: "Pockett's EM patterns", blurb: "Consciousness is a 3D electric pattern — a thing, not a process; all processing is unconscious.", family: "Materialism", claims: ["c197"] },
   { id: 82, name: "Llinás's mindness oscillations", blurb: "Coordinated rhythms of neurons humming in sync are the root of thought.", family: "Materialism", claims: ["c198"] },
   { id: 83, name: "Fingelkurts and Fingelkurts' Operational Architectonics", blurb: "Brain activity organizes into nested 3D field patterns that mirror experience itself.", family: "Materialism", claims: ["c199","c200"] },
+  { id: 84, name: "Edelman's neural Darwinism", blurb: "The brain evolves like Darwin's nature: neural circuits compete, experience selects the winners; reentrant signaling weaves them into conscious scenes.", family: "Materialism", claims: ["c201","c202","c203","c204"] },
+  { id: 85, name: "Hawkins's thousand brains", blurb: "The cortex runs thousands of little brains at once, each modeling the world; perception is what they agree on by vote.", family: "Materialism", claims: ["c205","c207"] },
+  { id: 86, name: "Merker's midbrain-centered consciousness", blurb: "No cortex needed: the ancient midbrain runs a simulated world around an ego-center — that's the seat of basic experience.", family: "Materialism", claims: ["c111","c208","c209"] },
+  { id: 87, name: "Ward–Min thalamic dynamic core / gating", blurb: "Consciousness is generated in the thalamus — the cortex computes, the thalamus experiences.", family: "Materialism", claims: ["c210","c211"] },
+  { id: 88, name: "Dendritic Integration Theory", blurb: "The decisive events happen inside single neurons' branch-tips: top-down meets bottom-up in apical dendrites, and that coincidence opens the gate to awareness.", family: "Materialism", claims: ["c213"] },
+  { id: 89, name: "Morsella's passive frame", blurb: "Consciousness is a shared stage where warring action-plans meet — it never decides anything, but without it your body couldn't act on conflicting urges.", family: "Materialism", claims: ["c214","c215","c216"] },
+  { id: 90, name: "Prinz's attended intermediate-level representation", blurb: "Experience happens where attention meets mid-level vision: attention hands a point-of-view picture to working memory — and that's what consciousness is.", family: "Materialism", claims: ["c217","c218","c219"] },
+  { id: 91, name: "Bunge's emergent materialism", blurb: "No soul, no mystery-stuff: mind is what a learning brain does — an emergent but wholly material property of neural systems.", family: "Materialism", claims: ["c221"], caveat: "Bunge is a materialist but not a physicalist: he holds that physics cannot explain life or mind, so his claims deliberately do not entail c0 ('ordinary physics is enough')." },
+  { id: 92, name: "Hobbes's mechanical material mind", blurb: "The first modern materialist: everything mental is matter in motion — colors and pains are motions in you, not features of the world.", family: "Materialism", claims: ["c223","c224"], caveat: "Whether Hobbes strictly identifies the felt appearance (phantasm) with bodily motion or treats it as a mode of the perceiver is contested in scholarship." },
+  { id: 93, name: "Armstrong's higher-order perception", blurb: "Part of your brain watches the rest of it: a first-order state becomes conscious when scanned by a perception-like inner sense.", family: "Materialism", claims: ["c225"], caveat: "Armstrong's inner sense explains introspective consciousness; whether it generates phenomenal consciousness itself or only makes an already-phenomenal state available is disputed — even his own texts point both ways." },
 ]);
