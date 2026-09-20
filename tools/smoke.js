@@ -15,7 +15,7 @@ const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
 const NEED_IDS = ['labQuizStart', 'labQuizMain', 'labQuizResult', 'labQuizBegin', 'labQuizRestart',
   'labQuizContinue', 'labContinueNote', 'labAgree', 'labDisagree', 'labSkip', 'labQBack', 'labQText', 'labQPlain', 'labQCount',
   'labQCoverage', 'labSettled', 'labSettledBy', 'labTension', 'labScores', 'labResultList', 'labClaimGraph',
-  'labQRanking', 'labQuizResume', 'labResultKicker', 'labResultTitle',
+  'labQRanking', 'labQuizResume', 'labResultKicker', 'labResultTitle', 'labQRestart',
   'labClaimDetail', 'labTheoryList', 'labTheorySearch', 'labDetail', 'labBack', 'labTabClaims', 'labTabTheories',
   'labClaims', 'labTheories', 'quizCountLine', 'exploreDek', 'updateBanner', 'updateReload'];
 
@@ -174,12 +174,18 @@ async function main() {
   fireInput(env, 'labTheorySearch', 'zzz-no-such-theory');
   check(html(env, 'labTheoryList').includes('No theories match'), 'theory search shows empty state');
   fireInput(env, 'labTheorySearch', '');
+  check(!html(env, 'labTheoryList').toLowerCase().includes('specific claim'),
+    'theory list buttons count total claims (specific + implied), not just specific ones');
+  check(!read('src/claims-lab.js').includes('inherited-wrap') && !read('styles.css').includes('inherited-wrap'),
+    'no leftover inherited-wrap CSS class anywhere');
 
   // claim detail headers
   click(env, 'labClaimGraph', { target: { closest: () => ({ dataset: { claim: 'c9' } }) } });
   check(html(env, 'labClaimDetail').includes('↑ Broader claims this leads to') &&
     html(env, 'labClaimDetail').includes('↓ More specific claims built on this'),
     'claim detail headers show implication direction');
+  check(html(env, 'labClaimDetail').includes('Theories affirming this claim'),
+    'claim detail uses the consistent "affirming this claim" heading');
   const scrollArgs = env.els.get('labClaimDetail')._scrollArgs;
   check(!!scrollArgs && scrollArgs[0] && scrollArgs[0].block === 'start',
     'clicking a graph node scrolls the detail panel into view (block: start)');
@@ -215,6 +221,14 @@ async function main() {
   check(text(env, 'labQCount') === '2 of 12', 'counter decrements on back after skip');
   click(env, 'labSkip'); // skip again, move on
 
+  // mid-round restart: first tap arms it, second tap restarts the quiz
+  check(!!env.els.get('labQRestart'), 'mid-round restart button exists');
+  click(env, 'labQRestart');
+  check(text(env, 'labQRestart').includes('Tap again'), 'first tap arms the restart: ' + text(env, 'labQRestart').slice(0, 40));
+  click(env, 'labQRestart');
+  check(text(env, 'labQCount') === '1 of 12', 'second tap restarts the quiz at question 1: ' + text(env, 'labQCount'));
+  check(text(env, 'labQRestart') === 'Restart ↺', 'restart button disarms after restarting');
+  click(env, 'labAgree'); // answer once more to resync the engine mirror below
   check(html(env, 'labScores').includes(' of '), 'live alignment scores render');
   check(html(env, 'labScores').includes('lab-score-blurb'), 'live scores show theory blurbs');
 

@@ -303,8 +303,8 @@
       cursor: pointer;
     }
     .lab-claim-chip.direct { background: var(--cyan); color: var(--black); font-weight: 600; }
-    .lab-inherited-wrap { display: inline-flex; align-items: center; gap: 6px; }
-    .lab-inherited-wrap small { color: var(--dim); font-size: 11px; }
+    .lab-implied-wrap { display: inline-flex; align-items: center; gap: 6px; }
+    .lab-implied-wrap small { color: var(--dim); font-size: 11px; }
     .lab-claim-text {
       border-left: 2px solid var(--line);
       padding: 4px 0 4px 14px;

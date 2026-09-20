@@ -6,7 +6,7 @@
     const $ = (id) => document.getElementById(id);
     // Defensive boot: if the HTML and JS versions disagree (e.g. a deploy
     // landing mid-reload), say so plainly instead of dying silently.
-    const need = ['labQuizStart', 'labQuizMain', 'labQuizResult', 'labQuizBegin', 'labQuizRestart',
+    const need = ['labQuizStart', 'labQuizMain', 'labQuizResult', 'labQuizBegin', 'labQuizRestart', 'labQRestart',
       'labQuizContinue', 'labContinueNote', 'labAgree', 'labDisagree', 'labSkip', 'labQBack', 'labQText', 'labQPlain', 'labQCount',
       'labQCoverage', 'labSettled', 'labSettledBy', 'labTension', 'labScores', 'labResultList', 'labClaimGraph',
       'labQRanking', 'labQuizResume', 'labResultKicker', 'labResultTitle',
@@ -236,7 +236,7 @@
             ${children.length ? `<div class="lab-chip-row">${children.map(child => claimChip(child)).join('')}</div>` : '<p class="lab-empty">Nothing depends directly on it yet.</p>'}
           </div>
           <div>
-            <p class="micro">Theories affirming this</p>
+            <p class="micro">Theories affirming this claim</p>
             <div class="lab-chip-row">${affirming.map(t => {
               const direct = (t.claims || []).includes(id);
               return `<button class="lab-theory-chip${direct ? ' direct' : ''}" data-theory="${t.id}" title="${direct ? 'Stated directly by this theory' : 'Not stated directly — it follows from claims this theory does state'}">${escapeHtml(t.name)}${direct ? '' : ' · implied'}</button>`;
@@ -279,12 +279,13 @@
         || (t.family || '').toLowerCase().includes(q)
         || (t.blurb || '').toLowerCase().includes(q)
         || (t.category || '').toLowerCase().includes(q);
-      const withClaims = E.theories.filter(matches).map(t =>
-        `<button class="lab-theory-btn" data-theory="${t.id}">
+      const withClaims = E.theories.filter(matches).map(t => {
+        const fullN = E.theoryFullClaims(t).size;
+        return `<button class="lab-theory-btn" data-theory="${t.id}">
           <strong>${escapeHtml(t.name)}</strong>
-          <span>${escapeHtml(t.family)} · ${t.claims.length} specific claim${t.claims.length === 1 ? '' : 's'}</span>
-        </button>`
-      ).join('');
+          <span>${escapeHtml(t.family)} · ${fullN} claim${fullN === 1 ? '' : 's'}</span>
+        </button>`;
+      }).join('');
       const pending = META_THEORIES.filter(t => !claimTheoryIds.has(t.id) && matches(t)).map(t =>
         `<button class="lab-theory-btn lab-theory-pending" data-meta="${t.id}">
           <strong>${escapeHtml(t.name)}</strong>
@@ -315,7 +316,7 @@
         ${t.caveat ? `<p class="lab-caveat">A note on how this is classified: ${escapeHtml(t.caveat)}</p>` : ''}
         <p class="micro">Specific claims (listed by the theory)</p>
         <div class="lab-chip-row">${[...direct].map(cid => claimChip(cid, 'direct')).join('')}</div>
-        ${inherited.length ? `<p class="micro">Implied claims (they follow from the specific ones)</p><div class="lab-chip-row">${inherited.map(cid => `<span class="lab-inherited-wrap">${claimChip(cid)}<small>via ${viaWhich(t, cid).join(', ')}</small></span>`).join('')}</div>` : ''}
+        ${inherited.length ? `<p class="micro">Implied claims (they follow from the specific ones)</p><div class="lab-chip-row">${inherited.map(cid => `<span class="lab-implied-wrap">${claimChip(cid)}<small>via ${viaWhich(t, cid).join(', ')}</small></span>`).join('')}</div>` : ''}
         <div class="lab-claim-texts">${[...full].map(cid => {
           const claim = claimById.get(cid);
           return `<div class="lab-claim-text${direct.has(cid) ? ' direct' : ''}"><span class="lab-claim-id">${cid}${direct.has(cid) ? '' : ' · implied'}</span><p>${escapeHtml(claim.text)}</p><p class="lab-claim-plain">Put simply: ${escapeHtml(claim.plain)}</p></div>`;
@@ -402,6 +403,15 @@
     let forcedQuestionId = null; // Back re-shows the exact popped question instead of re-deriving
     let qRoundCount = 0;
     let qRound = 1;
+    let restartArmed = false;
+    let restartTimer = null;
+    // Mid-round restart is a two-step tap: the first arms it ("tap again"),
+    // so an accidental tap can't wipe a round. Any step taken disarms it.
+    function disarmRestart() {
+      restartArmed = false;
+      if (restartTimer) { clearTimeout(restartTimer); restartTimer = null; }
+      $('labQRestart').textContent = 'Restart ↺';
+    }
     let lastSettledIds = [];
     let lastSettledDir = null; // 'yes' when the last answer affirmed, 'no' when it rejected
 
@@ -420,6 +430,7 @@
       qStart.classList.add('hidden');
       qResult.classList.add('hidden');
       qMain.classList.remove('hidden');
+      disarmRestart();
       renderQuestion();
     }
 
@@ -470,6 +481,7 @@
       $('labQBack').classList.toggle('hidden', qhistory.length === 0);
       // From round 2 on there is a ranking worth revisiting mid-round.
       $('labQRanking').classList.toggle('hidden', qRound < 2);
+      disarmRestart();
       renderSettledBy();
       renderTension();
       renderScores();
@@ -596,6 +608,13 @@
     $('labQuizBegin').addEventListener('click', startQuiz);
     $('labQuizRestart').addEventListener('click', startQuiz);
     $('labQuizContinue').addEventListener('click', continueQuiz);
+    // Mid-round restart: first tap arms it, second tap wipes and restarts.
+    $('labQRestart').addEventListener('click', () => {
+      if (restartArmed) { disarmRestart(); startQuiz(); return; }
+      restartArmed = true;
+      $('labQRestart').textContent = 'Tap again to restart — this clears your answers';
+      restartTimer = setTimeout(disarmRestart, 4000);
+    });
     // Mid-round peek at the ranking (round 2+): shows the results view over
     // current answers, with a way back that resumes the round untouched.
     $('labQRanking').addEventListener('click', () => {
