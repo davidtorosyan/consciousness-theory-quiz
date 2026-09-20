@@ -468,3 +468,5 @@
     }
     .lab-theory-pending { opacity: .72; }
     .lab-claim-plain { color: var(--muted); font-size: 14px; }
+    .lab-settled-by { color: var(--dim); font-size: 13px; margin: -14px 0 20px; }
+    .lab-settled-by:not(:empty)::before { content: "✓ "; color: var(--cyan); }

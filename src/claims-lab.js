@@ -3,9 +3,20 @@
   'use strict';
 
   function init() {
-    if (!window.ClaimsEngine || !window.CLAIMS) return;
-    const E = window.ClaimsEngine.bound();
     const $ = (id) => document.getElementById(id);
+    // Defensive boot: if the HTML and JS versions disagree (e.g. a deploy
+    // landing mid-reload), say so plainly instead of dying silently.
+    const need = ['labQuizStart', 'labQuizMain', 'labQuizResult', 'labQuizBegin', 'labQuizRestart',
+      'labAgree', 'labDisagree', 'labSkip', 'labQBack', 'labQText', 'labQPlain', 'labQCount',
+      'labQCoverage', 'labSettled', 'labSettledBy', 'labScores', 'labResultList', 'labClaimGraph',
+      'labClaimDetail', 'labTheoryList', 'labDetail', 'labBack', 'labTabClaims', 'labTabTheories',
+      'labClaims', 'labTheories', 'quizCountLine', 'exploreDek'];
+    if (!window.ClaimsEngine || !window.CLAIMS || need.some(id => !$(id))) {
+      const el = $('quizCountLine') || $('labQuizStart');
+      if (el) el.textContent = 'The site just updated — please reload the page to get the latest version.';
+      return;
+    }
+    const E = window.ClaimsEngine.bound();
     const claimById = new Map(E.claims.map(c => [c.id, c]));
     const theoryById = new Map(E.theories.map(t => [t.id, t]));
     const META_THEORIES = window.THEORIES_120 || [];
@@ -154,11 +165,11 @@
         <p class="lab-plain">Put simply: ${escapeHtml(c.plain)}</p>
         <div class="claim-detail-groups">
           <div>
-            <p class="micro">This directly entails</p>
+            <p class="micro">Broader claims this entails</p>
             ${parents.length ? `<div class="lab-chip-row">${parents.map(p => claimChip(p)).join('')}</div>` : '<p class="lab-empty">Nothing — this is a base claim.</p>'}
           </div>
           <div>
-            <p class="micro">Claims directly built on this</p>
+            <p class="micro">More specific claims that entail this</p>
             ${children.length ? `<div class="lab-chip-row">${children.map(child => claimChip(child)).join('')}</div>` : '<p class="lab-empty">Nothing depends directly on it yet.</p>'}
           </div>
           <div>
@@ -309,6 +320,7 @@
     const qResult = $('labQuizResult');
     let qstate = null;
     let qhistory = [];
+    let lastSettledIds = [];
 
     // Dynamic intro copy: counts come from the data, never hardcoded.
     $('quizCountLine').textContent = `${E.claims.length} claims · ${E.theories.length} theories`;
@@ -318,6 +330,7 @@
     function startQuiz() {
       qstate = E.newQuiz();
       qhistory = [];
+      lastSettledIds = [];
       qStart.classList.add('hidden');
       qResult.classList.add('hidden');
       qMain.classList.remove('hidden');
@@ -345,14 +358,28 @@
         ? `Settled so far: ${affN} agreed · ${rejN} rejected · ${E.claims.length - affN - rejN} open`
         : '';
       $('labQBack').classList.toggle('hidden', qhistory.length === 0);
+      renderSettledBy();
       renderScores();
+    }
+
+    function renderSettledBy() {
+      const el = $('labSettledBy');
+      if (!lastSettledIds.length) { el.textContent = ''; return; }
+      const labels = lastSettledIds.map(id => {
+        const c = claimById.get(id);
+        return c ? (c.short || c.text) : id;
+      });
+      el.textContent = `That also settled: ${labels.join(' · ')}.`;
     }
 
     function answerQuestion(yesNo) {
       const q = currentQuestion();
       if (!q) return;
+      const before = new Set([...E.affirmed(qstate), ...E.rejected(qstate)]);
       E.answer(qstate, q.id, yesNo);
       qhistory.push({ id: q.id, action: 'answer' });
+      lastSettledIds = [...E.affirmed(qstate), ...E.rejected(qstate)]
+        .filter(id => !before.has(id) && id !== q.id);
       renderQuestion();
     }
 
@@ -361,6 +388,7 @@
       if (!q) return;
       E.skip(qstate, q.id);
       qhistory.push({ id: q.id, action: 'skip' });
+      lastSettledIds = [];
       renderQuestion();
     }
 
@@ -378,13 +406,18 @@
     function renderResults() {
       qMain.classList.add('hidden');
       qResult.classList.remove('hidden');
-      $('labResultList').innerHTML = E.score(qstate).map((result, index) => `
+      $('labResultList').innerHTML = E.score(qstate).map((result, index) => {
+        const line = (result.agreed === 0 && result.disagreed === 0)
+          ? `None of this theory's claims came up in your answers (${result.total} claim${result.total === 1 ? '' : 's'}).`
+          : `You agree with ${result.agreed} of its ${result.total} claims${result.disagreed ? `, and reject ${result.disagreed}` : ''}.`;
+        return `
         <div class="lab-result-row${index === 0 ? ' top' : ''}">
           <span class="lab-result-rank">${index + 1}</span>
           <div><strong>${escapeHtml(result.theory.name)}</strong>
-          <p>You agree with ${result.agreed} of its ${result.total} claims${result.disagreed ? `, and reject ${result.disagreed}` : ''}.</p>
+          <p>${line}</p>
           <button class="text-btn" data-inspect="${result.theory.id}">Inspect this theory’s claims</button></div>
-        </div>`).join('');
+        </div>`;
+      }).join('');
     }
 
     $('labQuizBegin').addEventListener('click', startQuiz);
@@ -401,6 +434,7 @@
       if (!last) return;
       if (last.action === 'skip') E.unskip(qstate, last.id);
       else E.undo(qstate, last.id);
+      lastSettledIds = [];
       renderQuestion();
     });
 

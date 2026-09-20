@@ -71,7 +71,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c5",
     short: "Perception is an interface",
-    text: "Space, time, and physical objects are a species-specific interface evolved for survival, not a report of objective truth.",
+    text: "Space, time, and physical objects are a species-specific user interface shaped by evolution — useful for survival, not a true picture of reality.",
     plain: "Perception is like a desktop: icons hide the real machinery, but help you get things done.",
     entails: []
   },
@@ -106,7 +106,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c10",
     short: "Physical causes are closed",
-    text: "Physics is causally closed — experience never moves matter.",
+    text: "Every physical event has a purely physical cause — minds never move matter.",
     plain: "Everything physical has a purely physical cause; minds don't push neurons.",
     entails: []
   },
@@ -114,20 +114,20 @@ window.CLAIMS = Object.freeze([
     id: "c11",
     short: "Zombies are conceivable",
     text: "A physical duplicate of you with no inner experience is conceivable.",
-    plain: "The 'philosophical zombie' test: if physics doesn't entail experience, experience is extra.",
+    plain: "The 'philosophical zombie' thought experiment: a being physically identical to you, behaving exactly the same, with nobody home inside. If that's conceivable, experience must be something extra beyond physics.",
     entails: ["c9"]
   },
   {
     id: "c12",
     short: "Experience is causal structure",
-    text: "A conscious experience is identical to a maximally irreducible cause-effect structure in a physical system.",
-    plain: "Experience just is a certain kind of integrated causal structure, measurable as Φ (phi).",
+    text: "A conscious experience is identical to a particular kind of cause-and-effect structure in a physical system — one so tightly integrated it can't be divided into independent parts.",
+    plain: "Consciousness is how a system's parts hang together as one irreducible whole. (IIT measures this integration as Φ, 'phi'.)",
     entails: ["c0", "c13"]
   },
   {
     id: "c13",
     short: "Integrated structure matters",
-    text: "What makes a system conscious is its integrated-information structure, not what it computes.",
+    text: "What makes a system conscious is how its parts are integrated into one cause-and-effect whole — not the computations or functions it performs.",
     plain: "It's about how information is bound together, not about running the right program.",
     entails: ["c0"]
   },
@@ -141,7 +141,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c15",
     short: "mind as active brain-user",
-    text: "The conscious mind is an active agent that scans, selects, and unifies the brain's activity — including imposing the unity of the phenomenal field.",
+    text: "The conscious mind is an active agent that scans, selects, and unifies the brain's activity — including binding it into a single unified experience.",
     plain: "The mind isn't a passive product of the brain; it's an active user that reads out from and organizes neural activity.",
     entails: ["c8"]
   },
@@ -169,7 +169,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c19",
     short: "one substance, two aspects",
-    text: "There is exactly one substance (God-or-Nature); individual minds and bodies are finite modes of it expressed under different attributes.",
+    text: "There is exactly one fundamental reality (Spinoza called it God-or-Nature); individual minds and bodies are the same reality seen under two different aspects — the mental and the physical.",
     plain: "There's only one reality, and mind and body are the same thing seen two ways — thought and extension are two views of one thing.",
     entails: []
   },
@@ -190,7 +190,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c22",
     short: "pure experience prior to mind/matter",
-    text: "Mind and matter are both arrangements of a more primitive neutral field of 'pure experience' that is neither mental nor physical.",
+    text: "Mind and matter are both built from something more basic — a neutral 'pure experience' that isn't yet mental or physical.",
     plain: "Reality is made of one neutral stuff that isn't mind or matter yet; mind and matter are roles it plays depending on how it's organized.",
     entails: []
   },
@@ -274,8 +274,8 @@ window.CLAIMS = Object.freeze([
   {
     id: "c34",
     short: "consciousness irreducible",
-    text: "Consciousness is a real, irreducible part of the natural world — it cannot be eliminated or ontologically reduced to something else.",
-    plain: "Experience is genuinely real and survives any redescription in brain terms; its first-person character can't be reduced away.",
+    text: "Consciousness is a real part of the natural world that can't be explained away or reduced to something non-conscious.",
+    plain: "Experience is genuinely real; no redescription in brain terms makes its first-person character disappear.",
     entails: []
   },
   {
