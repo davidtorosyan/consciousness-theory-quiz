@@ -73,6 +73,7 @@ function boot({ siteBuild = 6, fetchImpl = null } = {}) {
   };
   const doc = {
     readyState: 'complete',
+    documentElement: { style: {} },
     getElementById: (id) => registry.get(id) || null,
     createElement: (tag) => makeEl(tag),
     createElementNS: (ns, tag) => makeEl(tag),
@@ -151,6 +152,20 @@ async function main() {
   const pending = (listHtml.match(/data-meta="/g) || []).length;
   check(withClaims === M && pending === 120 - M, `theory list: ${M} with claims + ${120 - M} pending (got ${withClaims}+${pending})`);
 
+  // no internal claim ids leak into visible UI
+  const graphHtml = html(env, 'labClaimGraph');
+  check(!graphHtml.includes('dag-node-id') && !/>c\d+</.test(graphHtml),
+    'graph nodes show no internal claim ids');
+  const CE2 = win.ClaimsEngine.bound();
+  const withImplied = THEORIES.find(t => [...CE2.theoryFullClaims(t)].some(x => !(t.claims || []).includes(x)));
+  check(!!withImplied, 'test setup: found a theory with implied claims');
+  click(env, 'labTheoryList', { target: { closest: (sel) => sel === '[data-theory]' ? { dataset: { theory: String(withImplied.id) } } : null }, preventDefault() {} });
+  const detailHtml = html(env, 'labDetail');
+  check(!/via c\d/.test(detailHtml) && !detailHtml.includes('lab-claim-id">c'),
+    'theory detail shows no internal claim ids (via-lines and implied markers are plain language)');
+  check(read('src/claims-lab.js').includes("root.style.scrollBehavior = 'auto'"),
+    'node-click scroll suppresses the CSS smooth behavior for an instant jump');
+
   // jargon regression guard: removed terms must not reappear unglossed
   const banned = ['numerically identical', 'subpersonal', 'prime mover', 'explanatory gap', 'non-separability'];
   const bad = [];
@@ -194,6 +209,8 @@ async function main() {
   const scrollArgs = env.els.get('labClaimDetail')._scrollArgs;
   check(!!scrollArgs && scrollArgs[0] && scrollArgs[0].block === 'start',
     'clicking a graph node scrolls the detail panel into view (block: start)');
+  check(!html(env, 'labClaimDetail').includes('>Claim c'),
+    'claim detail header shows no internal claim id');
   click(env, 'labQuizBegin');
   check(html(env, 'labClaimDetail') === '' && html(env, 'labDetail') === '',
     'starting a fresh quiz clears any open explorer panels');
@@ -348,7 +365,7 @@ async function main() {
   check(sawTension, 'tension note appears when affirming contradictory claims');
   check(sawPreNudge, 'pre-answer heads-up appears before affirming a contradictory claim');
   check(!hidden(env, 'labQuizContinue'), 'continue button offered after a round');
-  check(text(env, 'labContinueNote').includes('Based on 12 answers'), 'continue note cites answer count');
+  check(text(env, 'labContinueNote').includes('Based on 12 answers from you'), 'continue note cites answer count and settled claims');
   click(env, 'labQuizContinue');
   check(!hidden(env, 'labQuizMain') && hidden(env, 'labQuizResult'), 'continue resumes the quiz');
   check(text(env, 'labQCount') === '1 of 12 · round 2', 'round 2 counter names the round: ' + text(env, 'labQCount'));

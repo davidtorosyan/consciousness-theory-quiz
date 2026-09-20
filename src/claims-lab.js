@@ -41,7 +41,7 @@
     }
     function claimChip(id, extra) {
       const c = claimById.get(id);
-      return `<button class="lab-claim-chip${extra ? ' ' + extra : ''}" data-claim="${id}" title="${id}: ${escapeHtml(c.text)}">${escapeHtml(shortLabel(c))}</button>`;
+      return `<button class="lab-claim-chip${extra ? ' ' + extra : ''}" data-claim="${id}" title="${escapeHtml(c.text)}">${escapeHtml(shortLabel(c))}</button>`;
     }
 
     /* ---------------- explorer views (quiz lives above, always visible) ---------------- */
@@ -155,7 +155,7 @@
             // without duplicating anything for assistive tech.
             button.setAttribute('aria-label', `${id}: ${shortLabel(claim)}. ${claim.text}`);
             button.setAttribute('data-plain', `Put simply: ${claim.plain}`);
-            button.innerHTML = `<span class="dag-node-id">${id}</span><span class="dag-node-label">${escapeHtml(shortLabel(claim))}</span>`;
+            button.innerHTML = `<span class="dag-node-label">${escapeHtml(shortLabel(claim))}</span>`;
             inner.appendChild(button);
             return { el: button, col: index };
           });
@@ -227,7 +227,6 @@
       const children = directChildren(id);
       const affirming = E.theories.filter(t => E.theoryFullClaims(t).has(id));
       claimDetail.innerHTML = `
-        <p class="micro">Claim ${id}</p>
         <h3 class="lab-claim-title">${escapeHtml(c.text)}</h3>
         <p class="lab-plain">Put simply: ${escapeHtml(c.plain)}</p>
         <div class="claim-detail-groups">
@@ -253,9 +252,7 @@
       const node = e.target.closest('[data-claim]');
       if (!node) return;
       renderClaimDetail(node.dataset.claim);
-      // Instant jump, not smooth: the panel is far below a tall graph and a
-      // slow scroll left testers unsure anything had happened.
-      claimDetail.scrollIntoView({ block: 'start' });
+      jumpTo(claimDetail);
     });
     claimDetail.addEventListener('click', (e) => {
       const claim = e.target.closest('[data-claim]');
@@ -272,6 +269,18 @@
     requestAnimationFrame(layoutGraph);
     if ('ResizeObserver' in window) new ResizeObserver(() => layoutGraph()).observe(graph);
     else window.addEventListener('resize', () => layoutGraph());
+
+    // Instant jump to an element. The stylesheet sets
+    // html { scroll-behavior: smooth }, which would otherwise turn a plain
+    // scrollIntoView() into a slow animation the user may never notice —
+    // so the smooth behavior is suppressed for the duration of the jump.
+    function jumpTo(el) {
+      const root = document.documentElement;
+      const prev = root.style.scrollBehavior;
+      root.style.scrollBehavior = 'auto';
+      el.scrollIntoView({ block: 'start' });
+      root.style.scrollBehavior = prev;
+    }
 
     /* ---------------- theory explorer ---------------- */
     const theoryList = $('labTheoryList');
@@ -322,10 +331,13 @@
         ${t.caveat ? `<p class="lab-caveat">A note on how this is classified: ${escapeHtml(t.caveat)}</p>` : ''}
         <p class="micro">Specific claims (listed by the theory)</p>
         <div class="lab-chip-row">${[...direct].map(cid => claimChip(cid, 'direct')).join('')}</div>
-        ${inherited.length ? `<p class="micro">Implied claims (they follow from the specific ones)</p><div class="lab-chip-row">${inherited.map(cid => `<span class="lab-implied-wrap">${claimChip(cid)}<small>via ${viaWhich(t, cid).join(', ')}</small></span>`).join('')}</div>` : ''}
+        ${inherited.length ? `<p class="micro">Implied claims (they follow from the specific ones)</p><div class="lab-chip-row">${inherited.map(cid => {
+          const via = viaWhich(t, cid).map(sid => { const sc = claimById.get(sid); return sc ? `“${sc.plain}”` : sid; });
+          return `<span class="lab-implied-wrap">${claimChip(cid)}<small>via ${via.join(' · ')}</small></span>`;
+        }).join('')}</div>` : ''}
         <div class="lab-claim-texts">${[...full].map(cid => {
           const claim = claimById.get(cid);
-          return `<div class="lab-claim-text${direct.has(cid) ? ' direct' : ''}"><span class="lab-claim-id">${cid}${direct.has(cid) ? '' : ' · implied'}</span><p>${escapeHtml(claim.text)}</p><p class="lab-claim-plain">Put simply: ${escapeHtml(claim.plain)}</p></div>`;
+          return `<div class="lab-claim-text${direct.has(cid) ? ' direct' : ''}">${direct.has(cid) ? '' : '<span class="lab-claim-id">implied</span>'}<p>${escapeHtml(claim.text)}</p><p class="lab-claim-plain">Put simply: ${escapeHtml(claim.plain)}</p></div>`;
         }).join('')}</div>`;
     }
     function renderMeta(id) {
@@ -589,13 +601,20 @@
       qMain.classList.add('hidden');
       qResult.classList.remove('hidden');
       $('labQuizResume').classList.add('hidden');
-      $('labResultKicker').textContent = 'Your result · alignment, not elimination';
-      $('labResultTitle').textContent = 'Where your answers land';
       const answered = Object.keys(qstate.answers).length;
+      const decided = E.affirmed(qstate).size + E.rejected(qstate).size;
+      const basisLine = `Based on ${answered} answer${answered === 1 ? '' : 's'} from you — ${decided} claim${decided === 1 ? '' : 's'} settled in total.`;
       $('labQuizContinue').classList.toggle('hidden', exhausted);
-      $('labContinueNote').textContent = exhausted
-        ? ''
-        : `Based on ${answered} answer${answered === 1 ? '' : 's'} so far — keep going any time for a sharper picture.`;
+      $('labResultKicker').textContent = 'Your result · alignment, not elimination';
+      if (exhausted) {
+        // The engine ran out of undecided claims before the round filled up:
+        // say so, or the early finish looks like a bug.
+        $('labResultTitle').textContent = 'No questions left to ask';
+        $('labContinueNote').textContent = 'Your answers settled the remaining questions on their own — every claim they could decide is decided.';
+      } else {
+        $('labResultTitle').textContent = 'Where your answers land';
+        $('labContinueNote').textContent = `${basisLine} Keep going any time for a sharper picture.`;
+      }
       qMain.classList.add('hidden');
       qResult.classList.remove('hidden');
       $('labResultList').innerHTML = E.score(qstate).map((result, index) => {
@@ -634,7 +653,8 @@
       $('labResultKicker').textContent = 'Live ranking · not the final result';
       $('labResultTitle').textContent = 'Where your answers land so far';
       const answered = Object.keys(qstate.answers).length;
-      $('labContinueNote').textContent = `Based on ${answered} answer${answered === 1 ? '' : 's'} so far.`;
+      const decided = E.affirmed(qstate).size + E.rejected(qstate).size;
+      $('labContinueNote').textContent = `Based on ${answered} answer${answered === 1 ? '' : 's'} from you — ${decided} claim${decided === 1 ? '' : 's'} settled in total.`;
       $('labQuizResume').classList.remove('hidden');
     }
     $('labQRanking').addEventListener('click', peekRanking);
