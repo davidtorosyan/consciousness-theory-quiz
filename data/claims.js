@@ -24,8 +24,13 @@
   panprotopsychism/panqualityism, identity theory, and biological naturalism.
   Pre-merge drafts lived in data/claims-batch2.js + data/claims-batch2-notes.md
   (see git history).
+  Batch 3 (c35-c54, theories 2/16/17/18/20/22/25/27) added Advaita Vedanta
+  nondualism, non-reductive physicalism, functionalism, global workspace
+  theory, higher-order thought, predictive processing, EM-field theory,
+  and illusionism. Pre-merge drafts lived in data/claims-batch3.js +
+  data/claims-batch3-notes.md (see git history).
 */
-window.CLAIMS_VERSION = '2';
+window.CLAIMS_VERSION = '3';
 
 window.CLAIMS = Object.freeze([
   {
@@ -272,6 +277,146 @@ window.CLAIMS = Object.freeze([
     text: "Consciousness is a real, irreducible part of the natural world — it cannot be eliminated or ontologically reduced to something else.",
     plain: "Experience is genuinely real and survives any redescription in brain terms; its first-person character can't be reduced away.",
     entails: []
+  },
+  {
+    id: "c35",
+    short: "One universal consciousness",
+    text: "There is a single universal consciousness; individual subjects are apparent delimitations of it, not separate entities.",
+    plain: "One awareness underlies everything; your separate self is a case of mistaken identity.",
+    entails: ["c1"]
+  },
+  {
+    id: "c36",
+    short: "Consciousness is self-revealing",
+    text: "Awareness is self-luminous: it reveals itself without needing a second awareness to reveal it, and it is never an object of knowledge.",
+    plain: "Awareness doesn't need to be seen to be there — it is the seeing itself.",
+    entails: ["c9"]
+  },
+  {
+    id: "c37",
+    short: "The separate self is a construction",
+    text: "The ordinary experiencing 'I' is a construction produced by superimposing the witnessing awareness onto the psychophysical apparatus.",
+    plain: "The 'me' that seems to have experiences is a useful fiction, not the real you.",
+    entails: ["c35"]
+  },
+  {
+    id: "c38",
+    short: "Experience's contents come from machinery",
+    text: "The qualitative variety of experience — colors, pains, thoughts — belongs to a material, insentient mental apparatus, not to consciousness itself.",
+    plain: "What you're aware of is built by mental machinery; awareness itself is just the light that reveals it.",
+    entails: []
+  },
+  {
+    id: "c39",
+    short: "Physical yet irreducible",
+    text: "Consciousness is wholly physical but genuinely new — a strongly emergent level of brain organization, unpredictable even in principle from its constituents and not reducible to them.",
+    plain: "100% physical, but a real new level — not just neurons redescribed.",
+    entails: ["c34"]
+  },
+  {
+    id: "c40",
+    short: "Top-down causation is real",
+    text: "Higher levels of organization, including conscious states, exert real causal force on lower physical levels — causation runs downward as well as upward.",
+    plain: "Thoughts can reach down and steer neurons; causation isn't bottom-up only.",
+    entails: []
+  },
+  {
+    id: "c41",
+    short: "Mind is defined by its role",
+    text: "What makes a mental state the state it is is its functional role — the causal relations among sensory inputs, internal states, and motor outputs — not what it is made of.",
+    plain: "Pain is pain because of what it does in the system, not because of the neurons.",
+    entails: []
+  },
+  {
+    id: "c42",
+    short: "Same mind, different hardware",
+    text: "The same conscious state can be realized in radically different physical systems — human brains, animal brains, or machines — as long as the functional organization is the same.",
+    plain: "You could be made of Swiss cheese and it wouldn't matter, if the wiring did the same job.",
+    entails: ["c41"]
+  },
+  {
+    id: "c43",
+    short: "Consciousness is global broadcast",
+    text: "A mental state is conscious when it wins a competition among brain processes and is broadcast brain-wide, becoming available to attention, memory, speech, and action.",
+    plain: "Whatever gets onto the brain's public announcement system is what you're conscious of.",
+    entails: []
+  },
+  {
+    id: "c44",
+    short: "Attention gates consciousness",
+    text: "Attention is a prerequisite for consciousness — the brain does a great deal of processing unconsciously until attention amplifies a signal into awareness.",
+    plain: "Your brain works unconsciously most of the time; attention is the gate that lets things into awareness.",
+    entails: []
+  },
+  {
+    id: "c45",
+    short: "Consciousness needs a higher thought",
+    text: "A mental state is conscious only when you have a higher-order thought that you are in that state — being aware of the state is what makes it conscious.",
+    plain: "A feeling becomes conscious when your mind registers 'I'm having this feeling' — even if that registration is itself unconscious.",
+    entails: []
+  },
+  {
+    id: "c46",
+    short: "Qualities can exist unconsciously",
+    text: "Mental qualities (the raw feel of red, say) can exist without being conscious; they become conscious only through the higher-order awareness of them.",
+    plain: "Your brain can carry the quality of redness without you being conscious of it — consciousness is the higher-order noticing.",
+    entails: ["c45"]
+  },
+  {
+    id: "c47",
+    short: "The brain is a prediction engine",
+    text: "The brain is fundamentally a prediction machine: top-down predictions about the causes of sensory input are constantly compared against bottom-up prediction errors.",
+    plain: "Your brain doesn't passively receive the world — it predicts it, then corrects its guesses.",
+    entails: []
+  },
+  {
+    id: "c48",
+    short: "Experience is controlled prediction",
+    text: "Conscious experience is the brain's best controlled prediction — a synthesis of predictive expectation and sensory information.",
+    plain: "What you experience is your brain's best guess about the world, refined by the senses.",
+    entails: ["c47"]
+  },
+  {
+    id: "c49",
+    short: "Mind can extend beyond the skull",
+    text: "The mind is not confined to the brain — predictive brains can participate in larger cognitive circuits that include the body, tools, and environment.",
+    plain: "Thinking can loop through tools, body, and world, not just neurons.",
+    entails: []
+  },
+  {
+    id: "c50",
+    short: "Consciousness is the brain's EM field",
+    text: "Consciousness is the brain's global electromagnetic field — the coherent field generated by neural activity itself, not merely the firing patterns that produce it.",
+    plain: "What it's like to be you just is the electromagnetic field your brain generates.",
+    entails: ["c0"]
+  },
+  {
+    id: "c51",
+    short: "Fields bind experience together",
+    text: "Electromagnetic fields bind distributed neural activity into unified conscious experience through their physical properties of superposition and interference.",
+    plain: "The field stitches scattered brain activity into one seamless experience — it's the physical glue.",
+    entails: []
+  },
+  {
+    id: "c52",
+    short: "The field pushes neurons around",
+    text: "The brain's electromagnetic field exerts downward causation on neural firing — field and neurons influence each other in both directions.",
+    plain: "The field isn't just an echo of neurons; it pushes back and steers them.",
+    entails: ["c40"]
+  },
+  {
+    id: "c53",
+    short: "There are no real qualia",
+    text: "There are no qualia as traditionally conceived — no private, ineffable, intrinsic felt properties; they are philosophers' inventions.",
+    plain: "'What it's like' isn't a special inner property — that idea is a philosophical fiction.",
+    entails: []
+  },
+  {
+    id: "c54",
+    short: "Experience is a user illusion",
+    text: "Conscious experience is a benign 'user illusion' produced by the brain's unconscious processes — real as a functional pattern, but not what it seems to be.",
+    plain: "Your experience is like a desktop interface: useful and real as a pattern, but hiding what's really going on.",
+    entails: ["c53", "c0"]
   }
 ]);
 
@@ -296,5 +441,13 @@ window.CLAIM_THEORIES = Object.freeze([
   { id: 12, name: "Cosmopsychism",                   family: "Panpsychism",   claims: ["c28"] },
   { id: 13, name: "Panprotopsychism / panqualityism",family: "Panpsychism",   claims: ["c31"] },
   { id: 14, name: "Mind–brain identity theory",      family: "Materialism",   claims: ["c32"] },
-  { id: 15, name: "Biological naturalism",           family: "Materialism",   claims: ["c33", "c34"] }
+  { id: 15, name: "Biological naturalism",           family: "Materialism",   claims: ["c33", "c34"] },
+  { id:  2, name: "Advaita Vedānta nondualism",      family: "Idealism",       claims: ["c36", "c37", "c38"] },
+  { id: 16, name: "Non-reductive physicalism / strong emergence", family: "Materialism",    claims: ["c39", "c40"] },
+  { id: 17, name: "Functionalism / computationalism", family: "Materialism",    claims: ["c42"] },
+  { id: 18, name: "Global Workspace Theory",         family: "Materialism",    claims: ["c43", "c44"] },
+  { id: 20, name: "Higher-order thought theory",     family: "Materialism",    claims: ["c46"] },
+  { id: 22, name: "Predictive processing",           family: "Materialism",    claims: ["c48", "c49"] },
+  { id: 25, name: "Electromagnetic-field theory",    family: "Materialism",    claims: ["c50", "c51", "c52"] },
+  { id: 27, name: "Illusionism",                     family: "Materialism",    claims: ["c54"] },
 ]);
