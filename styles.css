@@ -446,6 +446,15 @@
     .dag-node.root { border-color: var(--coral); }
     .dag-node-id { display: block; margin-bottom: 4px; color: var(--cyan); font: 500 10px/1 "IBM Plex Mono", monospace; text-transform: uppercase; }
     .dag-node-label { display: block; font-size: 12px; font-weight: 600; }
+    .dag-node[data-plain]:hover::after, .dag-node[data-plain]:focus-visible::after {
+      content: attr(data-plain);
+      position: absolute; left: 50%; bottom: calc(100% + 8px); transform: translateX(-50%);
+      width: max-content; max-width: 260px;
+      background: var(--panel-2); color: var(--ink); border: 1px solid var(--cyan);
+      border-radius: 8px; padding: 8px 10px; font-size: 12px; font-weight: 400;
+      line-height: 1.35; z-index: 60; pointer-events: none; text-align: left;
+      box-shadow: 0 8px 24px rgba(0,0,0,.45);
+    }
     .claim-detail-panel { padding-top: 24px; border-top: 1px solid var(--line); }
     .claim-detail-panel:empty { display: none; }
     .claim-detail-panel .lab-claim-title { max-width: 780px; }
@@ -495,7 +504,7 @@
     .lab-settled-by { color: var(--dim); font-size: 13px; margin: -14px 0 20px; }
     .lab-settled-by:not(:empty)::before { content: "✓ "; color: var(--cyan); }
     .lab-tension { color: #f2d98c; font-size: 13px; margin: -14px 0 20px; border-left: 2px solid #8a6d1f; padding-left: 10px; }
-    .lab-scores-more { color: var(--dim); font-size: 13px; margin: 8px 0 0; }
+    .lab-scores-more { color: var(--dim); font-size: 13px; margin: 8px 0 0; text-align: left; cursor: pointer; }
     .lab-continue-note { color: var(--dim); font-size: 14px; margin: 0 0 16px; }
     .update-banner { background: #3a2f10; border: 1px solid #8a6d1f; color: #f2d98c; border-radius: 10px; padding: 10px 14px; margin: 0 0 16px; font-size: 14px; }
     .update-banner .text-btn { color: #ffe9a8; text-decoration: underline; font-size: 14px; }

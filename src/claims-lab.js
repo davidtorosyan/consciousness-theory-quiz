@@ -150,7 +150,11 @@
             // No title attribute: the aria-label carries the claim. Lead with the
             // short label (the node's visible identifier) so assistive tech
             // gets the same primary label sighted users see, then the full text.
+            // data-plain feeds a CSS-only hover tooltip for sighted users, so
+            // jargon-y short labels get an in-context plain-language gloss
+            // without duplicating anything for assistive tech.
             button.setAttribute('aria-label', `${id}: ${shortLabel(claim)}. ${claim.text}`);
+            button.setAttribute('data-plain', `Put simply: ${claim.plain}`);
             button.innerHTML = `<span class="dag-node-id">${id}</span><span class="dag-node-label">${escapeHtml(shortLabel(claim))}</span>`;
             inner.appendChild(button);
             return { el: button, col: index };
@@ -472,15 +476,13 @@
       $('labQText').textContent = claim.text;
       $('labQPlain').textContent = `Put simply: ${claim.plain}`;
       const both = E.coverageBoth(qstate, q.id);
-      $('labQCoverage').textContent = `Why this question: one answer decides several claims at once — yes decides ${both.yes}, no decides ${both.no}.`;
+      $('labQCoverage').textContent = `Why this question: one answer decides several claims at once — agreeing decides ${both.yes}, disagreeing decides ${both.no}.`;
       const affN = E.affirmed(qstate).size;
       const rejN = E.rejected(qstate).size;
       $('labSettled').textContent = (affN + rejN)
         ? `Decided so far: ${affN} agreed · ${rejN} rejected · ${E.claims.length - affN - rejN} open`
         : '';
       $('labQBack').classList.toggle('hidden', qhistory.length === 0);
-      // From round 2 on there is a ranking worth revisiting mid-round.
-      $('labQRanking').classList.toggle('hidden', qRound < 2);
       disarmRestart();
       renderSettledBy();
       renderTension();
@@ -571,7 +573,7 @@
           ${result.disagreed ? `<small>${result.disagreed} rejected</small>` : ''}
         </div>`;
       }).join('') + (ranked.length > QUIZ_RAIL_TOP
-        ? `<p class="lab-scores-more">${ranked.length - QUIZ_RAIL_TOP} more theories — full ranking any time.</p>`
+        ? `<button class="lab-scores-more text-btn" data-peek-ranking="1">${ranked.length - QUIZ_RAIL_TOP} more theories — full ranking any time.</button>`
         : '');
     }
 
@@ -615,9 +617,10 @@
       $('labQRestart').textContent = 'Tap again to restart — this clears your answers';
       restartTimer = setTimeout(disarmRestart, 4000);
     });
-    // Mid-round peek at the ranking (round 2+): shows the results view over
-    // current answers, with a way back that resumes the round untouched.
-    $('labQRanking').addEventListener('click', () => {
+    // Mid-round peek at the ranking: shows the results view over current
+    // answers, with a way back that resumes the round untouched. Available
+    // from round 1 — the rail's "full ranking any time" opens the same view.
+    function peekRanking() {
       renderResults(false);
       $('labQuizContinue').classList.add('hidden');
       $('labResultKicker').textContent = 'Live ranking · not the final result';
@@ -625,6 +628,10 @@
       const answered = Object.keys(qstate.answers).length;
       $('labContinueNote').textContent = `Based on ${answered} answer${answered === 1 ? '' : 's'} so far.`;
       $('labQuizResume').classList.remove('hidden');
+    }
+    $('labQRanking').addEventListener('click', peekRanking);
+    $('labScores').addEventListener('click', (e) => {
+      if (e.target.closest('[data-peek-ranking]')) peekRanking();
     });
     $('labQuizResume').addEventListener('click', () => {
       $('labQuizResume').classList.add('hidden');

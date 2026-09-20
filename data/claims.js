@@ -1424,14 +1424,14 @@ window.CLAIMS = Object.freeze([
   {
     id: "c191",
     short: "Resonance combines micro-consciousness",
-    text: "Shared resonance — matched oscillation frequencies in proximity — combines micro-conscious entities into macro-conscious wholes, solving the combination problem — how many tiny subjects add up to one unified subject.",
+    text: "Shared resonance — matched oscillation frequencies in proximity — combines micro-conscious entities into macro-conscious wholes, answering the 'combination problem': how many tiny subjects add up to one unified subject.",
     plain: "Small bits of consciousness merge into yours when their vibrations fall into sync — resonance is the glue.",
     entails: ["c25"]
   },
   {
     id: "c192",
     short: "Consciousness is nested EM fields",
-    text: "Consciousness just is a nested hierarchy of interacting electromagnetic fields; resonance builds the hierarchy, field shapes are qualia, and fields causally shape neural firing directly through the field itself — one field pushing neurons around without synapses (called ephaptic coupling).",
+    text: "Consciousness just is a nested hierarchy of interacting electromagnetic fields; resonance builds the hierarchy, field shapes are qualia (your feelings, like the redness of red), and fields causally shape neural firing directly through the field itself — one field pushing neurons around without synapses (this direct field-to-neuron push is what scientists call ephaptic coupling).",
     plain: "Consciousness is literally layers of resonating electric and magnetic fields — their shapes are your feelings.",
     entails: ["c191","c50","c52"]
   },

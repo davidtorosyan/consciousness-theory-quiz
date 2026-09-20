@@ -141,6 +141,8 @@ async function main() {
   const firstNode = env.els.get('labClaimGraph').querySelectorAll('.dag-node')[0];
   check(firstNode.title === '' && firstNode.getAttribute('title') === undefined,
     'graph node buttons carry no title (claim text exposed once to screen readers)');
+  check(String(firstNode.getAttribute('data-plain') || '').startsWith('Put simply:'),
+    'graph nodes carry a plain-language tooltip for sighted users');
   const listHtml = html(env, 'labTheoryList');
   const withClaims = (listHtml.match(/data-theory="/g) || []).length;
   const pending = (listHtml.match(/data-meta="/g) || []).length;
@@ -197,8 +199,9 @@ async function main() {
   check(claimText.get(text(env, 'labQText')) === 'c34', 'first question is the gentle opener (c34), not c0');
   check(text(env, 'labQCount') === '1 of 12', 'progress shows question N of 12: ' + text(env, 'labQCount'));
   check(text(env, 'labQPlain').startsWith('Put simply:'), 'put-simply line renders');
-  check(text(env, 'labQCoverage').includes('Why this question') && text(env, 'labQCoverage').includes('yes decides') && text(env, 'labQCoverage').includes('no decides'),
+  check(text(env, 'labQCoverage').includes('Why this question') && text(env, 'labQCoverage').includes('agreeing decides') && text(env, 'labQCoverage').includes('disagreeing decides'),
     'coverage copy is per-direction and plain-language: ' + text(env, 'labQCoverage').slice(0, 90));
+  check(!hidden(env, 'labQRanking'), 'ranking peek is offered from round 1, not just round 2');
 
   // back button
   const q1 = text(env, 'labQText');
@@ -230,6 +233,8 @@ async function main() {
   check(text(env, 'labQRestart') === 'Restart ↺', 'restart button disarms after restarting');
   click(env, 'labAgree'); // answer once more to resync the engine mirror below
   check(html(env, 'labScores').includes(' of '), 'live alignment scores render');
+  check(html(env, 'labScores').includes('data-peek-ranking'),
+    'rail "full ranking any time" is a live button that opens the ranking peek');
   check(html(env, 'labScores').includes('lab-score-blurb'), 'live scores show theory blurbs');
 
   // directional settled trace, verified against an engine mirror of quiz state.
