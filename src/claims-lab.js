@@ -449,6 +449,7 @@
       qResult.classList.add('hidden');
       qMain.classList.remove('hidden');
       disarmRestart();
+      disarmAgain();
       // A fresh quiz also clears any open explorer panels.
       claimDetail.innerHTML = '';
       detail.innerHTML = '';
@@ -617,7 +618,11 @@
       }
       qMain.classList.add('hidden');
       qResult.classList.remove('hidden');
-      $('labResultList').innerHTML = E.score(qstate).map((result, index) => {
+      const scores = E.score(qstate);
+      const maxAgreed = scores.length ? scores[0].agreed : 0;
+      $('labResultList').innerHTML = (maxAgreed === 0
+        ? '<p class="lab-empty">No theory matched your answers — nothing you decided lines up with any theory’s claims. The ranking below leads with the theories your answers ruled out least.</p>'
+        : '') + scores.map((result, index) => {
         const line = (result.agreed === 0 && result.disagreed === 0)
           ? `None of this theory's claims came up in your answers (${result.total} claim${result.total === 1 ? '' : 's'}).`
           : (result.agreed === 0)
@@ -635,7 +640,22 @@
     }
 
     $('labQuizBegin').addEventListener('click', startQuiz);
-    $('labQuizRestart').addEventListener('click', startQuiz);
+    // Results-page restart gets the same two-tap guard as the mid-round
+    // restart: an accidental tap after a long session must not wipe answers.
+    const QUIZ_RESTART_IDLE = 'Run it again <span class="arrow">↺</span>';
+    let againArmed = false;
+    let againTimer = null;
+    function disarmAgain() {
+      againArmed = false;
+      if (againTimer) { clearTimeout(againTimer); againTimer = null; }
+      $('labQuizRestart').innerHTML = QUIZ_RESTART_IDLE;
+    }
+    $('labQuizRestart').addEventListener('click', () => {
+      if (againArmed) { disarmAgain(); startQuiz(); return; }
+      againArmed = true;
+      $('labQuizRestart').textContent = 'Tap again to restart — this clears your answers';
+      againTimer = setTimeout(disarmAgain, 10000);
+    });
     $('labQuizContinue').addEventListener('click', continueQuiz);
     // Mid-round restart: first tap arms it, second tap wipes and restarts.
     $('labQRestart').addEventListener('click', () => {

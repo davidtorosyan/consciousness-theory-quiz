@@ -113,6 +113,8 @@ function fireInput(env, id, value) {
   el.value = value;
   (el._listeners.input || []).forEach((fn) => fn({ target: el }));
 }
+// Results-page restart is two-tap: arm, then confirm.
+function restartQuiz(env) { click(env, 'labQuizRestart'); click(env, 'labQuizRestart'); }
 
 // ---------------------------------------------------------------- checks
 let failures = 0;
@@ -271,7 +273,7 @@ async function main() {
   // Note: in a skip-free quiz, agreeing can never propagate — any undecided
   // ancestor would outscore its descendant and be asked first. So phase A
   // skips root claims to set up a genuine affirm-propagation.
-  click(env, 'labQuizRestart');
+  restartQuiz(env);
   const CE = win.ClaimsEngine;
   const settledOf = (mirror) => new Set([...CE.affirmed(CLAIMS, mirror), ...CE.rejected(CLAIMS, mirror)]);
   let sawAffirm = false, sawReject = false, rounds = 0;
@@ -300,7 +302,7 @@ async function main() {
   check(sawAffirm, 'observed an affirm-propagation trace');
 
   // Phase B: reject direction (fresh quiz)
-  click(env, 'labQuizRestart');
+  restartQuiz(env);
   const mirrorB = CE.newQuiz();
   rounds = 0;
   while (!sawReject && rounds++ < 15) {
@@ -352,7 +354,7 @@ async function main() {
   check(railFracs === railRows, `every rail row shows an X-of-Y fraction (got ${railFracs}/${railRows})`);
 
   // round cap + continue + tension notes (all-agree run)
-  click(env, 'labQuizRestart');
+  restartQuiz(env);
   let sawTension = false, sawPreNudge = false, answered = 0;
   while (hidden(env, 'labQuizResult') && answered < 20) {
     const t = text(env, 'labTension');
@@ -385,7 +387,7 @@ async function main() {
     'continuing scrolls the new question into view');
 
   // peek with zero agreement: an honest empty state, not an arbitrary ranking
-  click(env, 'labQuizRestart');
+  restartQuiz(env);
   for (let i = 0; i < 4; i++) click(env, 'labDisagree');
   click(env, 'labQRanking');
   check(html(env, 'labResultList').includes('No theories align with your answers yet'),
@@ -394,7 +396,7 @@ async function main() {
   check(!hidden(env, 'labQuizMain') && hidden(env, 'labQuizResult'), 'resume works after the empty-state peek');
 
   // complete the quiz
-  click(env, 'labQuizRestart');
+  restartQuiz(env);
   let guard = 0;
   while (hidden(env, 'labQuizResult') && guard++ < N + 50) click(env, 'labAgree');
   check(!hidden(env, 'labQuizResult'), 'quiz completes to results screen');
@@ -409,18 +411,21 @@ async function main() {
   const resLines = (resHtml.match(/You agree with \d+ of its|You rule out \d+ of its|None of this theory's claims came up/g) || []).length;
   check(resRows === M, `results render all ${M} theories (got ${resRows})`);
   check(resLines === M, `every result row explains its alignment (got ${resLines}/${resRows})`);
+  check(!resHtml.includes('No theory matched your answers'), 'ordering explainer absent when theories do match');
 
   // untouched theories: a fresh all-skip run leaves every theory untouched
-  click(env, 'labQuizRestart');
+  restartQuiz(env);
   guard = 0;
   while (hidden(env, 'labQuizResult') && guard++ < N + 50) click(env, 'labSkip');
   check(!hidden(env, 'labQuizResult'), 'all-skip run completes');
   const untouched = (html(env, 'labResultList').match(/None of this theory's claims came up/g) || []).length;
   check(untouched === M, `all ${M} theories explain themselves when untouched (got ${untouched})`);
+  check(html(env, 'labResultList').includes('No theory matched your answers — nothing you decided lines up'),
+    'zero-match results explain the ordering instead of presenting a bare ranking');
 
   // exhaustion: disagree across "keep answering" rounds until the engine runs
   // out of undecided claims, then the results must explain the early finish
-  click(env, 'labQuizRestart');
+  restartQuiz(env);
   guard = 0;
   let exhaustedTitle = '';
   while (guard++ < 500) {
@@ -442,9 +447,12 @@ async function main() {
   check(!read('styles.css').includes('.answer-btn::after'),
     'answer buttons have no misleading external-link arrow');
 
-  // restart
+  // restart: results-page restart needs the same two-tap confirm as mid-round
   click(env, 'labQuizRestart');
-  check(!hidden(env, 'labQuizMain') && text(env, 'labQText').length > 0, 'restart works');
+  check(text(env, 'labQuizRestart').includes('Tap again to restart'), 'results restart arms on first tap instead of wiping');
+  check(!hidden(env, 'labQuizResult'), 'first tap leaves the results in place');
+  click(env, 'labQuizRestart');
+  check(!hidden(env, 'labQuizMain') && text(env, 'labQText').length > 0, 'second tap restarts the quiz');
 
   // reload button
   click(env, 'updateReload');
