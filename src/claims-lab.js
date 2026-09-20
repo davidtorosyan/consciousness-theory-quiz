@@ -233,7 +233,7 @@
         <div class="claim-detail-groups">
           <div>
             <p class="micro">↑ Broader claims this leads to</p>
-            ${parents.length ? `<div class="lab-chip-row">${parents.map(p => claimChip(p)).join('')}</div>` : '<p class="lab-empty">Nothing — this is a base claim.</p>'}
+            ${parents.length ? `<div class="lab-chip-row">${parents.map(p => claimChip(p)).join('')}</div>` : '<p class="lab-empty">Nothing broader — this is a base claim, the starting point of its chain.</p>'}
           </div>
           <div>
             <p class="micro">↓ More specific claims built on this</p>
@@ -480,7 +480,7 @@
       const affN = E.affirmed(qstate).size;
       const rejN = E.rejected(qstate).size;
       $('labSettled').textContent = (affN + rejN)
-        ? `Decided so far: ${affN} agreed · ${rejN} rejected · ${E.claims.length - affN - rejN} open`
+        ? `Decided so far: ${affN} agreed · ${rejN} ruled out · ${E.claims.length - affN - rejN} open`
         : '';
       $('labQBack').classList.toggle('hidden', qhistory.length === 0);
       disarmRestart();
@@ -573,7 +573,7 @@
           ${result.disagreed ? `<small>${result.disagreed} rejected</small>` : ''}
         </div>`;
       }).join('') + (ranked.length > QUIZ_RAIL_TOP
-        ? `<button class="lab-scores-more text-btn" data-peek-ranking="1">${ranked.length - QUIZ_RAIL_TOP} more theories — full ranking any time.</button>`
+        ? `<button class="lab-scores-more text-btn" data-peek-ranking="1">${ranked.length - QUIZ_RAIL_TOP} more theories — see the full ranking any time.</button>`
         : '');
     }
 

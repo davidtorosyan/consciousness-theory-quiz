@@ -133,6 +133,9 @@ async function main() {
   check(text(env, 'exploreDek').includes(`${N} claims`) && text(env, 'exploreDek').includes(`${M} theories mapped so far`),
     'explorer dek is dynamic');
   check(env.els.get('labClaimGraph').querySelectorAll('.dag-node').length === N, `graph rendered ${N} claim nodes`);
+  const qRankingTag = read('index.html').match(/<button[^>]*id="labQRanking"[^>]*>/);
+  check(!!qRankingTag && !qRankingTag[0].includes('hidden'),
+    'ranking button is visible by default in markup (round 1+, not gated on round 2)');
   const scrollers = env.els.get('labClaimGraph').querySelectorAll('.dag-scroll');
   const badPlural = [...scrollers].filter(s => (s.getAttribute('aria-label') || '').includes('1 connected claims'));
   check(scrollers.length > 0 && badPlural.length === 0, `claim group labels pluralize correctly (${scrollers.length} groups)`);

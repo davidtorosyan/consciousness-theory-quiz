@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,650&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=30">
+  <link rel="stylesheet" href="styles.css?v=31">
 </head>
 <body>
   <main class="page">
@@ -49,7 +49,7 @@
             <div class="question-actions">
               <div class="question-action-left">
                 <button class="text-btn hidden" id="labQBack">← Back</button>
-                <button class="text-btn hidden" id="labQRanking">See current ranking</button>
+                <button class="text-btn" id="labQRanking">See current ranking</button>
                 <button class="text-btn" id="labQRestart" title="Start the whole quiz over from question 1">Restart ↺</button>
               </div>
               <button class="text-btn" id="labSkip">Not sure — skip</button>
@@ -89,7 +89,7 @@
 
       <div class="lab-pane" id="labClaims" role="tabpanel" aria-labelledby="labTabClaims">
         <div class="dag-key">
-          <p>Select any claim to inspect what it implies, what is built on it, and which theories affirm it. Arrows point from a more specific claim to the broader claim it implies.</p>
+          <p>Select any claim to inspect what it implies, what is built on it, and which theories affirm it. Arrows point from a more specific claim to the broader claim it implies. Hover or focus any node for its plain-language gloss.</p>
           <span class="dag-root-key">Base claim</span>
         </div>
         <div class="claim-graph" id="labClaimGraph" aria-label="Graph of consciousness claims"></div>
@@ -123,10 +123,10 @@
     <footer>Based on the <a href="https://loc.closertotruth.com/" target="_blank" rel="noopener">Closer to Truth Landscape of Consciousness</a>. Something seems off? <a href="https://github.com/davidtorosyan/consciousness-theory-quiz/issues" target="_blank" rel="noopener">Raise an issue ↗</a>.</footer>
   </main>
 
-<script>window.SITE_BUILD = 30;</script>
-<script src="data/theories.js?v=30"></script>
-<script src="data/claims.js?v=30"></script>
-<script src="src/claims-engine.js?v=30"></script>
-<script src="src/claims-lab.js?v=30"></script>
+<script>window.SITE_BUILD = 31;</script>
+<script src="data/theories.js?v=31"></script>
+<script src="data/claims.js?v=31"></script>
+<script src="src/claims-engine.js?v=31"></script>
+<script src="src/claims-lab.js?v=31"></script>
 </body>
 </html>
