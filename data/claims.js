@@ -61,6 +61,11 @@
   Batch 11 (c228-c245, theories 94-103) added Kriegel, Cleeremans, Lau (reuses c41),
   Metzinger, Brown HOROR (c237->c45), Churchland, Ryle, Humphrey (c242->c54),
   Blackmore, Kammerer (pre-merge draft deleted; notes at data/claims-batch11-notes.md).
+  Batch 12 (c246-c262, theories 104-113) added Mandik (reuses c108, c228;
+  no c0/c53), Irvine (methodological eliminativism, no c0/c53), Blums CTM,
+  Dennett multiple drafts (no c54), Minsky, Aguera y Arcas, Hofstadter (c258->c40),
+  extended mind (c259->c49), Thompson, Noe (c113 withheld; pre-merge draft
+  deleted; notes at data/claims-batch12-notes.md).
 */
 window.CLAIMS_VERSION = '6';
 
@@ -1787,6 +1792,125 @@ window.CLAIMS = Object.freeze([
     text: "Introspection systematically misleads about its own targets: we believe in phenomenal properties because phenomenal introspection applies concepts that frame ordinary brain states as epistemologically special — the seeming is produced by our naive theory of mind, not by anything real.",
     plain: "Looking inward tells a false story. Your brain's own concepts paint ordinary neural states as magically special-feeling.",
     entails: ["c53"]
+  },
+  {
+    id: "c246",
+    short: "Qualia talk is empty",
+    text: "The word 'qualia' has no stable content: descriptions of qualia are chaotic and mutually circular, and consciousness can be fully discussed and studied without the term — so there is no informative position to take either way on whether 'qualia' exist.",
+    plain: "Stop arguing about whether 'qualia' are real or fake — the word is too confused to answer anything.",
+    entails: []
+  },
+  {
+    id: "c247",
+    short: "Consciousness is no natural kind",
+    text: "'Consciousness' does not name one real, unified phenomenon (a natural kind like water or gold); it is a loose cluster of loosely connected capacities — more like 'game' or 'emotion' than like 'H₂O'.",
+    plain: "Consciousness isn't one single thing to find — it's a family of different capacities sharing one word.",
+    entails: []
+  },
+  {
+    id: "c248",
+    short: "Science should drop 'consciousness'",
+    text: "The science of consciousness should give up the single word 'consciousness' and instead study measurable, operationally defined capacities, working out what those measures track in the brain.",
+    plain: "Stop chasing the word 'consciousness' — measure concrete mental capacities instead.",
+    entails: ["c247"]
+  },
+  {
+    id: "c249",
+    short: "Introspection can't be the gold standard",
+    text: "Reports of our own experience are unreliable measures of consciousness: they are inconsistent and swayed by non-conscious factors, so introspection should not be the gold standard of consciousness science.",
+    plain: "What people say about their own inner experience is a shaky measuring stick — don't trust it as the gold standard.",
+    entails: []
+  },
+  {
+    id: "c250",
+    short: "Subjective experience is computation",
+    text: "Subjective experience is computational: a Turing-like machine with sensors, actuators, and internal world-models it takes for the world would be conscious, so the hard problem reduces to showing experience is computation — machine consciousness is possible, even inevitable.",
+    plain: "If experience is just a kind of computation, a machine running the right program would feel things too.",
+    entails: ["c42"]
+  },
+  {
+    id: "c251",
+    short: "Awareness is synchronized inspection",
+    text: "Conscious awareness arises when all processors simultaneously inspect a globally broadcast chunk of information — this synchronized unpacking evokes a unique subjective experience whose intensity and valence come from the chunk's weight.",
+    plain: "Awareness happens when every part of the system looks at the same broadcast message at the same time — and that shared looking is the feeling.",
+    entails: ["c43"]
+  },
+  {
+    id: "c252",
+    short: "Consciousness is competing drafts",
+    text: "Consciousness is not a single stream but a competition: parallel brain processes generate multiple drafts of content, continuously edited, and drafts compete so that the winner occupies the conscious moment ('fame in the brain').",
+    plain: "Instead of one movie in your head, many rough drafts of what's going on compete, and the winner gets the spotlight.",
+    entails: ["c0"]
+  },
+  {
+    id: "c253",
+    short: "No inner theater",
+    text: "There is no central 'Cartesian theater' and no inner observer: no headquarters where it all comes together; the self is a 'center of narrative gravity' — a story the drafts tell.",
+    plain: "There's no tiny audience inside your head watching your thoughts — the 'self' is the story they tell.",
+    entails: []
+  },
+  {
+    id: "c254",
+    short: "Mind is a society of agents",
+    text: "The mind is a society of simple, mindless 'agents' organized in layers into semi-independent modules; nonconscious interactions among them build cognition; no part knows everything and there is no central self.",
+    plain: "Your mind is a crowd of tiny mindless specialists, each doing one job — none of them is in charge.",
+    entails: ["c41","c0"]
+  },
+  {
+    id: "c255",
+    short: "Consciousness is computation",
+    text: "Consciousness is simply an emergent function of the right kinds of computations: life is a self-constructing computational process, and no new physics is needed for consciousness to emerge from it.",
+    plain: "Consciousness is what happens when computation gets complex enough — nothing spooky required.",
+    entails: ["c0","c41"]
+  },
+  {
+    id: "c256",
+    short: "Theory of mind makes consciousness",
+    text: "Theory of mind is the origin and mechanism of consciousness: the social 'arms race' that drove minds to model other minds, applied to oneself, produced self-reflection and the sense of a unified self.",
+    plain: "Consciousness grew out of figuring out what others are thinking — and turning that trick on yourself.",
+    entails: ["c255"]
+  },
+  {
+    id: "c257",
+    short: "The self is a strange loop",
+    text: "Consciousness and the self emerge from 'strange loops' — abstract, level-crossing feedback loops in which the brain represents itself, recursively representing its own representations; the 'I' is a dynamic, self-inventing pattern, not a substance.",
+    plain: "The self is a loop: a system thinking about itself thinking about itself — that loop is you.",
+    entails: ["c0"]
+  },
+  {
+    id: "c258",
+    short: "Meanings move neurons",
+    text: "Emergent self-referential meanings — the 'I' — exert real causal power over their own lower-level components: high-level patterns can push neurons around, not just be pushed by them.",
+    plain: "Your thoughts-as-patterns can actually push your brain cells around — causation runs downhill too.",
+    entails: ["c257","c40"]
+  },
+  {
+    id: "c259",
+    short: "Tools can join the mind",
+    text: "When the brain is locked in two-way causal interaction with an external entity, the pair forms a single coupled cognitive system: the external part counts as part of the mind, just as a brain part would.",
+    plain: "Your notebook, phone, or tools can literally be part of your thinking — not just aids, but pieces of the mind.",
+    entails: ["c49"]
+  },
+  {
+    id: "c260",
+    short: "Mind is more than brain",
+    text: "Mental life is bodily life situated in the world: it ramifies through the body and the environment and cannot be reduced to brain processes inside the head.",
+    plain: "The mind isn't a brain in a jar — it's the whole body-and-world life of the organism.",
+    entails: ["c49"]
+  },
+  {
+    id: "c261",
+    short: "Life and mind are continuous",
+    text: "'Where there is life there is mind': the self-producing (autopoietic) organization of living systems already implies cognition, and mind is an enriched version of life's self-organization — life and mind are deeply continuous.",
+    plain: "Life and mind are one continuous spectrum — even simple living things have a glimmer of what makes a mind.",
+    entails: ["c260"]
+  },
+  {
+    id: "c262",
+    short: "Consciousness is skilled activity",
+    text: "Consciousness is not something the brain produces but a kind of skilled activity: it arises when sentient creatures actively engage the world — keeping tabs, keeping touch — so we are not our brains.",
+    plain: "Consciousness is more like dancing than like movie-watching — it's something you do with the world.",
+    entails: ["c49"]
   }
 ]);
 
@@ -1900,4 +2024,14 @@ window.CLAIM_THEORIES = Object.freeze([
   { id: 101, name: "Humphrey's user illusion", blurb: "Your inner life is a magic show the brain stages for itself — an evolved trick that makes you feel special and keeps you alive.", family: "Materialism", claims: ["c242"] },
   { id: 102, name: "Blackmore's \"it's all models\"", blurb: "Nobody is conscious — only the predictive models inside you are. 'Becoming conscious' is a model joining your self-model.", family: "Materialism", claims: ["c244"], caveat: "The CTT landscape files Blackmore under Eliminative/Illusionism, but 'all models are conscious' has a panpsychist-of-models flavor and she retains 'what it is like' language for models. She is a 'delusionist' about the conscious subject, not a standard illusionist — c53 is deliberately not entailed." },
   { id: 103, name: "Kammerer's introspective illusionism", blurb: "Phenomenal consciousness doesn't exist — it only seems to, because introspection is rigged to paint brain states as special.", family: "Materialism", claims: ["c245"], caveat: "Kammerer argues illusionism makes the best case for physicalism, but his distinctive claims are about introspection's unreliability (TCE theory), not about physics — c0 is deliberately not entailed." },
+  { id: 104, name: "Mandik's qualia quietism", blurb: "Phenomenal experience is real — but the word 'qualia' is empty, so stop arguing about whether qualia exist or not.", family: "Materialism", claims: ["c246","c108","c228"], caveat: "Mandik explicitly rejects standard physicalism ('I'm not a physicalist') and takes neither a realist nor an eliminativist position on qualia; Materialism is the CTT landscape label, not a fit — c0 and c53 are deliberately not entailed. His self-representationalism is intrinsic to the state itself (like Kriegel's c229 lineage), so c228 is reused." },
+  { id: 105, name: "Irvine's scientific eliminativism", blurb: "'Consciousness' isn't one thing — it's a loose cluster of capacities, and science should drop the word and study measurable abilities instead.", family: "Materialism", claims: ["c248","c249"], caveat: "Irvine's eliminativism is methodological, not metaphysical: drop the term from science rather than chase one essence. She does not deny experience outright, so c53 (no real qualia) is not entailed, and she claims no physics thesis, so c0 is not entailed either." },
+  { id: 106, name: "Blums' conscious Turing machine", blurb: "Consciousness is a computation: a machine with sensors, a world-model it takes for the world, and synchronized inspection of broadcasts would feel things.", family: "Materialism", claims: ["c250","c251"] },
+  { id: 107, name: "Dennett's multiple drafts", blurb: "There's no inner movie screen — many rough drafts of experience compete, and the winner gets the spotlight for a moment.", family: "Materialism", claims: ["c252","c253"] },
+  { id: 108, name: "Minsky's society of mind", blurb: "Your mind is a society of mindless specialists: simple agents, working in layers, that add up to thought — with nobody in charge.", family: "Materialism", claims: ["c254"] },
+  { id: 109, name: "Agüera y Arcas's computational functionalism", blurb: "Consciousness is what computation does when life gets complex — and it grew out of minds modeling other minds.", family: "Materialism", claims: ["c256"] },
+  { id: 110, name: "Hofstadter's strange loops", blurb: "You are a self-referential loop: a system that represents itself representing itself — and that pattern can push your neurons around.", family: "Materialism", claims: ["c258"] },
+  { id: 111, name: "Extended mind", blurb: "Thinking doesn't stop at the skull — when brain and tools couple up, the tools are part of the mind.", family: "Materialism", claims: ["c259"] },
+  { id: 112, name: "Thompson's mind in life", blurb: "Life and mind are one continuous story: mind is what living, self-organizing bodies do in the world — not brain software.", family: "Materialism", claims: ["c261"] },
+  { id: 113, name: "Noë's \"out of our heads\"", blurb: "Consciousness is something you do with the world, not something your brain makes — you are not your brain.", family: "Materialism", claims: ["c262"], caveat: "Noë attacks materialism as well as dualism — brain science alone cannot explain consciousness; filed under Materialism by CTT landscape convention. His dream evidence suggests experience can occur with reduced world-engagement, so c113 ('No brain in a vat') is deliberately NOT listed: its absolute 'could not be conscious' is stronger than his stated position." },
 ]);
