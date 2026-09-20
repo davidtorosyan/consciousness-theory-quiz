@@ -227,8 +227,8 @@
       .legend { grid-template-columns: 1fr; }
     }
     @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }
-  
-    /* ---- Claims lab ---- */
+
+    /* Claims lab: inspect the entailment graph and try the DAG-driven quiz. */
     .claims-lab {
       margin-top: 64px;
       padding-top: 48px;
@@ -289,7 +289,7 @@
     }
     .lab-theory-btn strong { display: block; font-size: 15px; }
     .lab-theory-btn span { font-size: 12px; color: var(--dim); }
-    .lab-theory-btn:hover { border-color: var(--cyan); }
+    .lab-theory-btn:hover, .lab-theory-btn:focus-visible { border-color: var(--cyan); }
     .lab-detail-wrap { min-width: 0; }
     .lab-detail-wrap h3 { margin: 6px 0 16px; font-size: 24px; }
     .lab-chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
@@ -337,7 +337,6 @@
       font-size: 13px;
     }
     .lab-theory-chip.direct { border-color: var(--cyan); color: var(--cyan); }
-    /* quiz pane */
     .lab-quiz h3 { margin: 8px 0 12px; font-size: 26px; }
     .lab-quiz .lab-plain { max-width: 640px; }
     .lab-coverage { color: var(--dim); font-size: 13px; margin: 14px 0 20px; }
@@ -384,3 +383,14 @@
     @media (max-width: 860px) {
       .lab-explorer, .lab-quiz-grid, .lab-claim-cols { grid-template-columns: 1fr; }
     }
+    @media (max-width: 480px) {
+      .claims-lab { margin-top: 48px; padding-top: 36px; }
+      .lab-head { align-items: stretch; }
+      .lab-tabs { display: grid; grid-template-columns: 1fr 1fr; }
+      .lab-tab { padding-inline: 12px; }
+      .lab-pane { padding: 20px 16px; }
+      .lab-explorer { gap: 24px; }
+      .lab-claim-title { font-size: 20px; }
+      .lab-score-top { align-items: flex-start; }
+    }
+  

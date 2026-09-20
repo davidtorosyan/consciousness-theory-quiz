@@ -13,6 +13,9 @@ Writes into repo_dir:
     styles.css            extracted <style> block
     data/quiz-content.js  decoded content data-uri script (reviewable source of truth)
     src/content-lint.js   decoded release-gating lint data-uri script
+    data/claims.js        decoded claims-DAG data data-uri script
+    src/claims-engine.js  decoded claims-DAG engine data-uri script
+    src/claims-lab.js     decoded claims lab UI data-uri script
     src/app.js            extracted inline quiz app script
 """
 import base64
@@ -35,8 +38,8 @@ def main() -> None:
         (m.group(0), m.group(1) or "", m.group(2))
         for m in re.finditer(r"<script(\s[^>]*)?>(.*?)</script>", html, re.S)
     ]
-    if len(scripts) != 3:
-        raise SystemExit(f"expected 3 script elements, found {len(scripts)}")
+    if len(scripts) != 6:
+        raise SystemExit(f"expected 6 script elements, found {len(scripts)}")
 
     plan = []  # (original_element, replacement_tag, rel_path, content)
     for full, attrs, body in scripts:
@@ -49,6 +52,12 @@ def main() -> None:
                 rel = "src/content-lint.js"
             elif "Reviewable source of truth" in js:
                 rel = "data/quiz-content.js"
+            elif "Claims DAG prototype" in js:
+                rel = "data/claims.js"
+            elif "Claims engine" in js:
+                rel = "src/claims-engine.js"
+            elif "Claims lab" in js:
+                rel = "src/claims-lab.js"
             else:
                 raise SystemExit("unrecognized data-uri script")
         elif not src_m:

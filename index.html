@@ -110,12 +110,12 @@
           <p class="dek">Five theories, rebuilt as positive claims linked by entailment. Explore the graph, or take the prototype quiz that always asks the most informative question next.</p>
         </div>
         <div class="lab-tabs" role="tablist" aria-label="Claims lab views">
-          <button class="lab-tab active" id="labTabExplore" role="tab" aria-selected="true">Explore claims</button>
-          <button class="lab-tab" id="labTabQuiz" role="tab" aria-selected="false">Try the quiz</button>
+          <button class="lab-tab active" id="labTabExplore" role="tab" aria-selected="true" aria-controls="labExplore">Explore claims</button>
+          <button class="lab-tab" id="labTabQuiz" role="tab" aria-selected="false" aria-controls="labQuiz">Try the quiz</button>
         </div>
       </div>
 
-      <div class="lab-pane" id="labExplore" role="tabpanel">
+      <div class="lab-pane" id="labExplore" role="tabpanel" aria-labelledby="labTabExplore">
         <div class="lab-explorer">
           <div class="lab-theories">
             <p class="micro">Theories</p>
@@ -128,7 +128,7 @@
         </div>
       </div>
 
-      <div class="lab-pane hidden" id="labQuiz" role="tabpanel">
+      <div class="lab-pane hidden" id="labQuiz" role="tabpanel" aria-labelledby="labTabQuiz">
         <div class="lab-quiz" id="labQuizStart">
           <p class="micro">Prototype quiz · 5 theories</p>
           <h3>Answer claims. Watch the alignment move.</h3>
@@ -143,8 +143,8 @@
               <p class="lab-plain" id="labQPlain"></p>
               <p class="lab-coverage" id="labQCoverage"></p>
               <div class="answers">
-                <button class="answer-btn" id="labAgree"><span>Agree</span><small>This is true, as far as I'm concerned.</small></button>
-                <button class="answer-btn" id="labDisagree"><span>Disagree</span><small>This is false, as far as I'm concerned.</small></button>
+                <button class="answer-btn" id="labAgree"><span>Agree</span><small>This is true, as far as I’m concerned.</small></button>
+                <button class="answer-btn" id="labDisagree"><span>Disagree</span><small>This is false, as far as I’m concerned.</small></button>
               </div>
               <div class="question-actions">
                 <button class="text-btn hidden" id="labQBack">← Back</button>
