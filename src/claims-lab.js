@@ -331,6 +331,7 @@
     let qstate = null;
     let qhistory = [];
     let lastSettledIds = [];
+    let lastSettledDir = null; // 'yes' when the last answer affirmed, 'no' when it rejected
 
     // Dynamic intro copy: counts come from the data, never hardcoded.
     $('quizCountLine').textContent = `${E.claims.length} claims · ${E.theories.length} theories`;
@@ -341,6 +342,7 @@
       qstate = E.newQuiz();
       qhistory = [];
       lastSettledIds = [];
+      lastSettledDir = null;
       qStart.classList.add('hidden');
       qResult.classList.add('hidden');
       qMain.classList.remove('hidden');
@@ -375,12 +377,15 @@
 
     function renderSettledBy() {
       const el = $('labSettledBy');
+      if (lastSettledDir === 'skip') { el.textContent = 'Skipped — nothing settled.'; return; }
       if (!lastSettledIds.length) { el.textContent = 'That settles just this claim.'; return; }
       const labels = lastSettledIds.map(id => {
         const c = claimById.get(id);
         return c ? c.plain : id;
-      });
-      el.textContent = `That also settled: ${labels.join(' · ')}.`;
+      }).join(' · ');
+      el.textContent = lastSettledDir === 'no'
+        ? `That also ruled out: ${labels} — they were built on the claim you rejected.`
+        : `That also settled: ${labels} — they follow from the claim you agreed with.`;
     }
 
     function answerQuestion(yesNo) {
@@ -391,6 +396,7 @@
       qhistory.push({ id: q.id, action: 'answer' });
       lastSettledIds = [...E.affirmed(qstate), ...E.rejected(qstate)]
         .filter(id => !before.has(id) && id !== q.id);
+      lastSettledDir = yesNo;
       renderQuestion();
     }
 
@@ -400,6 +406,7 @@
       E.skip(qstate, q.id);
       qhistory.push({ id: q.id, action: 'skip' });
       lastSettledIds = [];
+      lastSettledDir = 'skip';
       renderQuestion();
     }
 
@@ -448,6 +455,7 @@
       if (last.action === 'skip') E.unskip(qstate, last.id);
       else E.undo(qstate, last.id);
       lastSettledIds = [];
+      lastSettledDir = null;
       renderQuestion();
     });
 

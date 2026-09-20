@@ -103,7 +103,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c9",
     short: "Experience is fundamental",
-    text: "Conscious experience is a fundamental, irreducible feature of reality — not built out of anything more basic.",
+    text: "Conscious experience is a fundamental feature of reality — not built out of anything more basic.",
     plain: "Experience is basic furniture of the universe, not built out of something else.",
     entails: []
   },
@@ -124,15 +124,15 @@ window.CLAIMS = Object.freeze([
   {
     id: "c12",
     short: "Experience is causal structure",
-    text: "A conscious experience is identical to a particular kind of cause-and-effect structure in a physical system — one so tightly integrated it can't be divided into independent parts.",
-    plain: "Consciousness is how a system's parts hang together as one irreducible whole.",
+    text: "A conscious experience is identical to a particular kind of cause-and-effect structure in a physical system — the complete pattern of how its parts affect each other — when that pattern is so tightly integrated it can't be divided into independent parts.",
+    plain: "A conscious moment is a physical system whose parts affect each other as one tightly bound whole that can't be split into independent pieces.",
     entails: ["c0", "c13"]
   },
   {
     id: "c13",
     short: "Integrated structure matters",
-    text: "What makes a system conscious is how its parts are integrated into one cause-and-effect whole — not the computations or functions it performs.",
-    plain: "It's about how information is bound together, not about running the right program.",
+    text: "What makes a system conscious is how tightly its parts are woven into one whole of mutual cause and effect — not the computations or functions it performs.",
+    plain: "What matters is the parts forming one inseparable web of mutual influence, not running the right program.",
     entails: ["c0"]
   },
   {
@@ -151,7 +151,7 @@ window.CLAIMS = Object.freeze([
   },
   {
     id: "c16",
-    short: "thought acts on matter only through mind",
+    short: "Mind moves matter indirectly",
     text: "Objective products of thought — theories, ideas, artifacts — can change the physical world only by passing through a conscious mind.",
     plain: "An idea changes the world only when a mind grasps it; subjective experience is an indispensable link in the chain.",
     entails: ["c8"]
@@ -194,7 +194,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c22",
     short: "pure experience prior to mind/matter",
-    text: "Mind and matter are both built from something more basic — a neutral 'pure experience' that isn't yet mental or physical.",
+    text: "Mind and matter are both built from something more basic — a single neutral stuff, not yet mental or physical, that James called 'pure experience'.",
     plain: "Reality is made of one neutral stuff that isn't mind or matter yet; mind and matter are roles it plays depending on how it's organized.",
     entails: []
   },
@@ -480,10 +480,17 @@ window.CLAIMS = Object.freeze([
   },
   {
     id: "c63",
-    short: "Mind is material",
-    text: "Intellect, ego, memory, emotion, and the senses are all products of unconscious nature — cognition is natural, and only the witness is not.",
+    short: "Mental machinery is natural",
+    text: "Intellect, ego, memory, emotion, and the senses are all products of unconscious nature — your mental machinery is natural through and through.",
     plain: "Your whole mental machinery — thoughts, memories, ego — belongs to nature, not to consciousness.",
     entails: []
+  },
+  {
+    id: "c102",
+    short: "Only the witness is outside nature",
+    text: "The witness — pure witnessing awareness — stands entirely outside nature; everything else about the mind is natural, and only the witness is not.",
+    plain: "One thing alone isn't part of nature: the silent witness itself.",
+    entails: ["c63"]
   },
   {
     id: "c64",
@@ -502,7 +509,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c66",
     short: "Three irreducible domains",
-    text: "Mind, matter, and at least one further domain — such as their union, objective knowledge, or mathematical reality — are each irreducible; reality doesn't split into just one or two kinds.",
+    text: "Mind, matter, and at least one further domain — such as their union, objective knowledge, or mathematical reality — are each basic and can't be reduced to the others; reality doesn't split into just one or two kinds.",
     plain: "Reality has three basic realms relevant to consciousness, not one or two.",
     entails: []
   },
@@ -530,8 +537,8 @@ window.CLAIMS = Object.freeze([
   {
     id: "c70",
     short: "Consciousness rare, late",
-    text: "Consciousness, as full self-aware experience, is rare and late in nature — it arises only in complex organisms under special conditions; experience comes first, consciousness after.",
-    plain: "Experience is everywhere, but real consciousness is rare and came late.",
+    text: "Consciousness, as full self-aware experience, is rare and late in nature — it arises only in complex organisms under special conditions.",
+    plain: "Real, self-aware consciousness is rare and came late in nature's story.",
     entails: []
   },
   {
@@ -788,7 +795,7 @@ window.CLAIM_THEORIES = Object.freeze([
   { id: 44, name: "Avicenna's self-present soul", blurb: "The self knows itself directly, needs no senses, and survives death.",      family: "Dualism",         claims: ["c36", "c7", "c58"] },
   { id: 45, name: "Malebranche's occasionalism", blurb: "Only God truly causes anything; mind and body never touch.",       family: "Dualism",         claims: ["c6", "c60"] },
   { id: 46, name: "Bergson's duration dualism", blurb: "The brain filters consciousness; real time is lived duration.",        family: "Dualism",         claims: ["c61", "c62"] },
-  { id: 47, name: "Sāṃkhya witness dualism", blurb: "Consciousness is a pure silent witness; the mind itself is material.",           family: "Dualism",         claims: ["c63", "c64", "c65"] },
+  { id: 47, name: "Sāṃkhya witness dualism", blurb: "Consciousness is a pure silent witness; the mind itself is material.",           family: "Dualism",         claims: ["c102", "c64", "c65"] },
   { id: 51, name: "Trialism", blurb: "Reality has three basic domains, not one or two.",                          family: "Dualism",         claims: ["c66"] },
   { id: 52, name: "Epiphenomenalism", blurb: "The brain causes consciousness, but consciousness causes nothing.",                  family: "Materialism",     claims: ["c33", "c67", "c68"] },
   { id: 53, name: "Whitehead's process theory", blurb: "Reality is made of events with inner experience, not static stuff.",        family: "Neutral monism",  claims: ["c69", "c70", "c71"] },
