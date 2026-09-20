@@ -123,7 +123,7 @@
     .answer-btn {
       position: relative;
       min-height: 118px;
-      padding: 22px 52px 22px 22px;
+      padding: 22px;
       text-align: left;
       border: 1px solid #344242;
       border-radius: 5px 17px 5px 17px;
@@ -131,7 +131,6 @@
       color: var(--ink);
       font-weight: 600;
     }
-    .answer-btn::after { content: "↗"; position: absolute; right: 19px; top: 18px; color: var(--cyan); font-family: "IBM Plex Mono", monospace; }
     .answer-btn small { display: block; margin-top: 8px; color: var(--muted); font-weight: 400; line-height: 1.4; }
     .answer-btn:hover { border-color: var(--cyan); background: #192627; }
     .question-actions { display: flex; justify-content: space-between; gap: 16px; margin-top: 22px; }

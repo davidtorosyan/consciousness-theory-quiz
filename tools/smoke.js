@@ -384,6 +384,15 @@ async function main() {
   check(!!mainScroll && mainScroll[0] && mainScroll[0].block === 'start',
     'continuing scrolls the new question into view');
 
+  // peek with zero agreement: an honest empty state, not an arbitrary ranking
+  click(env, 'labQuizRestart');
+  for (let i = 0; i < 4; i++) click(env, 'labDisagree');
+  click(env, 'labQRanking');
+  check(html(env, 'labResultList').includes('No theories align with your answers yet'),
+    'zero-agreement peek shows an honest empty state instead of an arbitrary ranking');
+  click(env, 'labQuizResume');
+  check(!hidden(env, 'labQuizMain') && hidden(env, 'labQuizResult'), 'resume works after the empty-state peek');
+
   // complete the quiz
   click(env, 'labQuizRestart');
   let guard = 0;
@@ -397,7 +406,7 @@ async function main() {
   // every result row must explain its own ranking — no silent rows
   const resHtml = html(env, 'labResultList');
   const resRows = (resHtml.match(/class="lab-result-row/g) || []).length;
-  const resLines = (resHtml.match(/You agree with \d+ of its|You reject \d+ of its|None of this theory's claims came up/g) || []).length;
+  const resLines = (resHtml.match(/You agree with \d+ of its|You rule out \d+ of its|None of this theory's claims came up/g) || []).length;
   check(resRows === M, `results render all ${M} theories (got ${resRows})`);
   check(resLines === M, `every result row explains its alignment (got ${resLines}/${resRows})`);
 
@@ -408,6 +417,30 @@ async function main() {
   check(!hidden(env, 'labQuizResult'), 'all-skip run completes');
   const untouched = (html(env, 'labResultList').match(/None of this theory's claims came up/g) || []).length;
   check(untouched === M, `all ${M} theories explain themselves when untouched (got ${untouched})`);
+
+  // exhaustion: disagree across "keep answering" rounds until the engine runs
+  // out of undecided claims, then the results must explain the early finish
+  click(env, 'labQuizRestart');
+  guard = 0;
+  let exhaustedTitle = '';
+  while (guard++ < 500) {
+    if (!hidden(env, 'labQuizResult')) {
+      exhaustedTitle = text(env, 'labResultTitle');
+      if (exhaustedTitle === 'No questions left to ask') break;
+      click(env, 'labQuizContinue');
+    } else {
+      click(env, 'labDisagree');
+    }
+  }
+  check(exhaustedTitle === 'No questions left to ask',
+    `exhausted round titles itself "No questions left to ask" (took ${guard} steps)`);
+  check(text(env, 'labContinueNote').includes('settled the remaining questions on their own'),
+    'exhausted round explains the early finish');
+  check(hidden(env, 'labQuizContinue'), 'exhausted round offers no continue button');
+
+  // answer buttons carry no external-link arrow (CSS ::after)
+  check(!read('styles.css').includes('.answer-btn::after'),
+    'answer buttons have no misleading external-link arrow');
 
   // restart
   click(env, 'labQuizRestart');

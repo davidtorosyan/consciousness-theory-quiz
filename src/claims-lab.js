@@ -655,6 +655,12 @@
       const answered = Object.keys(qstate.answers).length;
       const decided = E.affirmed(qstate).size + E.rejected(qstate).size;
       $('labContinueNote').textContent = `Based on ${answered} answer${answered === 1 ? '' : 's'} from you — ${decided} claim${decided === 1 ? '' : 's'} settled in total.`;
+      const top = E.score(qstate)[0];
+      if (top && top.agreed === 0) {
+        // Scores are sorted best-first, so a zero top score means every
+        // theory sits at zero: an ordered #1..N would fake a recommendation.
+        $('labResultList').innerHTML = '<p class="lab-empty">No theories align with your answers yet — nothing you’ve decided matches any theory’s claims. Keep answering and the ranking will take shape.</p>';
+      }
       $('labQuizResume').classList.remove('hidden');
     }
     $('labQRanking').addEventListener('click', peekRanking);
