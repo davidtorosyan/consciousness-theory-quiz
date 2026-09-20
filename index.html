@@ -102,6 +102,69 @@
       </aside>
     </section>
 
+    <section class="claims-lab" aria-labelledby="claims-lab-heading">
+      <div class="lab-head">
+        <div>
+          <p class="eyebrow">Prototype · auditable classification</p>
+          <h2 id="claims-lab-heading">The claims lab</h2>
+          <p class="dek">Five theories, rebuilt as positive claims linked by entailment. Explore the graph, or take the prototype quiz that always asks the most informative question next.</p>
+        </div>
+        <div class="lab-tabs" role="tablist" aria-label="Claims lab views">
+          <button class="lab-tab active" id="labTabExplore" role="tab" aria-selected="true">Explore claims</button>
+          <button class="lab-tab" id="labTabQuiz" role="tab" aria-selected="false">Try the quiz</button>
+        </div>
+      </div>
+
+      <div class="lab-pane" id="labExplore" role="tabpanel">
+        <div class="lab-explorer">
+          <div class="lab-theories">
+            <p class="micro">Theories</p>
+            <div id="labTheoryList"></div>
+          </div>
+          <div class="lab-detail-wrap">
+            <button class="text-btn hidden" id="labBack">← Back</button>
+            <div id="labDetail"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lab-pane hidden" id="labQuiz" role="tabpanel">
+        <div class="lab-quiz" id="labQuizStart">
+          <p class="micro">Prototype quiz · 5 theories</p>
+          <h3>Answer claims. Watch the alignment move.</h3>
+          <p>Each question is the claim that settles the most right now. Theories score by how many of their claims you agree with — never by elimination.</p>
+          <button class="primary" id="labQuizBegin">Start the prototype <span class="arrow">→</span></button>
+        </div>
+        <div class="lab-quiz hidden" id="labQuizMain">
+          <div class="lab-quiz-grid">
+            <div>
+              <div class="count-label">CLAIM <strong id="labQCount">01</strong></div>
+              <h3 id="labQText"></h3>
+              <p class="lab-plain" id="labQPlain"></p>
+              <p class="lab-coverage" id="labQCoverage"></p>
+              <div class="answers">
+                <button class="answer-btn" id="labAgree"><span>Agree</span><small>This is true, as far as I'm concerned.</small></button>
+                <button class="answer-btn" id="labDisagree"><span>Disagree</span><small>This is false, as far as I'm concerned.</small></button>
+              </div>
+              <div class="question-actions">
+                <button class="text-btn hidden" id="labQBack">← Back</button>
+              </div>
+            </div>
+            <aside class="lab-rail" aria-label="Live alignment">
+              <p class="micro">Alignment so far</p>
+              <div id="labScores"></div>
+            </aside>
+          </div>
+        </div>
+        <div class="lab-quiz hidden" id="labQuizResult">
+          <p class="micro">Prototype result · alignment, not elimination</p>
+          <h3>Where your answers land</h3>
+          <div id="labResultList"></div>
+          <button class="primary" id="labQuizRestart">Run it again <span class="arrow">↺</span></button>
+        </div>
+      </div>
+    </section>
+
     <section class="method">
       <div>
         <p class="micro">Reading the map</p>
@@ -125,7 +188,10 @@
   </main>
 
 <script src="data/quiz-content.js"></script>
+<script src="data/claims.js"></script>
 <script src="src/content-lint.js"></script>
+<script src="src/claims-engine.js"></script>
+<script src="src/claims-lab.js"></script>
 <script src="src/app.js"></script>
 </body>
 </html>

@@ -228,3 +228,159 @@
     }
     @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }
   
+    /* ---- Claims lab ---- */
+    .claims-lab {
+      margin-top: 64px;
+      padding-top: 48px;
+      border-top: 1px solid var(--line);
+    }
+    .lab-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 28px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+    .lab-head h2 {
+      margin: 0 0 12px;
+      font: 650 clamp(30px, 4vw, 46px)/1.05 "Source Serif 4", serif;
+      letter-spacing: -.02em;
+    }
+    .lab-head .dek { max-width: 560px; }
+    .lab-tabs { display: flex; gap: 8px; }
+    .lab-tab {
+      padding: 10px 18px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+    }
+    .lab-tab.active {
+      background: var(--cyan);
+      border-color: var(--cyan);
+      color: var(--black);
+      font-weight: 600;
+    }
+    .lab-pane {
+      border: 1px solid var(--line);
+      border-radius: 28px 6px 28px 6px;
+      background: var(--panel);
+      padding: clamp(22px, 3.5vw, 40px);
+    }
+    .lab-explorer {
+      display: grid;
+      grid-template-columns: minmax(220px, .8fr) minmax(0, 1.6fr);
+      gap: 32px;
+      align-items: start;
+    }
+    .lab-theories #labTheoryList { display: grid; gap: 8px; }
+    .lab-theory-btn {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+      color: var(--ink);
+      cursor: pointer;
+    }
+    .lab-theory-btn strong { display: block; font-size: 15px; }
+    .lab-theory-btn span { font-size: 12px; color: var(--dim); }
+    .lab-theory-btn:hover { border-color: var(--cyan); }
+    .lab-detail-wrap { min-width: 0; }
+    .lab-detail-wrap h3 { margin: 6px 0 16px; font-size: 24px; }
+    .lab-chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+    .lab-claim-chip {
+      font: 500 12px "IBM Plex Mono", monospace;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--cyan);
+      background: transparent;
+      color: var(--cyan);
+      cursor: pointer;
+    }
+    .lab-claim-chip.direct { background: var(--cyan); color: var(--black); font-weight: 600; }
+    .lab-inherited-wrap { display: inline-flex; align-items: center; gap: 6px; }
+    .lab-inherited-wrap small { color: var(--dim); font-size: 11px; }
+    .lab-claim-text {
+      border-left: 2px solid var(--line);
+      padding: 4px 0 4px 14px;
+      margin-bottom: 14px;
+    }
+    .lab-claim-text.direct { border-left-color: var(--cyan); }
+    .lab-claim-text p { margin: 4px 0 0; color: #c3cac7; }
+    .lab-claim-id {
+      font: 500 11px "IBM Plex Mono", monospace;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+    .lab-claim-title { font-size: 22px; line-height: 1.35; font-weight: 500; }
+    .lab-plain { color: var(--muted); margin: 0 0 24px; }
+    .lab-claim-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 8px;
+    }
+    .lab-empty { color: var(--dim); font-size: 14px; }
+    .lab-theory-chip {
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+      color: var(--ink);
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .lab-theory-chip.direct { border-color: var(--cyan); color: var(--cyan); }
+    /* quiz pane */
+    .lab-quiz h3 { margin: 8px 0 12px; font-size: 26px; }
+    .lab-quiz .lab-plain { max-width: 640px; }
+    .lab-coverage { color: var(--dim); font-size: 13px; margin: 14px 0 20px; }
+    .lab-quiz-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(220px, .7fr);
+      gap: 32px;
+      align-items: start;
+    }
+    .lab-rail {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px;
+      background: var(--panel-2);
+    }
+    .lab-score-row { margin-bottom: 14px; }
+    .lab-score-row:last-child { margin-bottom: 0; }
+    .lab-score-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+    .lab-score-top span { color: var(--cyan); font-family: "IBM Plex Mono", monospace; font-size: 12px; }
+    .lab-score-bar { height: 4px; border-radius: 2px; background: #253031; overflow: hidden; }
+    .lab-score-bar span { display: block; height: 100%; background: var(--cyan); }
+    .lab-score-row small { color: var(--coral); font-size: 11px; }
+    .lab-result-row {
+      display: flex;
+      gap: 16px;
+      align-items: baseline;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .lab-result-row.top strong { color: var(--cyan); }
+    .lab-result-rank {
+      font: 500 13px "IBM Plex Mono", monospace;
+      color: var(--dim);
+      min-width: 24px;
+    }
+    .lab-result-row p { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+    #labQuizRestart { margin-top: 24px; }
+    @media (max-width: 860px) {
+      .lab-explorer, .lab-quiz-grid, .lab-claim-cols { grid-template-columns: 1fr; }
+    }
