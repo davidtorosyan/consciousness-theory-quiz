@@ -253,7 +253,9 @@
       const node = e.target.closest('[data-claim]');
       if (!node) return;
       renderClaimDetail(node.dataset.claim);
-      claimDetail.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+      // Instant jump, not smooth: the panel is far below a tall graph and a
+      // slow scroll left testers unsure anything had happened.
+      claimDetail.scrollIntoView({ block: 'start' });
     });
     claimDetail.addEventListener('click', (e) => {
       const claim = e.target.closest('[data-claim]');
@@ -435,6 +437,12 @@
       qResult.classList.add('hidden');
       qMain.classList.remove('hidden');
       disarmRestart();
+      // A fresh quiz also clears any open explorer panels.
+      claimDetail.innerHTML = '';
+      detail.innerHTML = '';
+      selectedClaim = null;
+      graph.querySelectorAll('.dag-node.selected').forEach(n => n.classList.remove('selected'));
+      theoryList.querySelectorAll('.lab-theory-btn.active').forEach(b => b.classList.remove('active'));
       renderQuestion();
     }
 
@@ -499,7 +507,7 @@
         return c ? c.plain : id;
       }).join(' · ');
       el.textContent = lastSettledDir === 'no'
-        ? `Last question: that also ruled out: ${labels} — they were built on the claim you rejected.`
+        ? `Last question: that also ruled out: ${labels} — they were built on the claim you ruled out.`
         : `Last question: that also decided: ${labels} — they follow from the claim you agreed with.`;
     }
 
@@ -570,7 +578,7 @@
           <div class="lab-score-top"><strong>${escapeHtml(result.theory.name)}</strong><span>${result.agreed} of ${result.total}</span></div>
           ${result.theory.blurb ? `<div class="lab-score-blurb">${escapeHtml(result.theory.blurb)}</div>` : ''}
           <div class="lab-score-bar"><span style="width:${pct}%"></span></div>
-          ${result.disagreed ? `<small>${result.disagreed} rejected</small>` : ''}
+          ${result.disagreed ? `<small>${result.disagreed} ruled out</small>` : ''}
         </div>`;
       }).join('') + (ranked.length > QUIZ_RAIL_TOP
         ? `<button class="lab-scores-more text-btn" data-peek-ranking="1">${ranked.length - QUIZ_RAIL_TOP} more theories — see the full ranking any time.</button>`
@@ -594,8 +602,8 @@
         const line = (result.agreed === 0 && result.disagreed === 0)
           ? `None of this theory's claims came up in your answers (${result.total} claim${result.total === 1 ? '' : 's'}).`
           : (result.agreed === 0)
-            ? `You reject ${result.disagreed} of its ${result.total} claims (agreeing with none).`
-            : `You agree with ${result.agreed} of its ${result.total} claims${result.disagreed ? `, and reject ${result.disagreed}` : ''}.`;
+            ? `You rule out ${result.disagreed} of its ${result.total} claims (agreeing with none).`
+            : `You agree with ${result.agreed} of its ${result.total} claims${result.disagreed ? `, and rule out ${result.disagreed}` : ''}.`;
         return `
         <div class="lab-result-row${index === 0 ? ' top' : ''}">
           <span class="lab-result-rank">#${index + 1}</span>
@@ -615,7 +623,7 @@
       if (restartArmed) { disarmRestart(); startQuiz(); return; }
       restartArmed = true;
       $('labQRestart').textContent = 'Tap again to restart — this clears your answers';
-      restartTimer = setTimeout(disarmRestart, 4000);
+      restartTimer = setTimeout(disarmRestart, 10000);
     });
     // Mid-round peek at the ranking: shows the results view over current
     // answers, with a way back that resumes the round untouched. Available

@@ -194,6 +194,16 @@ async function main() {
   const scrollArgs = env.els.get('labClaimDetail')._scrollArgs;
   check(!!scrollArgs && scrollArgs[0] && scrollArgs[0].block === 'start',
     'clicking a graph node scrolls the detail panel into view (block: start)');
+  click(env, 'labQuizBegin');
+  check(html(env, 'labClaimDetail') === '' && html(env, 'labDetail') === '',
+    'starting a fresh quiz clears any open explorer panels');
+  check(!read('src/claims-lab.js').includes(' rejected</small>') &&
+    !read('src/claims-lab.js').includes('You reject ') &&
+    !read('src/claims-lab.js').includes('and reject ') &&
+    !read('src/claims-lab.js').includes('you rejected.'),
+    'results and rail copy says "rule out", not "reject"');
+  check(read('index.html').includes('aria-label="Filter theories by name, family, or topic"'),
+    'theory filter label names what it actually matches');
 
   // quiz flow
   click(env, 'labQuizBegin');
@@ -286,7 +296,7 @@ async function main() {
       CE.answer(mirrorB, q.id, 'no');
       const t = text(env, 'labSettledBy');
       sawReject = true;
-      check(t.startsWith('Last question: that also ruled out:') && t.endsWith('they were built on the claim you rejected.'),
+      check(t.startsWith('Last question: that also ruled out:') && t.endsWith('they were built on the claim you ruled out.'),
         'reject trace explains direction: ' + t.slice(0, 110));
     } else {
       const newAnc = [...CE.ancestors(CLAIMS, q.id)].filter((id) => !settled.has(id));
