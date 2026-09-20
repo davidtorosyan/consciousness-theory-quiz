@@ -327,6 +327,7 @@
       margin-bottom: 8px;
     }
     .lab-empty { color: var(--dim); font-size: 14px; }
+    .lab-caveat { color: var(--dim); font-size: 13px; border-left: 2px solid var(--line); padding-left: 10px; margin: 8px 0 20px; }
     .lab-theory-chip {
       padding: 8px 14px;
       border-radius: 999px;

@@ -252,6 +252,7 @@
         <h3>${escapeHtml(t.name)}</h3>
         ${meta ? `<p class="lab-plain">${escapeHtml(meta.summary)}</p>` : ''}
         ${link ? `<p class="source-note"><a href="${escapeHtml(link)}" target="_blank" rel="noopener">Read the original Closer to Truth entry ↗</a></p>` : ''}
+        ${t.caveat ? `<p class="lab-caveat">A note on how this is classified: ${escapeHtml(t.caveat)}</p>` : ''}
         <p class="micro">Specific claims (listed by the theory)</p>
         <div class="lab-chip-row">${[...direct].map(cid => claimChip(cid, 'direct')).join('')}</div>
         ${inherited.length ? `<p class="micro">Inherited claims (entailed by the specific ones)</p><div class="lab-chip-row">${inherited.map(cid => `<span class="lab-inherited-wrap">${claimChip(cid)}<small>via ${viaWhich(t, cid).join(', ')}</small></span>`).join('')}</div>` : ''}

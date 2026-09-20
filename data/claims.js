@@ -34,7 +34,7 @@
   Whitehead, and Leibniz. Pre-merge drafts lived in data/claims-batch4.js +
   data/claims-batch4-notes.md (see git history).
 */
-window.CLAIMS_VERSION = '5';
+window.CLAIMS_VERSION = '6';
 
 window.CLAIMS = Object.freeze([
   {
@@ -757,6 +757,34 @@ window.CLAIMS = Object.freeze([
     text: "Wherever information is realized, there is a potential for conscious experience — experience and information always go together.",
     plain: "Where there's information, experience is at least possible.",
     entails: ["c100"]
+  },
+  {
+    id: "c103",
+    short: "Tiny unconscious perceptions add up",
+    text: "Beneath awareness the mind holds countless tiny unconscious perceptions — petites perceptions — too faint to notice on their own, that add up to conscious experience.",
+    plain: "Like the roar of the sea built from tiny unheard wave-sounds, experience is built from countless tiny unnoticed perceptions.",
+    entails: ["c72"]
+  },
+  {
+    id: "c104",
+    short: "No mechanics explains perception",
+    text: "Perception cannot be explained mechanically: imagine a brain enlarged to the size of a mill — inside you would see only parts pushing parts, never anything that explains perception.",
+    plain: "Walk inside a giant brain and you'd see only moving parts — nothing there explains how it feels to perceive.",
+    entails: []
+  },
+  {
+    id: "c105",
+    short: "Inner striving drives change",
+    text: "Each monad changes only from within, driven by an inner striving — appetition — that carries it from one perception to the next.",
+    plain: "Each tiny unit is self-propelled: an inner push carries it from one perception to the next.",
+    entails: ["c72"]
+  },
+  {
+    id: "c106",
+    short: "Monads come in degrees",
+    text: "Monads come in degrees: bare monads with only faint perception, souls with memory, and rational minds that can reflect on themselves.",
+    plain: "Mind-like units range from dim and forgetful, to memory-having, to fully self-aware.",
+    entails: ["c72"]
   }
 ]);
 
@@ -799,7 +827,7 @@ window.CLAIM_THEORIES = Object.freeze([
   { id: 51, name: "Trialism", blurb: "Reality has three basic domains, not one or two.",                          family: "Dualism",         claims: ["c66"] },
   { id: 52, name: "Epiphenomenalism", blurb: "The brain causes consciousness, but consciousness causes nothing.",                  family: "Materialism",     claims: ["c33", "c67", "c68"] },
   { id: 53, name: "Whitehead's process theory", blurb: "Reality is made of events with inner experience, not static stuff.",        family: "Neutral monism",  claims: ["c69", "c70", "c71"] },
-  { id: 54, name: "Leibniz's monads", blurb: "Everything is made of tiny perceiving units in pre-set harmony.",                  family: "Neutral monism",  claims: ["c45", "c72", "c73"] },
+  { id: 54, name: "Leibniz's monads", blurb: "Everything is made of tiny perceiving units in pre-set harmony.",                  family: "Neutral monism",  claims: ["c45", "c73", "c103", "c104", "c105", "c106"], caveat: "Filed under Neutral monism by structural analogy, not strict fit — Leibniz is a monist, but \u201cneutral monism\u201d is a modern label. The \u201chigher thought\u201d claim reflects the scholarly reading of Leibniz's \u201capperception\u201d; he never phrased it as higher-order thought." },
   { id: 41, name: "Aurobindo's evolving consciousness", blurb: "Consciousness is the fundamental reality, evolving from matter toward the divine.", family: "Idealism",       claims: ["c76", "c75"] },
   { id: 48, name: "Nyāya contingent-consciousness self", blurb: "The self is an enduring nonphysical thing that only sometimes happens to be conscious.", family: "Dualism",        claims: ["c77", "c78", "c79", "c7"] },
   { id: 49, name: "Libet's conscious mental field", blurb: "Experience is a nonphysical field the brain generates — which pushes back on the brain.", family: "Dualism",        claims: ["c80", "c82"] },
