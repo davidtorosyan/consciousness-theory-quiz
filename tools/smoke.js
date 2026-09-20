@@ -132,6 +132,9 @@ async function main() {
   check(text(env, 'exploreDek').includes(`${N} claims`) && text(env, 'exploreDek').includes(`${M} theories mapped so far`),
     'explorer dek is dynamic');
   check(env.els.get('labClaimGraph').querySelectorAll('.dag-node').length === N, `graph rendered ${N} claim nodes`);
+  const firstNode = env.els.get('labClaimGraph').querySelectorAll('.dag-node')[0];
+  check(firstNode.title === '' && firstNode.getAttribute('title') === undefined,
+    'graph node buttons carry no title (claim text exposed once to screen readers)');
   const listHtml = html(env, 'labTheoryList');
   const withClaims = (listHtml.match(/data-theory="/g) || []).length;
   const pending = (listHtml.match(/data-meta="/g) || []).length;
@@ -278,6 +281,9 @@ async function main() {
   click(env, 'labQuizContinue');
   check(!hidden(env, 'labQuizMain') && hidden(env, 'labQuizResult'), 'continue resumes the quiz');
   check(text(env, 'labQCount') === '1 of 12 · round 2', 'round 2 counter names the round: ' + text(env, 'labQCount'));
+  const mainScroll = env.els.get('labQuizMain')._scrollArgs;
+  check(!!mainScroll && mainScroll[0] && mainScroll[0].block === 'start',
+    'continuing scrolls the new question into view');
 
   // complete the quiz
   click(env, 'labQuizRestart');
@@ -287,6 +293,8 @@ async function main() {
   check(html(env, 'labResultList').includes('You agree with'), 'results use X-of-Y alignment framing');
   check(html(env, 'labResultList').includes('lab-result-blurb'), 'results rows show theory blurbs');
   check(html(env, 'labResultList').includes('data-inspect'), 'results have inspect-claims buttons');
+  check((html(env, 'labResultList').match(/aria-label="Inspect [^"]+’s claims"/g) || []).length === M,
+    'inspect buttons are named per theory for screen readers');
 
   // untouched theories: a fresh all-skip run leaves every theory untouched
   click(env, 'labQuizRestart');

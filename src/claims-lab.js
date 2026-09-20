@@ -141,7 +141,8 @@
             button.className = `dag-node${rank === 0 ? ' root' : ''}`;
             button.dataset.claim = id;
             button.style.top = `${DAG_PAD_TOP + row * DAG_ROW_H}px`;
-            button.title = claim.text;
+            // No title attribute: the aria-label already carries the full claim
+            // text, and a title would expose it a second time to screen readers.
             button.setAttribute('aria-label', `${id}: ${claim.text}`);
             button.innerHTML = `<span class="dag-node-id">${id}</span><span class="dag-node-label">${escapeHtml(shortLabel(claim))}</span>`;
             inner.appendChild(button);
@@ -422,6 +423,7 @@
       qResult.classList.add('hidden');
       qMain.classList.remove('hidden');
       renderQuestion();
+      qMain.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
     }
 
     function currentQuestion() {
@@ -564,7 +566,7 @@
           <div><strong>${escapeHtml(result.theory.name)}</strong>
           ${result.theory.blurb ? `<p class="lab-result-blurb">${escapeHtml(result.theory.blurb)}</p>` : ''}
           <p>${line}</p>
-          <button class="text-btn" data-inspect="${result.theory.id}">Inspect this theory’s claims</button></div>
+          <button class="text-btn" data-inspect="${result.theory.id}" aria-label="Inspect ${escapeHtml(result.theory.name)}’s claims">Inspect this theory’s claims</button></div>
         </div>`;
       }).join('');
     }
