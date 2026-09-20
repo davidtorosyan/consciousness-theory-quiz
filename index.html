@@ -107,32 +107,20 @@
         <div>
           <p class="eyebrow">Prototype · auditable classification</p>
           <h2 id="claims-lab-heading">The claims lab</h2>
-          <p class="dek">Five theories, rebuilt as positive claims linked by entailment. Explore the graph, or take the prototype quiz that always asks the most informative question next.</p>
+          <p class="dek">Fifteen positive claims form a directed acyclic graph. Take the claim-driven quiz, explore the graph itself, or inspect how each theory inherits its claims.</p>
         </div>
         <div class="lab-tabs" role="tablist" aria-label="Claims lab views">
-          <button class="lab-tab active" id="labTabExplore" role="tab" aria-selected="true" aria-controls="labExplore">Explore claims</button>
-          <button class="lab-tab" id="labTabQuiz" role="tab" aria-selected="false" aria-controls="labQuiz">Try the quiz</button>
+          <button class="lab-tab active" id="labTabQuiz" role="tab" aria-selected="true" aria-controls="labQuiz">Quiz</button>
+          <button class="lab-tab" id="labTabClaims" role="tab" aria-selected="false" aria-controls="labClaims">Claim explorer</button>
+          <button class="lab-tab" id="labTabTheories" role="tab" aria-selected="false" aria-controls="labTheories">Theory explorer</button>
         </div>
       </div>
 
-      <div class="lab-pane" id="labExplore" role="tabpanel" aria-labelledby="labTabExplore">
-        <div class="lab-explorer">
-          <div class="lab-theories">
-            <p class="micro">Theories</p>
-            <div id="labTheoryList"></div>
-          </div>
-          <div class="lab-detail-wrap">
-            <button class="text-btn hidden" id="labBack">← Back</button>
-            <div id="labDetail"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="lab-pane hidden" id="labQuiz" role="tabpanel" aria-labelledby="labTabQuiz">
+      <div class="lab-pane" id="labQuiz" role="tabpanel" aria-labelledby="labTabQuiz">
         <div class="lab-quiz" id="labQuizStart">
           <p class="micro">Prototype quiz · 5 theories</p>
           <h3>Answer claims. Watch the alignment move.</h3>
-          <p>Each question is the claim that settles the most right now. Theories score by how many of their claims you agree with — never by elimination.</p>
+          <p class="lab-plain">Each question is the claim that settles the most right now. Theories score by how many of their claims you agree with — never by elimination.</p>
           <button class="primary" id="labQuizBegin">Start the prototype <span class="arrow">→</span></button>
         </div>
         <div class="lab-quiz hidden" id="labQuizMain">
@@ -163,6 +151,29 @@
           <button class="primary" id="labQuizRestart">Run it again <span class="arrow">↺</span></button>
         </div>
       </div>
+
+      <div class="lab-pane hidden" id="labClaims" role="tabpanel" aria-labelledby="labTabClaims">
+        <div class="dag-key">
+          <p>Tap any claim to inspect its dependencies and the theories that affirm it. Arrows point from a more specific claim to what it entails.</p>
+          <span class="dag-root-key">Base claim</span>
+        </div>
+        <div class="claim-graph" id="labClaimGraph" aria-label="Directed acyclic graph of fifteen consciousness claims"></div>
+        <div class="claim-detail-panel" id="labClaimDetail" aria-live="polite"></div>
+      </div>
+
+      <div class="lab-pane hidden" id="labTheories" role="tabpanel" aria-labelledby="labTabTheories">
+        <div class="lab-explorer">
+          <div class="lab-theories">
+            <p class="micro">Theories</p>
+            <div id="labTheoryList"></div>
+          </div>
+          <div class="lab-detail-wrap">
+            <button class="text-btn hidden" id="labBack">← Back</button>
+            <div id="labDetail"></div>
+          </div>
+        </div>
+      </div>
+
     </section>
 
     <section class="method">
