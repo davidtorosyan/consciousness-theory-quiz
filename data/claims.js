@@ -33,6 +33,15 @@
   Avicenna, Malebranche, Bergson, Samkhya, trialism, epiphenomenalism,
   Whitehead, and Leibniz. Pre-merge drafts lived in data/claims-batch4.js +
   data/claims-batch4-notes.md (see git history).
+  Batch 5 (c74-c101, theories 41/48/49/50/53/55/56/57/58/59) added Aurobindo,
+  Nyāya, Vaiśeṣika, Sufi wahdat al-wujūd, Dignāga, Śaṅkara Māyā,
+  Libet, Beck-Eccles, Davidson, and Pereira (pre-merge draft deleted; notes at
+  data/claims-batch5-notes.md).
+  Batch 6 (c107-c129, theories 21/23/24/26/28/29/30/31/32/33) added first-order
+  representationalism, affective/homeostatic consciousness, enactivism,
+  Orch OR, Attention Schema Theory, Kashmir Shaivism, Berkeley, absolute
+  idealism, Kant, and Schelling (pre-merge draft deleted; notes at
+  data/claims-batch6-notes.md).
 */
 window.CLAIMS_VERSION = '6';
 
@@ -786,6 +795,168 @@ window.CLAIMS = Object.freeze([
     plain: "Mind-like units range from dim and forgetful, to memory-having, to fully self-aware.",
     entails: ["c72"]
   }
+,
+  {
+    id: "c107",
+    short: "No higher-order state needed",
+    text: "A mental state is conscious just by being a world-directed representation — no higher thought or monitoring of the state is needed.",
+    plain: "No inner watcher is required — being conscious doesn't take a second thought.",
+    entails: []
+  },
+  {
+    id: "c108",
+    short: "Phenomenal character is representational content",
+    text: "What an experience feels like is nothing more than what it represents — its content about the world.",
+    plain: "How it feels is fully fixed by what it's about.",
+    entails: ["c107"]
+  },
+  {
+    id: "c109",
+    short: "Feeling came first",
+    text: "Consciousness begins in feeling: affect — pleasure, pain, hunger, need — is the foundation of all conscious experience, not cognition.",
+    plain: "Feeling came first; thinking is a late add-on.",
+    entails: []
+  },
+  {
+    id: "c110",
+    short: "Homeostatic regulation is the point",
+    text: "Consciousness exists to regulate life: feelings report the body's internal state so the organism can maintain itself.",
+    plain: "Experience tells the organism how it's doing — that's its job.",
+    entails: ["c109"]
+  },
+  {
+    id: "c111",
+    short: "Brainstem, not cortex, is the seat",
+    text: "The ancient brainstem and subcortical systems — not the cortex — are the core seat of consciousness; rich cortex without them is empty.",
+    plain: "Consciousness lives in the old lower brain, not the fancy outer layer.",
+    entails: []
+  },
+  {
+    id: "c112",
+    short: "Perception is a bodily skill",
+    text: "Perceiving is not building an inner picture of the world; it is a bodily skill — practical mastery of how your movements change what you sense.",
+    plain: "Seeing is more like touching than like watching a movie in your head.",
+    entails: []
+  },
+  {
+    id: "c113",
+    short: "No brain in a vat",
+    text: "A brain in a vat — or any brain cut off from body and world — could not be conscious; body and environment are constitutive of experience, not just its causes.",
+    plain: "Cut the body and world away and there's no mind left — they're part of the experience itself.",
+    entails: ["c112"]
+  },
+  {
+    id: "c114",
+    short: "Experience needs noncomputational physics",
+    text: "Consciousness is non-computational: no algorithm running on a classical computer could be conscious, because experience depends on quantum-gravity effects in the brain.",
+    plain: "A computer running the right program would still miss it — consciousness needs brand-new physics.",
+    entails: []
+  },
+  {
+    id: "c115",
+    short: "Microtubule collapses are experience",
+    text: "Quantum superpositions inside neuronal microtubules collapse at a gravity-linked threshold, and each such collapse is a primitive moment of conscious experience.",
+    plain: "Tiny quantum collapses inside brain cells are the atoms of experience.",
+    entails: ["c114"]
+  },
+  {
+    id: "c116",
+    short: "Orchestration makes rich moments",
+    text: "Synaptic inputs and brain processes 'orchestrate' — tune and shape — these quantum collapses, turning primitive flickers into the rich, coherent moments of human experience.",
+    plain: "The brain tunes the quantum flickers into full, rich experiences.",
+    entails: ["c115"]
+  },
+  {
+    id: "c117",
+    short: "Awareness is a model of attention",
+    text: "The brain builds a simplified informational model of its own attention — an attention schema — to monitor and control it.",
+    plain: "Your brain keeps a crude sketch of what it's paying attention to, and uses it to steer.",
+    entails: []
+  },
+  {
+    id: "c118",
+    short: "Model mistaken for a soul",
+    text: "What we call awareness is the brain's attention-schema applied to itself; the brain attributes this simplified model to itself as a ghostly, nonphysical essence.",
+    plain: "We take our brain's crude self-sketch for a mysterious inner essence — but it's just data.",
+    entails: ["c117"]
+  },
+  {
+    id: "c119",
+    short: "Universal consciousness vibrates into world",
+    text: "The one universal consciousness is inherently dynamic: it vibrates and contracts itself into the world of finite things and selves.",
+    plain: "Reality is one consciousness pulsing itself into everything you see.",
+    entails: ["c1"]
+  },
+  {
+    id: "c120",
+    short: "World is real, not illusion",
+    text: "The world is a real expression of consciousness — not an illusion to be escaped or denied.",
+    plain: "The world is genuinely real, not a trick to see through.",
+    entails: []
+  },
+  {
+    id: "c121",
+    short: "Recognition is liberation",
+    text: "Liberation is recognition: the individual self realizing it was always identical with universal consciousness.",
+    plain: "Enlightenment isn't becoming something new — it's remembering what you always were.",
+    entails: ["c119"]
+  },
+  {
+    id: "c122",
+    short: "Only minds and ideas exist",
+    text: "Nothing exists except minds and the ideas they perceive — there is no mind-independent material substance at all.",
+    plain: "Reality is minds plus what they experience — and nothing else, no matter-stuff.",
+    entails: ["c1"]
+  },
+  {
+    id: "c123",
+    short: "To be is to be perceived",
+    text: "Physical objects are stable collections of sensory ideas sustained by God: a table exists because it is perceived — by finite minds and, always, by an infinite mind.",
+    plain: "Things exist because they're being experienced — and God is always watching.",
+    entails: ["c122","c2"]
+  },
+  {
+    id: "c124",
+    short: "All reality is one Absolute Experience",
+    text: "Sentient experience is the sole reality; everything finite is a partial appearance of one all-inclusive Absolute Experience.",
+    plain: "One all-inclusive experience is all there is; finite minds are glimpses of it.",
+    entails: ["c1"]
+  },
+  {
+    id: "c125",
+    short: "Subject and object are abstractions",
+    text: "Subject, object, body, and self are abstractions from a prior experiential unity — at its most primitive, experience is undivided feeling, not a relation between a perceiver and a perceived.",
+    plain: "Before there's a 'you' seeing an 'it,' there's just undivided feeling — the split comes later.",
+    entails: ["c124"]
+  },
+  {
+    id: "c126",
+    short: "We know only things-as-experienced",
+    text: "We can know things only as they appear to us — phenomena; things as they are in themselves are forever beyond our knowledge.",
+    plain: "You'll never know reality as it really is — only how it shows up for you.",
+    entails: []
+  },
+  {
+    id: "c127",
+    short: "Mind structures all experience",
+    text: "All possible experience is structured by the mind's own forms — space, time, and the categories — unified by the 'I think' that accompanies every perception.",
+    plain: "Space, time, and cause-and-effect are your mind's lenses, not the world's raw features.",
+    entails: ["c126"]
+  },
+  {
+    id: "c128",
+    short: "Nature and spirit are one Absolute",
+    text: "Nature and mind are not two kinds of being but two poles of one Absolute: nature is visible spirit, spirit is invisible nature.",
+    plain: "Nature and mind are the same reality seen from opposite ends.",
+    entails: ["c19"]
+  },
+  {
+    id: "c129",
+    short: "Nature wakes up as consciousness",
+    text: "Consciousness is nature's own coming-to-awareness: nature ascends through stages — from unconscious productivity to self-conscious mind.",
+    plain: "Consciousness is nature waking up through you, stage by stage.",
+    entails: ["c128"]
+  }
 ]);
 
 /*
@@ -837,5 +1008,15 @@ window.CLAIM_THEORIES = Object.freeze([
   { id: 57, name: "Teilhard de Chardin's evolving consciousness", blurb: "Matter and mind are two aspects of one cosmic stuff, evolving toward ultimate unity.", family: "Neutral monism", claims: ["c19", "c91", "c92"] },
   { id: 58, name: "Davidson's anomalous monism", blurb: "Each thought is a brain event — but no laws will ever map the mental onto the physical.", family: "Materialism",    claims: ["c93", "c94", "c95"] },
   { id: 59, name: "Pereira's triple-aspect monism", blurb: "Brain, information, and experience are three inseparable aspects of one thing.", family: "Materialism",    claims: ["c97", "c98"] },
-  { id: 60, name: "Chalmers's double-aspect theory of information", blurb: "Information is fundamental, with a physical face and a felt face.", family: "Neutral monism", claims: ["c101", "c34"] }
+  { id: 60, name: "Chalmers's double-aspect theory of information", blurb: "Information is fundamental, with a physical face and a felt face.", family: "Neutral monism", claims: ["c101", "c34"] },
+  { id: 21, name: "First-order representationalism", blurb: "Experience just is world-directed representation — no inner watcher needed.", family: "Materialism", claims: ["c108"] },
+  { id: 23, name: "Affective / homeostatic consciousness", blurb: "Consciousness begins in feeling, in the ancient brainstem, to regulate life.", family: "Materialism", claims: ["c110","c111"] },
+  { id: 24, name: "Enactivism / embodied cognition", blurb: "Perception is a bodily skill; no body and world, no consciousness.", family: "Materialism", claims: ["c113"] },
+  { id: 26, name: "Orchestrated Objective Reduction — Orch OR", blurb: "Quantum collapses in microtubules, orchestrated by the brain, are experience.", family: "Quantum", claims: ["c116"] },
+  { id: 28, name: "Attention Schema Theory", blurb: "Awareness is the brain's simplified model of its own attention.", family: "Materialism", claims: ["c118"] },
+  { id: 29, name: "Kashmir Shaivism's dynamic non-dualism", blurb: "One dynamic consciousness vibrates into the world; the world is real, and you are it.", family: "Idealism", claims: ["c120","c121"] },
+  { id: 30, name: "Berkeley's immaterialist idealism", blurb: "Only minds and their ideas exist; things exist because they are perceived.", family: "Idealism", claims: ["c123"] },
+  { id: 31, name: "Absolute idealism", blurb: "One Absolute Experience is all there is; subject and object are abstractions from it.", family: "Idealism", claims: ["c125"] },
+  { id: 32, name: "Kant's transcendental idealism", blurb: "We know only things-as-experienced; the mind structures all possible experience.", family: "Idealism", claims: ["c127"], caveat: "Kant does not affirm “everything is mind” (c1) — only that the mind structures what experience can be; the claims stop deliberately short of that." },
+  { id: 33, name: "Schelling's nature–spirit identity", blurb: "Nature and mind are two poles of one Absolute; consciousness is nature waking up.", family: "Idealism", claims: ["c129"] },
 ]);
