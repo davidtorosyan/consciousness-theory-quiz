@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,650&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=27">
+  <link rel="stylesheet" href="styles.css?v=28">
 </head>
 <body>
   <main class="page">
@@ -29,7 +29,7 @@
       <div class="lab-quiz" id="labQuizStart">
         <p class="micro" id="quizCountLine">Loading…</p>
         <h3>Answer claims. Watch the alignment move.</h3>
-        <p class="lab-plain">Each round asks about a dozen questions — always the claim that settles the most right now. Agreeing with a specific claim also agrees with the broader claims it implies; disagreeing with a broad claim also disagrees with the specific claims built on it. Theories are scored by how many of their claims you agree with — never by elimination.</p>
+        <p class="lab-plain">Each round asks about a dozen questions — always the question where your answer counts the most. Agreeing with a specific claim also agrees with the broader claims it implies; disagreeing with a broad claim also disagrees with the specific claims built on it. Theories are scored by how many of their claims you agree with — never by elimination.</p>
         <button class="primary" id="labQuizBegin">Start the quiz <span class="arrow">→</span></button>
       </div>
       <div class="lab-quiz hidden" id="labQuizMain">
@@ -61,8 +61,8 @@
         </div>
       </div>
       <div class="lab-quiz hidden" id="labQuizResult">
-        <p class="micro">Your result · alignment, not elimination</p>
-        <h3>Where your answers land</h3>
+        <p class="micro" id="labResultKicker">Your result · alignment, not elimination</p>
+        <h3 id="labResultTitle">Where your answers land</h3>
         <p class="lab-continue-note" id="labContinueNote"></p>
         <div id="labResultList"></div>
         <div class="result-actions">
@@ -88,7 +88,7 @@
 
       <div class="lab-pane" id="labClaims" role="tabpanel" aria-labelledby="labTabClaims">
         <div class="dag-key">
-          <p>Select any claim to inspect what it entails, what is built on it, and which theories affirm it. Arrows point from a more specific claim to what it entails.</p>
+          <p>Select any claim to inspect what it implies, what is built on it, and which theories affirm it. Arrows point from a more specific claim to the broader claim it implies.</p>
           <span class="dag-root-key">Base claim</span>
         </div>
         <div class="claim-graph" id="labClaimGraph" aria-label="Graph of consciousness claims"></div>
@@ -122,10 +122,10 @@
     <footer>Based on the <a href="https://loc.closertotruth.com/" target="_blank" rel="noopener">Closer to Truth Landscape of Consciousness</a>. Something seems off? <a href="https://github.com/davidtorosyan/consciousness-theory-quiz/issues" target="_blank" rel="noopener">Raise an issue ↗</a>.</footer>
   </main>
 
-<script>window.SITE_BUILD = 27;</script>
-<script src="data/theories.js?v=27"></script>
-<script src="data/claims.js?v=27"></script>
-<script src="src/claims-engine.js?v=27"></script>
-<script src="src/claims-lab.js?v=27"></script>
+<script>window.SITE_BUILD = 28;</script>
+<script src="data/theories.js?v=28"></script>
+<script src="data/claims.js?v=28"></script>
+<script src="src/claims-engine.js?v=28"></script>
+<script src="src/claims-lab.js?v=28"></script>
 </body>
 </html>

@@ -9,7 +9,7 @@
     const need = ['labQuizStart', 'labQuizMain', 'labQuizResult', 'labQuizBegin', 'labQuizRestart',
       'labQuizContinue', 'labContinueNote', 'labAgree', 'labDisagree', 'labSkip', 'labQBack', 'labQText', 'labQPlain', 'labQCount',
       'labQCoverage', 'labSettled', 'labSettledBy', 'labTension', 'labScores', 'labResultList', 'labClaimGraph',
-      'labQRanking', 'labQuizResume',
+      'labQRanking', 'labQuizResume', 'labResultKicker', 'labResultTitle',
       'labClaimDetail', 'labTheoryList', 'labDetail', 'labBack', 'labTabClaims', 'labTabTheories',
       'labClaims', 'labTheories', 'quizCountLine', 'exploreDek', 'updateBanner', 'updateReload'];
     if (!window.ClaimsEngine || !window.CLAIMS || need.some(id => !$(id))) {
@@ -228,18 +228,18 @@
         <p class="lab-plain">Put simply: ${escapeHtml(c.plain)}</p>
         <div class="claim-detail-groups">
           <div>
-            <p class="micro">↑ What this implies (broader claims)</p>
+            <p class="micro">↑ Broader claims this leads to</p>
             ${parents.length ? `<div class="lab-chip-row">${parents.map(p => claimChip(p)).join('')}</div>` : '<p class="lab-empty">Nothing — this is a base claim.</p>'}
           </div>
           <div>
-            <p class="micro">↓ What implies this (more specific claims)</p>
+            <p class="micro">↓ More specific claims built on this</p>
             ${children.length ? `<div class="lab-chip-row">${children.map(child => claimChip(child)).join('')}</div>` : '<p class="lab-empty">Nothing depends directly on it yet.</p>'}
           </div>
           <div>
             <p class="micro">Theories affirming this</p>
             <div class="lab-chip-row">${affirming.map(t => {
               const direct = (t.claims || []).includes(id);
-              return `<button class="lab-theory-chip${direct ? ' direct' : ''}" data-theory="${t.id}" title="${direct ? 'Listed directly' : 'Inherited through entailment'}">${escapeHtml(t.name)}${direct ? '' : ' · inherited'}</button>`;
+              return `<button class="lab-theory-chip${direct ? ' direct' : ''}" data-theory="${t.id}" title="${direct ? 'Stated directly by this theory' : 'Not stated directly — it follows from claims this theory does state'}">${escapeHtml(t.name)}${direct ? '' : ' · implied'}</button>`;
             }).join('') || ('<p class="lab-empty">None of the ' + E.theories.length + ' theories with claims.</p>')}</div>
           </div>
         </div>`;
@@ -315,10 +315,10 @@
         ${t.caveat ? `<p class="lab-caveat">A note on how this is classified: ${escapeHtml(t.caveat)}</p>` : ''}
         <p class="micro">Specific claims (listed by the theory)</p>
         <div class="lab-chip-row">${[...direct].map(cid => claimChip(cid, 'direct')).join('')}</div>
-        ${inherited.length ? `<p class="micro">Inherited claims (entailed by the specific ones)</p><div class="lab-chip-row">${inherited.map(cid => `<span class="lab-inherited-wrap">${claimChip(cid)}<small>via ${viaWhich(t, cid).join(', ')}</small></span>`).join('')}</div>` : ''}
+        ${inherited.length ? `<p class="micro">Implied claims (they follow from the specific ones)</p><div class="lab-chip-row">${inherited.map(cid => `<span class="lab-inherited-wrap">${claimChip(cid)}<small>via ${viaWhich(t, cid).join(', ')}</small></span>`).join('')}</div>` : ''}
         <div class="lab-claim-texts">${[...full].map(cid => {
           const claim = claimById.get(cid);
-          return `<div class="lab-claim-text${direct.has(cid) ? ' direct' : ''}"><span class="lab-claim-id">${cid}${direct.has(cid) ? '' : ' · inherited'}</span><p>${escapeHtml(claim.text)}</p><p class="lab-claim-plain">Put simply: ${escapeHtml(claim.plain)}</p></div>`;
+          return `<div class="lab-claim-text${direct.has(cid) ? ' direct' : ''}"><span class="lab-claim-id">${cid}${direct.has(cid) ? '' : ' · implied'}</span><p>${escapeHtml(claim.text)}</p><p class="lab-claim-plain">Put simply: ${escapeHtml(claim.plain)}</p></div>`;
         }).join('')}</div>`;
     }
     function renderMeta(id) {
@@ -345,14 +345,14 @@
         <p class="micro">Claim ${id}</p>
         <h3 class="lab-claim-title">${escapeHtml(c.text)}</h3>
         <p class="lab-plain">Put simply: ${escapeHtml(c.plain)}</p>
-        <div class="lab-claim-cols"><div><p class="micro">↑ What this implies (broader claims)</p>${ancestors.length ? `<div class="lab-chip-row">${ancestors.map(a => claimChip(a)).join('')}</div>` : '<p class="lab-empty">Nothing — this is a base claim.</p>'}</div><div><p class="micro">↓ What implies this (more specific claims)</p>${descendants.length ? `<div class="lab-chip-row">${descendants.map(d => claimChip(d)).join('')}</div>` : '<p class="lab-empty">Nothing depends on this yet.</p>'}</div></div>
-        <p class="micro">Theories affirming this claim</p><div class="lab-chip-row">${affirming.map(t => `<button class="lab-theory-chip${(t.claims || []).includes(id) ? ' direct' : ''}" data-theory="${t.id}">${escapeHtml(t.name)}${(t.claims || []).includes(id) ? '' : ' · inherited'}</button>`).join('') || ('<p class="lab-empty">None of the ' + E.theories.length + ' theories with claims.</p>')}</div>`;
+        <div class="lab-claim-cols"><div><p class="micro">↑ Broader claims this leads to</p>${ancestors.length ? `<div class="lab-chip-row">${ancestors.map(a => claimChip(a)).join('')}</div>` : '<p class="lab-empty">Nothing — this is a base claim.</p>'}</div><div><p class="micro">↓ More specific claims built on this</p>${descendants.length ? `<div class="lab-chip-row">${descendants.map(d => claimChip(d)).join('')}</div>` : '<p class="lab-empty">Nothing depends on this yet.</p>'}</div></div>
+        <p class="micro">Theories affirming this claim</p><div class="lab-chip-row">${affirming.map(t => `<button class="lab-theory-chip${(t.claims || []).includes(id) ? ' direct' : ''}" data-theory="${t.id}">${escapeHtml(t.name)}${(t.claims || []).includes(id) ? '' : ' · implied'}</button>`).join('') || ('<p class="lab-empty">None of the ' + E.theories.length + ' theories with claims.</p>')}</div>`;
     }
     function renderTheoryNav() {
       const current = theoryNav[theoryNav.length - 1];
       $('labBack').classList.toggle('hidden', theoryNav.length <= 1);
       if (!current) {
-        detail.innerHTML = '<p class="lab-empty">Pick a theory on the left to inspect its specific and inherited claims.</p>';
+        detail.innerHTML = '<p class="lab-empty">Pick a theory on the left to inspect its specific and implied claims.</p>';
         theoryList.querySelectorAll('.lab-theory-btn').forEach(b => b.classList.remove('active'));
       } else if (current.kind === 'theory') renderTheory(current.id);
       else if (current.kind === 'meta') renderMeta(current.id);
@@ -559,7 +559,7 @@
           ${result.disagreed ? `<small>${result.disagreed} rejected</small>` : ''}
         </div>`;
       }).join('') + (ranked.length > QUIZ_RAIL_TOP
-        ? `<p class="lab-scores-more">${ranked.length - QUIZ_RAIL_TOP} more theories — full ranking at the end.</p>`
+        ? `<p class="lab-scores-more">${ranked.length - QUIZ_RAIL_TOP} more theories — full ranking any time.</p>`
         : '');
     }
 
@@ -567,6 +567,8 @@
       qMain.classList.add('hidden');
       qResult.classList.remove('hidden');
       $('labQuizResume').classList.add('hidden');
+      $('labResultKicker').textContent = 'Your result · alignment, not elimination';
+      $('labResultTitle').textContent = 'Where your answers land';
       const answered = Object.keys(qstate.answers).length;
       $('labQuizContinue').classList.toggle('hidden', exhausted);
       $('labContinueNote').textContent = exhausted
@@ -599,6 +601,8 @@
     $('labQRanking').addEventListener('click', () => {
       renderResults(false);
       $('labQuizContinue').classList.add('hidden');
+      $('labResultKicker').textContent = 'Live ranking · not the final result';
+      $('labResultTitle').textContent = 'Where your answers land so far';
       const answered = Object.keys(qstate.answers).length;
       $('labContinueNote').textContent = `Based on ${answered} answer${answered === 1 ? '' : 's'} so far.`;
       $('labQuizResume').classList.remove('hidden');

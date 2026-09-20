@@ -15,7 +15,7 @@ const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
 const NEED_IDS = ['labQuizStart', 'labQuizMain', 'labQuizResult', 'labQuizBegin', 'labQuizRestart',
   'labQuizContinue', 'labContinueNote', 'labAgree', 'labDisagree', 'labSkip', 'labQBack', 'labQText', 'labQPlain', 'labQCount',
   'labQCoverage', 'labSettled', 'labSettledBy', 'labTension', 'labScores', 'labResultList', 'labClaimGraph',
-  'labQRanking', 'labQuizResume',
+  'labQRanking', 'labQuizResume', 'labResultKicker', 'labResultTitle',
   'labClaimDetail', 'labTheoryList', 'labTheorySearch', 'labDetail', 'labBack', 'labTabClaims', 'labTabTheories',
   'labClaims', 'labTheories', 'quizCountLine', 'exploreDek', 'updateBanner', 'updateReload'];
 
@@ -177,8 +177,8 @@ async function main() {
 
   // claim detail headers
   click(env, 'labClaimGraph', { target: { closest: () => ({ dataset: { claim: 'c9' } }) } });
-  check(html(env, 'labClaimDetail').includes('↑ What this implies (broader claims)') &&
-    html(env, 'labClaimDetail').includes('↓ What implies this (more specific claims)'),
+  check(html(env, 'labClaimDetail').includes('↑ Broader claims this leads to') &&
+    html(env, 'labClaimDetail').includes('↓ More specific claims built on this'),
     'claim detail headers show implication direction');
   const scrollArgs = env.els.get('labClaimDetail')._scrollArgs;
   check(!!scrollArgs && scrollArgs[0] && scrollArgs[0].block === 'start',
@@ -327,6 +327,7 @@ async function main() {
   check(!hidden(env, 'labQuizResult') && hidden(env, 'labQuizMain'), 'ranking peek shows the results view');
   check(!hidden(env, 'labQuizResume') && hidden(env, 'labQuizContinue'), 'peek offers resume, not continue');
   check(html(env, 'labResultList').includes('You agree with'), 'peek renders the live ranking');
+  check(text(env, 'labResultTitle') === 'Where your answers land so far', 'peek uses an interim header, not the final-results header');
   click(env, 'labQuizResume');
   check(!hidden(env, 'labQuizMain') && hidden(env, 'labQuizResult'), 'resume returns to the quiz');
   check(text(env, 'labQText') === rqBefore, 'resume restores the same question');
