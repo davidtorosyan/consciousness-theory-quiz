@@ -154,6 +154,8 @@ async function main() {
   check(bad.length === 0, `no regressed jargon in claims/theories${bad.length ? ' (' + bad.slice(0, 6).join(', ') + ')' : ''}`);
   const badShorts = CLAIMS.filter(c => (c.short || '').startsWith('Phenomenal')).map(c => c.id);
   check(badShorts.length === 0, `no short label leads with unglossed 'Phenomenal'${badShorts.length ? ' (' + badShorts.join(',') + ')' : ''}`);
+  const lowShorts = CLAIMS.filter(c => /^[a-z]/.test(c.short || 'x')).map(c => c.id);
+  check(lowShorts.length === 0, `all short labels capitalized${lowShorts.length ? ' (' + lowShorts.join(',') + ')' : ''}`);
 
   // theory search filter
   fireInput(env, 'labTheorySearch', 'integrated information');
@@ -308,8 +310,8 @@ async function main() {
   check(html(env, 'labResultList').includes('You agree with'), 'results use X-of-Y alignment framing');
   check(html(env, 'labResultList').includes('lab-result-blurb'), 'results rows show theory blurbs');
   check(html(env, 'labResultList').includes('data-inspect'), 'results have inspect-claims buttons');
-  check((html(env, 'labResultList').match(/aria-label="Inspect [^"]+’s claims"/g) || []).length === M,
-    'inspect buttons are named per theory for screen readers');
+  check((html(env, 'labResultList').match(/<span class="vh">/g) || []).length === M,
+    'inspect buttons carry a screen-reader-only theory name');
 
   // untouched theories: a fresh all-skip run leaves every theory untouched
   click(env, 'labQuizRestart');

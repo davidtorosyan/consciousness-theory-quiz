@@ -338,7 +338,7 @@
         <p class="micro">Claim ${id}</p>
         <h3 class="lab-claim-title">${escapeHtml(c.text)}</h3>
         <p class="lab-plain">Put simply: ${escapeHtml(c.plain)}</p>
-        <div class="lab-claim-cols"><div><p class="micro">All claims this entails</p>${ancestors.length ? `<div class="lab-chip-row">${ancestors.map(a => claimChip(a)).join('')}</div>` : '<p class="lab-empty">Nothing — this is a base claim.</p>'}</div><div><p class="micro">Everything built on this</p>${descendants.length ? `<div class="lab-chip-row">${descendants.map(d => claimChip(d)).join('')}</div>` : '<p class="lab-empty">Nothing depends on this yet.</p>'}</div></div>
+        <div class="lab-claim-cols"><div><p class="micro">↑ What this implies (broader claims)</p>${ancestors.length ? `<div class="lab-chip-row">${ancestors.map(a => claimChip(a)).join('')}</div>` : '<p class="lab-empty">Nothing — this is a base claim.</p>'}</div><div><p class="micro">↓ What implies this (more specific claims)</p>${descendants.length ? `<div class="lab-chip-row">${descendants.map(d => claimChip(d)).join('')}</div>` : '<p class="lab-empty">Nothing depends on this yet.</p>'}</div></div>
         <p class="micro">Theories affirming this claim</p><div class="lab-chip-row">${affirming.map(t => `<button class="lab-theory-chip${(t.claims || []).includes(id) ? ' direct' : ''}" data-theory="${t.id}">${escapeHtml(t.name)}${(t.claims || []).includes(id) ? '' : ' · inherited'}</button>`).join('') || ('<p class="lab-empty">None of the ' + E.theories.length + ' theories with claims.</p>')}</div>`;
     }
     function renderTheoryNav() {
@@ -399,7 +399,7 @@
 
     // Dynamic intro copy: counts come from the data, never hardcoded.
     $('quizCountLine').textContent = `${E.claims.length} claims · ${E.theories.length} theories`;
-    $('exploreDek').textContent = `${E.claims.length} claims, each linked to the broader claims it entails — general claims at the top, specific ones below. ${E.theories.length} theories mapped so far, and the map keeps growing. Select anything to inspect it.`;
+    $('exploreDek').textContent = `${E.claims.length} claims, each linked to the broader claims it implies — general claims at the top, specific ones below. ${E.theories.length} theories mapped so far, and the map keeps growing. Select anything to inspect it.`;
     graph.setAttribute('aria-label', `Graph of ${E.claims.length} consciousness claims`);
 
     function startQuiz() {
@@ -566,7 +566,7 @@
           <div><strong>${escapeHtml(result.theory.name)}</strong>
           ${result.theory.blurb ? `<p class="lab-result-blurb">${escapeHtml(result.theory.blurb)}</p>` : ''}
           <p>${line}</p>
-          <button class="text-btn" data-inspect="${result.theory.id}" aria-label="Inspect ${escapeHtml(result.theory.name)}’s claims">Inspect this theory’s claims</button></div>
+          <button class="text-btn" data-inspect="${result.theory.id}">Inspect this theory’s claims <span class="vh">— ${escapeHtml(result.theory.name)}</span></button></div>
         </div>`;
       }).join('');
     }

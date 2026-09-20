@@ -379,6 +379,15 @@
       color: var(--dim);
       min-width: 24px;
     }
+    .vh {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
     .lab-result-row p { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
     #labQuizRestart { margin-top: 24px; }
     .dag-key {
