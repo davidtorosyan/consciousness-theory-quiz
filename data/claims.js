@@ -728,14 +728,14 @@ window.CLAIMS = Object.freeze([
   {
     id: "c91",
     short: "Evolution drawn to Omega",
-    text: "Evolution is drawn forward by Omega — the absolute whole and prime mover — toward ever-greater convergence and unity of consciousness, ultimately identified with God.",
+    text: "Evolution is drawn forward by Omega — the theory's name for the universe's ultimate destination, the absolute whole and prime mover — toward ever-greater convergence and unity of consciousness, ultimately identified with God.",
     plain: "Evolution is being pulled toward a final unity of all consciousness — Omega.",
     entails: []
   },
   {
     id: "c92",
     short: "Planetary mind-layer forming",
-    text: "Individual human minds are converging into a planetary noosphere — a shared layer of thought and mind enveloping the Earth.",
+    text: "Individual human minds are converging into a planetary noosphere — from Greek nous, 'mind': a shared layer of thought and mind enveloping the Earth.",
     plain: "All human minds are merging into one planetary mind-layer.",
     entails: ["c90"]
   },
@@ -1193,14 +1193,14 @@ window.CLAIMS = Object.freeze([
   {
     id: "c158",
     short: "Entangled megaobject is superconscious",
-    text: "A timeless, non-spatiotemporal, holistically entangled 'megaobject' — underlying spacetime itself — exhibits maximal coherence, zero entropy, and the highest form of conscious resonance.",
+    text: "A timeless, holistically entangled 'megaobject' — one giant entangled whole underlying spacetime itself — exhibits maximal coherence, zero entropy, and the highest form of conscious resonance.",
     plain: "Beneath space and time sits one perfectly coherent entangled whole, and it is the most conscious thing there is.",
     entails: ["c157"]
   },
   {
     id: "c159",
     short: "Spacetime emerges from prototime",
-    text: "Spacetime is not fundamental: it emerges from a deeper level of reality — 'prototime', outside ordinary space and time — in which quantum entanglement keeps its coherence.",
+    text: "Spacetime is not fundamental: it emerges from a deeper level of reality — 'prototime', the theory's name for this deeper level, outside ordinary space and time — in which quantum entanglement keeps its coherence.",
     plain: "Space and time are not the bottom layer; they grow out of a deeper timeless entanglement.",
     entails: []
   },
@@ -1361,7 +1361,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c182",
     short: "Seities are conscious agents",
-    text: "Fundamental quantum-conscious agents — 'seities' or consciousness units — predate spacetime itself; physical laws, fields, and lived experience all emerge from their interactions.",
+    text: "Fundamental quantum-conscious agents — 'seities', the theory's word for units of consciousness — predate spacetime itself; physical laws, fields, and lived experience all emerge from their interactions.",
     plain: "Tiny conscious agents came before space and time — everything else grew from them.",
     entails: ["c181"]
   },
@@ -1431,7 +1431,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c192",
     short: "Consciousness is nested EM fields",
-    text: "Consciousness just is a nested hierarchy of interacting electromagnetic fields; resonance builds the hierarchy, field shapes are qualia, and fields causally shape neural firing directly through the field itself (called ephaptic coupling).",
+    text: "Consciousness just is a nested hierarchy of interacting electromagnetic fields; resonance builds the hierarchy, field shapes are qualia, and fields causally shape neural firing directly through the field itself — one field pushing neurons around without synapses (called ephaptic coupling).",
     plain: "Consciousness is literally layers of resonating electric and magnetic fields — their shapes are your feelings.",
     entails: ["c191","c50","c52"]
   },
@@ -1718,7 +1718,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c233",
     short: "Perception is tagged reliable",
-    text: "A perception becomes conscious when the brain forms a higher-order 'tag' judging that first-order perceptual representation to be a reliable reflection of the external world right now — a subpersonal reliability stamp, not a conscious thought.",
+    text: "A perception becomes conscious when the brain attaches a 'this is reliable' tag to it — a subpersonal stamp judging the perception to be a trustworthy reflection of the world right now, not a conscious thought.",
     plain: "You consciously see something when your brain stamps the signal 'this is really out there right now.' No stamp, no seeing — that's why blindsight patients can respond without awareness.",
     entails: ["c230"]
   },

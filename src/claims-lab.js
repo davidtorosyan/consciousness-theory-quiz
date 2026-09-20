@@ -241,7 +241,7 @@
       const node = e.target.closest('[data-claim]');
       if (!node) return;
       renderClaimDetail(node.dataset.claim);
-      claimDetail.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'nearest' });
+      claimDetail.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
     });
     claimDetail.addEventListener('click', (e) => {
       const claim = e.target.closest('[data-claim]');

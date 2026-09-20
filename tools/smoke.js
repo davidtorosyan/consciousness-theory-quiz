@@ -48,7 +48,7 @@ function makeEl(tag, id) {
     },
     querySelector(sel) { return this.querySelectorAll(sel)[0] || null; },
     getBoundingClientRect() { return { width: 0, height: 0, left: 0, top: 0, bottom: 0, right: 0 }; },
-    scrollIntoView() {},
+    scrollIntoView(...a) { this._scrollArgs = a; },
     remove() {},
   };
   el.classList = {
@@ -152,6 +152,9 @@ async function main() {
   check(html(env, 'labClaimDetail').includes('↑ What this implies (broader claims)') &&
     html(env, 'labClaimDetail').includes('↓ What implies this (more specific claims)'),
     'claim detail headers show implication direction');
+  const scrollArgs = env.els.get('labClaimDetail')._scrollArgs;
+  check(!!scrollArgs && scrollArgs[0] && scrollArgs[0].block === 'start',
+    'clicking a graph node scrolls the detail panel into view (block: start)');
 
   // quiz flow
   click(env, 'labQuizBegin');
