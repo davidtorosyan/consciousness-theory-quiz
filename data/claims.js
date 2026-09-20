@@ -66,6 +66,10 @@
   Dennett multiple drafts (no c54), Minsky, Aguera y Arcas, Hofstadter (c258->c40),
   extended mind (c259->c49), Thompson, Noe (c113 withheld; pre-merge draft
   deleted; notes at data/claims-batch12-notes.md).
+  Batch 13 (c263-c277, theories 114-120, final 120) added Friston (c263->c47),
+  Seth (c265->c48, c266->c110), Godfrey-Smith, Ginsburg-Jablonka, Husserl and
+  Merleau-Ponty (new Phenomenology family), Hoel (c277->c276->c275, Information;
+  pre-merge draft deleted; notes at data/claims-batch13-notes.md).
 */
 window.CLAIMS_VERSION = '6';
 
@@ -1911,6 +1915,111 @@ window.CLAIMS = Object.freeze([
     text: "Consciousness is not something the brain produces but a kind of skilled activity: it arises when sentient creatures actively engage the world — keeping tabs, keeping touch — so we are not our brains.",
     plain: "Consciousness is more like dancing than like movie-watching — it's something you do with the world.",
     entails: ["c49"]
+  },
+  {
+    id: "c263",
+    short: "Consciousness minimizes surprise",
+    text: "Consciousness is the natural outcome of minimizing the difference between expected and actual sensory input: the brain generates internal models that predict the world, and experience is what the process of reducing prediction error — staying in low-surprise states — amounts to.",
+    plain: "Your brain constantly guesses what your senses will report, and updates when wrong. Consciousness is that error-correcting process running.",
+    entails: ["c47"]
+  },
+  {
+    id: "c264",
+    short: "Consciousness is a process",
+    text: "Consciousness is not a thing to be defined but a process to be understood — nothing more and nothing less than a natural process such as evolution or the weather. The right question is what processes give rise to the illusion that a mind 'exists' at all.",
+    plain: "Stop asking what consciousness 'is' — ask what it does. It's like weather: a process, not an object.",
+    entails: []
+  },
+  {
+    id: "c265",
+    short: "Experience is controlled hallucination",
+    text: "We never experience sensory signals themselves — only top-down interpretations of them. Conscious contents are a kind of waking dream, a neuronal fantasy reined in by reality: what we see, hear, and feel is the brain's best guess about the causes of its inputs, not a transparent window onto the world.",
+    plain: "You're hallucinating right now — a controlled one, kept in check by your senses. What you see is your brain's best guess, not raw reality.",
+    entails: ["c48"]
+  },
+  {
+    id: "c266",
+    short: "Consciousness keeps the body alive",
+    text: "The brain's prediction machinery arose from a fundamental biological imperative: regulating bodily physiology — keeping the organism alive. We experience the world, and ourselves in it, with, through, and because of our living bodies.",
+    plain: "Consciousness evolved to run the body's life-support. You feel the world because your brain is constantly asking: is the body okay?",
+    entails: ["c110"]
+  },
+  {
+    id: "c267",
+    short: "Consciousness evolved gradually",
+    text: "Subjective experience arose gradually over deep evolutionary time, not by a sharp on/off event or threshold: organisms have internal goings-on that are more or less experiential, in degrees, rather than consciousness switching on at one bright line.",
+    plain: "There was no moment when consciousness flickered on. It dawned slowly, in degrees, across animal evolution.",
+    entails: []
+  },
+  {
+    id: "c268",
+    short: "Experience diversified across animals",
+    text: "What evolved is not the same thing repeatedly, but something divergent in kind: different animal lineages — mammals, octopuses, insects — evolved different forms of experience, with sensory and evaluative strands varying independently. There is no single scale of consciousness.",
+    plain: "An octopus's inner life isn't a dimmer version of yours — it's a different kind of inner life. Evolution ran the experiment many ways.",
+    entails: ["c267"]
+  },
+  {
+    id: "c269",
+    short: "Learning capacity marks consciousness",
+    text: "'Unlimited associative learning' — the ability to ascribe motivational value to a novel, compound, non-reflex-inducing stimulus or action and use it as the basis for future learning — is the observable evolutionary marker of the transition to minimal consciousness.",
+    plain: "The moment animals could learn truly new tricks — linking brand-new situations to good and bad outcomes — was the dawn of consciousness.",
+    entails: []
+  },
+  {
+    id: "c270",
+    short: "Value systems drive the transition",
+    text: "The transition to consciousness runs on evaluation: an organism becomes minimally conscious when its learning is fused with an integrated system that assigns motivational value — good and bad — to the world, turning mere association into meaning.",
+    plain: "Consciousness didn't come from thinking harder. It came from caring — from a system that says 'this matters to me.'",
+    entails: ["c269"]
+  },
+  {
+    id: "c271",
+    short: "All consciousness is about something",
+    text: "Consciousness is always intentional — always 'of' or 'about' something: perceiving, judging, imagining, remembering, doubting are all acts that point beyond themselves to an object as it is meant. There is no consciousness without an object.",
+    plain: "You can't just be conscious — you're always conscious of something. Every thought points at the world, or at an idea of it.",
+    entails: []
+  },
+  {
+    id: "c272",
+    short: "The world can be bracketed",
+    text: "We can suspend — 'bracket' — the unexamined assumption that the world exists just as it appears, and rigorously describe how things show up in experience: their structures of givenness, time, embodiment, and shared meaning. First-person description can be a strict science.",
+    plain: "Set aside whether the world is 'really' out there, and look carefully at how it appears. That careful looking is a science of its own.",
+    entails: []
+  },
+  {
+    id: "c273",
+    short: "The body is the perceiver",
+    text: "Consciousness is not an inner theater of mental states but the lived body's pre-reflective openness to a meaningful world: the body is the subject of perception, not an object I happen to have — a bodily power of orientation and grip, 'I can' rather than 'I think.'",
+    plain: "You don't perceive the world from inside a control room — you perceive it with your body. Your body is the perceiver, not a vehicle.",
+    entails: ["c112"]
+  },
+  {
+    id: "c274",
+    short: "Meanings live in the body",
+    text: "Meaning shows up in the body before any judgment: the world presents itself as solicitations, possibilities, obstacles, and bodily powers — a field of significance the lived body understands pre-reflectively, not a neutral array of data awaiting interpretation.",
+    plain: "Before you think 'that cup is grabbable,' your body already knows. The world speaks to your body first — in urges and possibilities.",
+    entails: ["c273"]
+  },
+  {
+    id: "c275",
+    short: "Macro can out-cause micro",
+    text: "A macro-scale description of a system can be more causally informative than its most detailed micro-scale description: some systems' causal structure only comes into focus at higher levels, and no amount of microscopic detail captures it fully.",
+    plain: "Zooming in doesn't always explain more. Sometimes the bigger picture has more causal power than the tiny details do.",
+    entails: []
+  },
+  {
+    id: "c276",
+    short: "Consciousness peaks at emergence",
+    text: "Consciousness resides at the level where causal emergence peaks — the scale at which the brain has maximal control over its own future. Consciousness is what it is like for information to be causally emergent.",
+    plain: "Experience happens at the level where the brain's big picture out-causes its neurons — where the whole gains real power over its own future.",
+    entails: ["c275"]
+  },
+  {
+    id: "c277",
+    short: "Stories have causal power",
+    text: "Consciousness is narrative awareness: stories — sequential, causally coherent structures — are not epiphenomenal but real causal scaffolding of the mind, operating at the emergent level where experience lives.",
+    plain: "Your inner story isn't just decoration. The narrative your mind tells has real causal power — it's part of what runs you.",
+    entails: ["c276"]
   }
 ]);
 
@@ -2034,4 +2143,11 @@ window.CLAIM_THEORIES = Object.freeze([
   { id: 111, name: "Extended mind", blurb: "Thinking doesn't stop at the skull — when brain and tools couple up, the tools are part of the mind.", family: "Materialism", claims: ["c259"] },
   { id: 112, name: "Thompson's mind in life", blurb: "Life and mind are one continuous story: mind is what living, self-organizing bodies do in the world — not brain software.", family: "Materialism", claims: ["c261"] },
   { id: 113, name: "Noë's \"out of our heads\"", blurb: "Consciousness is something you do with the world, not something your brain makes — you are not your brain.", family: "Materialism", claims: ["c262"], caveat: "Noë attacks materialism as well as dualism — brain science alone cannot explain consciousness; filed under Materialism by CTT landscape convention. His dream evidence suggests experience can occur with reduced world-engagement, so c113 ('No brain in a vat') is deliberately NOT listed: its absolute 'could not be conscious' is stronger than his stated position." },
+  { id: 114, name: "Friston's free-energy principle", blurb: "Consciousness is what happens when a system relentlessly minimizes surprise: the brain predicts its sensory inputs, corrects its errors, and experience is that error-correcting process.", family: "Materialism", claims: ["c263","c264"] },
+  { id: 115, name: "Seth's beast machine", blurb: "Your world is a controlled hallucination: experience is the brain's best guess about its inputs, and consciousness evolved as the body asking 'am I okay?' — with, through, and because of your living body.", family: "Materialism", claims: ["c265","c266"] },
+  { id: 116, name: "Godfrey-Smith's gradualist evolution", blurb: "Consciousness dawned slowly and diversely: different animals evolved different kinds of inner life — an octopus's experience is a different kind, not a dimmer version of yours.", family: "Materialism", claims: ["c268"] },
+  { id: 117, name: "Ginsburg–Jablonka unlimited associative learning", blurb: "The dawn of consciousness is a learning milestone: when evolution produced unlimited associative learning — linking novel situations to good and bad — caring minds were born.", family: "Materialism", claims: ["c270"] },
+  { id: 118, name: "Husserl's transcendental phenomenology", blurb: "Before explaining consciousness, describe it properly: every experience is about something, and bracketing our assumptions reveals the deep structures of time, meaning, and the shared world.", family: "Phenomenology", claims: ["c271","c272"], caveat: "Phenomenology is a descriptive method, not a metaphysics: Husserl deliberately brackets whether the world exists as it appears, so these claims take no stance for or against materialism — c0 is deliberately not entailed." },
+  { id: 119, name: "Merleau-Ponty's lived body", blurb: "You are not a mind piloting a body — your body is the perceiver: meaning reaches you through the body first, as urges and possibilities, before any thought.", family: "Phenomenology", claims: ["c274"], caveat: "Merleau-Ponty's project is phenomenological description, not mechanism: these claims are about how the world shows up in bodily life, not about what the brain computes — no c0 entailment, consistent with his rejection of both empiricism and intellectualism." },
+  { id: 120, name: "Hoel's causal emergence", blurb: "Consciousness lives where the big picture out-causes the details: macro-scale brain patterns can have more causal power than neurons, and your inner narrative is part of that real causal machinery.", family: "Information", claims: ["c277"] },
 ]);
