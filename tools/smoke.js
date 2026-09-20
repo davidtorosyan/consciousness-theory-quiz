@@ -13,8 +13,8 @@ const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
 
 // ---------------------------------------------------------------- shim
 const NEED_IDS = ['labQuizStart', 'labQuizMain', 'labQuizResult', 'labQuizBegin', 'labQuizRestart',
-  'labAgree', 'labDisagree', 'labSkip', 'labQBack', 'labQText', 'labQPlain', 'labQCount',
-  'labQCoverage', 'labSettled', 'labSettledBy', 'labScores', 'labResultList', 'labClaimGraph',
+  'labQuizContinue', 'labContinueNote', 'labAgree', 'labDisagree', 'labSkip', 'labQBack', 'labQText', 'labQPlain', 'labQCount',
+  'labQCoverage', 'labSettled', 'labSettledBy', 'labTension', 'labScores', 'labResultList', 'labClaimGraph',
   'labClaimDetail', 'labTheoryList', 'labDetail', 'labBack', 'labTabClaims', 'labTabTheories',
   'labClaims', 'labTheories', 'quizCountLine', 'exploreDek', 'updateBanner', 'updateReload'];
 
@@ -120,6 +120,7 @@ async function main() {
   const { window: win } = env;
   const CLAIMS = win.CLAIMS, THEORIES = win.CLAIM_THEORIES;
   const N = CLAIMS.length, M = THEORIES.length;
+  const claimText = new Map(CLAIMS.map((c) => [c.text, c.id]));
   console.log(`data: ${N} claims, ${M} theories`);
 
   check(text(env, 'quizCountLine') === `${N} claims · ${M} theories`, `quiz start shows ${N} claims · ${M} theories`);
@@ -141,6 +142,8 @@ async function main() {
   click(env, 'labQuizBegin');
   check(!hidden(env, 'labQuizMain') && hidden(env, 'labQuizStart'), 'quiz starts');
   check(text(env, 'labQText').length > 20, 'question text renders');
+  check(claimText.get(text(env, 'labQText')) === 'c34', 'first question is the gentle opener (c34), not c0');
+  check(text(env, 'labQCount') === '1 of 12', 'progress shows question N of 12: ' + text(env, 'labQCount'));
   check(text(env, 'labQPlain').startsWith('Put simply:'), 'put-simply line renders');
   check(text(env, 'labQCoverage').includes('Agreeing settles') && text(env, 'labQCoverage').includes('disagreeing settles'),
     'coverage copy is per-direction: ' + text(env, 'labQCoverage').slice(0, 80));
@@ -163,7 +166,6 @@ async function main() {
   // skips root claims to set up a genuine affirm-propagation.
   click(env, 'labQuizRestart');
   const CE = win.ClaimsEngine;
-  const claimText = new Map(CLAIMS.map((c) => [c.text, c.id]));
   const settledOf = (mirror) => new Set([...CE.affirmed(CLAIMS, mirror), ...CE.rejected(CLAIMS, mirror)]);
   let sawAffirm = false, sawReject = false, rounds = 0;
 
@@ -228,7 +230,36 @@ async function main() {
     check(text(env, 'labQText') !== qs || !hidden(env, 'labQuizResult'), 'skip advances');
   }
 
+  // engine-level: contradictions + validation
+  const mContra = CE.newQuiz();
+  CE.answer(mContra, 'c0', 'yes');
+  CE.answer(mContra, 'c6', 'yes');
+  check(CE.contradictions(CLAIMS, mContra).length === 1, 'engine reports the c0/c6 contradiction');
+  check(CE.validate(CLAIMS, THEORIES).length === 0, 'claims-engine validation has no problems');
+
+  // rail shows top 8, not all 120
+  const railRows = (html(env, 'labScores').match(/lab-score-row/g) || []).length;
+  check(railRows === 8, `rail shows top 8 theories during quiz (got ${railRows})`);
+  check(html(env, 'labScores').includes('112 more theories'), 'rail notes the remaining theories');
+
+  // round cap + continue + tension note (all-agree run)
+  click(env, 'labQuizRestart');
+  let sawTension = false, answered = 0;
+  while (hidden(env, 'labQuizResult') && answered < 20) {
+    if (text(env, 'labTension').length > 0) sawTension = true;
+    click(env, 'labAgree');
+    answered++;
+  }
+  check(answered === 12 && !hidden(env, 'labQuizResult'), `quiz stops after a 12-question round (answered ${answered})`);
+  check(sawTension, 'tension note appears when affirming contradictory claims');
+  check(!hidden(env, 'labQuizContinue'), 'continue button offered after a round');
+  check(text(env, 'labContinueNote').includes('Based on 12 answers'), 'continue note cites answer count');
+  click(env, 'labQuizContinue');
+  check(!hidden(env, 'labQuizMain') && hidden(env, 'labQuizResult'), 'continue resumes the quiz');
+  check(text(env, 'labQCount') === '1 of 12', 'new round restarts progress');
+
   // complete the quiz
+  click(env, 'labQuizRestart');
   let guard = 0;
   while (hidden(env, 'labQuizResult') && guard++ < N + 50) click(env, 'labAgree');
   check(!hidden(env, 'labQuizResult'), 'quiz completes to results screen');

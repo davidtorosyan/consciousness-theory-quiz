@@ -7,8 +7,8 @@
     // Defensive boot: if the HTML and JS versions disagree (e.g. a deploy
     // landing mid-reload), say so plainly instead of dying silently.
     const need = ['labQuizStart', 'labQuizMain', 'labQuizResult', 'labQuizBegin', 'labQuizRestart',
-      'labAgree', 'labDisagree', 'labSkip', 'labQBack', 'labQText', 'labQPlain', 'labQCount',
-      'labQCoverage', 'labSettled', 'labSettledBy', 'labScores', 'labResultList', 'labClaimGraph',
+      'labQuizContinue', 'labContinueNote', 'labAgree', 'labDisagree', 'labSkip', 'labQBack', 'labQText', 'labQPlain', 'labQCount',
+      'labQCoverage', 'labSettled', 'labSettledBy', 'labTension', 'labScores', 'labResultList', 'labClaimGraph',
       'labClaimDetail', 'labTheoryList', 'labDetail', 'labBack', 'labTabClaims', 'labTabTheories',
       'labClaims', 'labTheories', 'quizCountLine', 'exploreDek', 'updateBanner', 'updateReload'];
     if (!window.ClaimsEngine || !window.CLAIMS || need.some(id => !$(id))) {
@@ -40,7 +40,7 @@
     }
     function claimChip(id, extra) {
       const c = claimById.get(id);
-      return `<button class="lab-claim-chip${extra ? ' ' + extra : ''}" data-claim="${id}" title="${escapeHtml(c.text)}">${id}</button>`;
+      return `<button class="lab-claim-chip${extra ? ' ' + extra : ''}" data-claim="${id}" title="${id}: ${escapeHtml(c.text)}">${escapeHtml(shortLabel(c))}</button>`;
     }
 
     /* ---------------- explorer views (quiz lives above, always visible) ---------------- */
@@ -99,6 +99,7 @@
 
     function renderGraph() {
       const memo = new Map();
+      const MAX_PER_ROW = 6;
       components = weakComponents().map((ids, componentIndex) => {
         const levels = new Map();
         ids.forEach(id => {
@@ -106,31 +107,41 @@
           if (!levels.has(rank)) levels.set(rank, []);
           levels.get(rank).push(id);
         });
-        const maxRank = Math.max(...levels.keys());
-        const height = 28 + (maxRank + 1) * 88;
+        // Wide ranks wrap into multiple rows of at most MAX_PER_ROW nodes so
+        // dense levels stay readable instead of stacking on top of each other.
+        const rows = [];
+        [...levels.keys()].sort((a, b) => a - b).forEach(rank => {
+          const levelIds = levels.get(rank);
+          levelIds.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+          for (let i = 0; i < levelIds.length; i += MAX_PER_ROW) {
+            rows.push({ rank, ids: levelIds.slice(i, i + MAX_PER_ROW) });
+          }
+        });
+        const height = 28 + rows.length * 88;
         const component = document.createElement('div');
         component.className = 'dag-component';
         component.style.height = `${height}px`;
         component.dataset.component = String(componentIndex);
         component.innerHTML = `<svg aria-hidden="true"><defs><marker id="dagArrow${componentIndex}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#49615f"></path></marker></defs></svg>`;
-        levels.forEach((levelIds, rank) => {
-          levelIds.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
-          levelIds.forEach((id, index) => {
+        rows.forEach(({ rank, ids: rowIds }, row) => {
+          rowIds.forEach((id, index) => {
             const claim = claimById.get(id);
             const button = document.createElement('button');
             button.className = `dag-node${rank === 0 ? ' root' : ''}`;
             button.dataset.claim = id;
-            button.style.left = `${((index + 0.5) / levelIds.length) * 100}%`;
-            button.style.top = `${18 + rank * 88}px`;
+            button.style.left = `${((index + 0.5) / rowIds.length) * 100}%`;
+            button.style.top = `${18 + row * 88}px`;
             button.title = claim.text;
             button.setAttribute('aria-label', `${id}: ${claim.text}`);
             button.innerHTML = `<span class="dag-node-id">${id}</span><span class="dag-node-label">${escapeHtml(shortLabel(claim))}</span>`;
             component.appendChild(button);
           });
         });
-        graph.appendChild(component);
         return { element: component, ids, index: componentIndex };
       });
+      // Biggest clusters first: the map metaphor matters most where it is densest.
+      components.sort((a, b) => b.ids.length - a.ids.length);
+      components.forEach(c => graph.appendChild(c.element));
     }
 
     function drawEdges() {
@@ -329,22 +340,37 @@
     const qStart = $('labQuizStart');
     const qMain = $('labQuizMain');
     const qResult = $('labQuizResult');
+    // A round is a short series: 12 questions, then results with the option
+    // to keep going. The landing promises a short series, so the quiz keeps it.
+    const QUIZ_ROUND_LENGTH = 12;
+    const QUIZ_RAIL_TOP = 8;
     let qstate = null;
     let qhistory = [];
+    let qRoundCount = 0;
     let lastSettledIds = [];
     let lastSettledDir = null; // 'yes' when the last answer affirmed, 'no' when it rejected
 
     // Dynamic intro copy: counts come from the data, never hardcoded.
     $('quizCountLine').textContent = `${E.claims.length} claims · ${E.theories.length} theories`;
-    $('exploreDek').textContent = `${E.claims.length} claims, each linked to the broader claims it entails — general claims at the top, specific ones below. ${E.theories.length} theories mapped so far; ${META_THEORIES.length - E.theories.length} more on the way. Tap anything to inspect it.`;
+    $('exploreDek').textContent = `${E.claims.length} claims, each linked to the broader claims it entails — general claims at the top, specific ones below. ${E.theories.length} theories mapped so far, and the map keeps growing. Select anything to inspect it.`;
     graph.setAttribute('aria-label', `Graph of ${E.claims.length} consciousness claims`);
 
     function startQuiz() {
       qstate = E.newQuiz();
       qhistory = [];
+      qRoundCount = 0;
       lastSettledIds = [];
       lastSettledDir = null;
       qStart.classList.add('hidden');
+      qResult.classList.add('hidden');
+      qMain.classList.remove('hidden');
+      renderQuestion();
+    }
+
+    function continueQuiz() {
+      qRoundCount = 0;
+      lastSettledIds = [];
+      lastSettledDir = null;
       qResult.classList.add('hidden');
       qMain.classList.remove('hidden');
       renderQuestion();
@@ -355,13 +381,17 @@
     }
 
     function renderQuestion() {
+      if (qRoundCount >= QUIZ_ROUND_LENGTH) {
+        renderResults(false);
+        return;
+      }
       const q = currentQuestion();
       if (!q) {
-        renderResults();
+        renderResults(true);
         return;
       }
       const claim = claimById.get(q.id);
-      $('labQCount').textContent = String(qhistory.length + 1).padStart(2, '0');
+      $('labQCount').textContent = `${qRoundCount + 1} of ${QUIZ_ROUND_LENGTH}`;
       $('labQText').textContent = claim.text;
       $('labQPlain').textContent = `Put simply: ${claim.plain}`;
       const both = E.coverageBoth(qstate, q.id);
@@ -373,6 +403,7 @@
         : '';
       $('labQBack').classList.toggle('hidden', qhistory.length === 0);
       renderSettledBy();
+      renderTension();
       renderScores();
     }
 
@@ -395,6 +426,7 @@
       const before = new Set([...E.affirmed(qstate), ...E.rejected(qstate)]);
       E.answer(qstate, q.id, yesNo);
       qhistory.push({ id: q.id, action: 'answer' });
+      qRoundCount++;
       lastSettledIds = [...E.affirmed(qstate), ...E.rejected(qstate)]
         .filter(id => !before.has(id) && id !== q.id);
       lastSettledDir = yesNo;
@@ -406,13 +438,33 @@
       if (!q) return;
       E.skip(qstate, q.id);
       qhistory.push({ id: q.id, action: 'skip' });
+      qRoundCount++;
       lastSettledIds = [];
       lastSettledDir = 'skip';
       renderQuestion();
     }
 
+    // Gentle inconsistency note: the quiz measures alignment, not consistency,
+    // but a layperson deserves to know when two affirmed claims pull apart.
+    function renderTension() {
+      const el = $('labTension');
+      const pairs = E.contradictions(qstate).slice(0, 2);
+      if (!pairs.length) {
+        el.textContent = '';
+        el.classList.add('hidden');
+        return;
+      }
+      el.classList.remove('hidden');
+      el.textContent = pairs.map(([a, b]) => {
+        const ca = claimById.get(a), cb = claimById.get(b);
+        return `Worth knowing: “${ca.plain}” pulls against “${cb.plain}” — you affirmed both. No wrong answers here; the quiz measures alignment, not consistency.`;
+      }).join(' ');
+    }
+
     function renderScores() {
-      $('labScores').innerHTML = E.score(qstate).map(result => {
+      const ranked = E.score(qstate);
+      const top = ranked.slice(0, QUIZ_RAIL_TOP);
+      $('labScores').innerHTML = top.map(result => {
         const pct = result.total ? Math.round(100 * result.agreed / result.total) : 0;
         return `<div class="lab-score-row">
           <div class="lab-score-top"><strong>${escapeHtml(result.theory.name)}</strong><span>${result.agreed} of ${result.total}</span></div>
@@ -420,10 +472,19 @@
           <div class="lab-score-bar"><span style="width:${pct}%"></span></div>
           ${result.disagreed ? `<small>${result.disagreed} rejected</small>` : ''}
         </div>`;
-      }).join('');
+      }).join('') + (ranked.length > QUIZ_RAIL_TOP
+        ? `<p class="lab-scores-more">${ranked.length - QUIZ_RAIL_TOP} more theories — full ranking at the end.</p>`
+        : '');
     }
 
-    function renderResults() {
+    function renderResults(exhausted) {
+      qMain.classList.add('hidden');
+      qResult.classList.remove('hidden');
+      const answered = Object.keys(qstate.answers).length;
+      $('labQuizContinue').classList.toggle('hidden', exhausted);
+      $('labContinueNote').textContent = exhausted
+        ? ''
+        : `Based on ${answered} answer${answered === 1 ? '' : 's'} so far — keep going any time for a sharper picture.`;
       qMain.classList.add('hidden');
       qResult.classList.remove('hidden');
       $('labResultList').innerHTML = E.score(qstate).map((result, index) => {
@@ -443,6 +504,7 @@
 
     $('labQuizBegin').addEventListener('click', startQuiz);
     $('labQuizRestart').addEventListener('click', startQuiz);
+    $('labQuizContinue').addEventListener('click', continueQuiz);
     $('labAgree').addEventListener('click', () => answerQuestion('yes'));
     $('labDisagree').addEventListener('click', () => answerQuestion('no'));
     $('labSkip').addEventListener('click', skipQuestion);

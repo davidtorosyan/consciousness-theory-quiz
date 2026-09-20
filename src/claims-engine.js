@@ -115,12 +115,23 @@
 
   // Greedy: the undecided, unskipped claim with the highest coverage.
   // Ties -> stable id order.
+  // On a completely fresh quiz (no answers or skips yet), prefer a claim
+  // flagged `opener: true` — a gentler first question than the raw
+  // highest-coverage claim (which is the hardest metaphysical question).
   function nextQuestion(claims, state) {
     const skipped = state.skipped || {};
+    const fresh = Object.keys(state.answers || {}).length === 0 &&
+      Object.keys(skipped).length === 0;
+    const byId = indexById(claims);
     const und = undecided(claims, state).filter(id => !skipped[id]);
     if (!und.length) return null;
-    let best = und[0], bestCov = -1;
-    for (const id of und) {
+    let pool = und;
+    if (fresh) {
+      const openers = und.filter(id => (byId.get(id) || {}).opener);
+      if (openers.length) pool = openers;
+    }
+    let best = pool[0], bestCov = -1;
+    for (const id of pool) {
       const cov = coverage(claims, state, id);
       if (cov > bestCov) { bestCov = cov; best = id; }
     }
@@ -172,6 +183,26 @@
     }).sort((x, y) => (y.agreed - x.agreed) || (x.disagreed - y.disagreed) || (x.theory.id - y.theory.id));
   }
 
+  // Pairs of affirmed claims that directly contradict each other, from the
+  // claims' `contradicts` lists. The quiz measures alignment, not
+  // consistency, so these are reported gently, never scored.
+  function contradictions(claims, state) {
+    const aff = affirmed(claims, state);
+    const byId = indexById(claims);
+    const seen = new Set();
+    const out = [];
+    for (const id of aff) {
+      for (const other of ((byId.get(id) || {}).contradicts || [])) {
+        if (!aff.has(other)) continue;
+        const key = [id, other].sort().join('|');
+        if (seen.has(key)) continue;
+        seen.add(key);
+        out.push([id, other]);
+      }
+    }
+    return out;
+  }
+
   // --- Audit ---------------------------------------------------------------
   // Returns a list of problems: dangling entails refs, cycles, dangling theory refs.
   function validate(claims, theories) {
@@ -180,6 +211,10 @@
     for (const c of claims) {
       for (const p of (c.entails || [])) {
         if (!byId.has(p)) problems.push(`claim ${c.id} entails unknown claim ${p}`);
+      }
+      for (const q of (c.contradicts || [])) {
+        if (!byId.has(q)) problems.push(`claim ${c.id} contradicts unknown claim ${q}`);
+        else if (q === c.id) problems.push(`claim ${c.id} contradicts itself`);
       }
     }
     // Cycle detection (DFS on child -> parent edges).
@@ -207,7 +242,8 @@
   const api = {
     ancestors, descendants, theoryFullClaims,
     newQuiz, affirmed, rejected, undecided, coverage, coverageBoth,
-    nextQuestion, answer, undo, skip, unskip, score, validate
+    nextQuestion, answer, undo, skip, unskip, score, validate,
+    contradictions
   };
 
   api.bound = function () {
@@ -231,6 +267,7 @@
       skip: (state, id) => api.skip(state, id),
       unskip: (state, id) => api.unskip(state, id),
       score: (state) => api.score(claims, theories, state),
+      contradictions: (state) => api.contradictions(claims, state),
       validate: () => api.validate(claims, theories)
     };
   };

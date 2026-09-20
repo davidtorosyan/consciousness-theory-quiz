@@ -471,6 +471,9 @@
     .lab-claim-plain { color: var(--muted); font-size: 14px; }
     .lab-settled-by { color: var(--dim); font-size: 13px; margin: -14px 0 20px; }
     .lab-settled-by:not(:empty)::before { content: "✓ "; color: var(--cyan); }
+    .lab-tension { color: #f2d98c; font-size: 13px; margin: -14px 0 20px; border-left: 2px solid #8a6d1f; padding-left: 10px; }
+    .lab-scores-more { color: var(--dim); font-size: 13px; margin: 8px 0 0; }
+    .lab-continue-note { color: var(--dim); font-size: 14px; margin: 0 0 16px; }
     .update-banner { background: #3a2f10; border: 1px solid #8a6d1f; color: #f2d98c; border-radius: 10px; padding: 10px 14px; margin: 0 0 16px; font-size: 14px; }
     .update-banner .text-btn { color: #ffe9a8; text-decoration: underline; font-size: 14px; }
     .lab-score-blurb, .lab-result-blurb { color: var(--dim); font-size: 13px; margin: 2px 0 6px; }

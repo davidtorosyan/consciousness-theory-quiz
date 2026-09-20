@@ -79,6 +79,7 @@ window.CLAIMS = Object.freeze([
     short: "Ordinary physics is enough",
     text: "Consciousness is entirely explainable by ordinary matter and physics.",
     plain: "Nothing about experience needs anything beyond the physical world.",
+    contradicts: ["c6"],
     entails: []
   },
   {
@@ -121,6 +122,7 @@ window.CLAIMS = Object.freeze([
     short: "Mind is nonphysical",
     text: "The mind is a nonphysical substance, distinct in kind from the body.",
     plain: "Mind and body are two fundamentally different kinds of thing.",
+    contradicts: ["c0", "c93"],
     entails: []
   },
   {
@@ -135,6 +137,7 @@ window.CLAIMS = Object.freeze([
     short: "Mind can affect the brain",
     text: "Conscious minds can causally affect the physical brain.",
     plain: "Your thoughts can move matter — physics isn't causally closed.",
+    contradicts: ["c10"],
     entails: ["c6"]
   },
   {
@@ -149,6 +152,7 @@ window.CLAIMS = Object.freeze([
     short: "Physical causes are closed",
     text: "Every physical event has a purely physical cause — minds never move matter.",
     plain: "Everything physical has a purely physical cause; minds don't push neurons.",
+    contradicts: ["c8"],
     entails: []
   },
   {
@@ -211,7 +215,7 @@ window.CLAIMS = Object.freeze([
     id: "c19",
     short: "one substance, two aspects",
     text: "There is exactly one fundamental reality; individual minds and bodies are that same reality seen under two different aspects — the mental and the physical.",
-    plain: "There's only one reality, and mind and body are the same thing seen two ways — thought and extension are two views of one thing.",
+    plain: "There's only one reality, and mind and body are the same thing seen two ways — as inner thought, and as something spread out in space.",
     entails: []
   },
   {
@@ -317,6 +321,7 @@ window.CLAIMS = Object.freeze([
     short: "consciousness irreducible",
     text: "Consciousness is a real part of the natural world that can't be explained away or reduced to something non-conscious.",
     plain: "Experience is genuinely real; no redescription in brain terms makes its first-person character disappear.",
+    opener: true,
     entails: []
   },
   {
@@ -555,6 +560,7 @@ window.CLAIMS = Object.freeze([
     short: "Consciousness does nothing",
     text: "Subjective experience has no causal power of its own: all the work attributed to it — deciding, controlling, steering behavior — is done by nonconscious brain systems.",
     plain: "Your feeling of being in control doesn't actually control anything.",
+    contradicts: ["c95"],
     entails: []
   },
   {
@@ -737,6 +743,7 @@ window.CLAIMS = Object.freeze([
     short: "Mental events are physical",
     text: "Every particular mental event — this pain, that thought — is numerically identical with a physical event in the brain; there is no extra mental stuff.",
     plain: "Each of your thoughts just is a physical brain event.",
+    contradicts: ["c6"],
     entails: []
   },
   {
@@ -751,6 +758,7 @@ window.CLAIMS = Object.freeze([
     short: "Mind causes physical events",
     text: "Mental events have genuine causal powers — your beliefs and desires really cause your body to move and physical events to happen.",
     plain: "Your thoughts genuinely cause physical things to happen.",
+    contradicts: ["c67"],
     entails: []
   },
   {
@@ -1254,8 +1262,8 @@ window.CLAIMS = Object.freeze([
   {
     id: "c168",
     short: "Consciousness acts on physics",
-    text: "Consciousness is not merely affected by physics but acts on it: since the physical world manifestly acts on consciousness, a reciprocal influence must exist — and the quantum collapse is where it shows itself.",
-    plain: "Mind doesn't just receive from physics — it pushes back, at the quantum collapse.",
+    text: "Consciousness is not merely affected by physics but acts on it: since the physical world manifestly acts on consciousness, a reciprocal influence must exist — and the quantum collapse, the moment a spread-out quantum possibility becomes one definite outcome, is where it shows itself.",
+    plain: "Mind doesn't just receive from physics — it pushes back, at the moment quantum possibilities become definite.",
     entails: []
   },
   {
@@ -1366,14 +1374,14 @@ window.CLAIMS = Object.freeze([
   {
     id: "c184",
     short: "Possibles are real",
-    text: "Possibility is a real feature of nature: 'possibles' (Res potentia) are ontologically real — not merely descriptions of what could happen, but what becomes actual (Res extensa).",
+    text: "Possibility is a real feature of nature: 'possibles' — real maybe-states of nature, what Kauffman calls Res potentia — are ontologically real: not merely descriptions of what could happen, but what becomes actual (the ordinary physical world, Res extensa).",
     plain: "Possibilities are real things, not just ideas — they wait, as possibilities, to become actual.",
     entails: []
   },
   {
     id: "c185",
     short: "Mind turns possibles into actuals",
-    text: "Mind mediates the conversion of possibles into actuals — mind actualizes Res potentia into Res extensa — so mind cannot be a purely classical phenomenon.",
+    text: "Mind mediates the conversion of possibles into actuals — mind actualizes real possibilities (Res potentia) into the actual physical world (Res extensa) — so mind cannot be a purely classical phenomenon.",
     plain: "Mind is what turns real possibilities into actual things, so mind must involve physics beyond the classical.",
     entails: ["c184","c168"]
   },
@@ -1422,7 +1430,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c192",
     short: "Consciousness is nested EM fields",
-    text: "Consciousness just is a nested hierarchy of interacting electromagnetic fields; resonance builds the hierarchy, field shapes are qualia, and fields causally shape neural firing (ephaptic coupling).",
+    text: "Consciousness just is a nested hierarchy of interacting electromagnetic fields; resonance builds the hierarchy, field shapes are qualia, and fields causally shape neural firing directly through the field itself (called ephaptic coupling).",
     plain: "Consciousness is literally layers of resonating electric and magnetic fields — their shapes are your feelings.",
     entails: ["c191","c50","c52"]
   },
@@ -1449,7 +1457,7 @@ window.CLAIMS = Object.freeze([
   },
   {
     id: "c196",
-    short: "Integration, no separate workspace",
+    short: "Integration is enough — no workspace",
     text: "Conscious processing is a highly integrated processing mode — there is no separate workspace; reportability is a natural consequence of the integration itself.",
     plain: "No special brain stage is needed — once processing is integrated enough, it's conscious and reportable.",
     entails: ["c195"]
@@ -1652,7 +1660,7 @@ window.CLAIMS = Object.freeze([
   },
   {
     id: "c225",
-    short: "An inner sense scans the mind",
+    short: "Brain scanning itself",
     text: "Introspective consciousness is a perception-like inner sense: one neural process scanning and representing another, producing non-inferential information about the mind's current states — a first-order state becomes introspectively conscious when it is the object of such a scan.",
     plain: "Part of your brain watches the rest of it — when a brain state gets scanned by this inner sense, you become aware of it.",
     entails: ["c0"]
@@ -1680,7 +1688,7 @@ window.CLAIMS = Object.freeze([
   },
   {
     id: "c229",
-    short: "Integration across representational orders",
+    short: "Self-awareness woven into experience",
     text: "Consciousness requires the functional integration of two representations into one state: a first-order representation of the world and a higher-order representation of that very representation — neither side alone suffices.",
     plain: "The 'what' of experience and the 'I'm aware of it' part must be woven into one thing. One without the other isn't consciousness.",
     entails: ["c228"]
@@ -1736,7 +1744,7 @@ window.CLAIMS = Object.freeze([
   },
   {
     id: "c237",
-    short: "Representation of a representation",
+    short: "A thought about your own representing",
     text: "Phenomenal consciousness consists in a thought-like higher-order representation of a representation — with content like 'I, myself, am having this representation' — rather than a higher-order thought about a sensation directly.",
     plain: "You're conscious of red when your brain holds the claim-like thought 'I myself am representing red' — a representation about your representing, not about red itself.",
     entails: ["c45"]
@@ -2034,7 +2042,7 @@ window.CLAIM_THEORIES = Object.freeze([
   { id:  3, name: "Conscious realism", blurb: "Reality is made of conscious agents interacting.",               family: "Idealism",      claims: ["c4", "c5"] },
   { id:  4, name: "Substance dualism", blurb: "Mind and body are two fundamentally different kinds of stuff.",               family: "Dualism",       claims: ["c7", "c8"] },
   { id:  5, name: "Naturalistic / property dualism", blurb: "Consciousness is a real non-physical property of brains.", family: "Dualism",       claims: ["c10", "c11"] },
-  { id: 19, name: "Integrated Information Theory", blurb: "Consciousness is how integrated a system's cause-and-effect structure is.",   family: "Information",   claims: ["c12", "c14"] },
+  { id: 19, name: "Integrated Information Theory", blurb: "Consciousness is how integrated a system's cause-and-effect structure is.",   family: "Information",   caveat: "IIT gives phenomenal existence primacy and redefines 'physical' as pure cause-and-effect power — broader than ordinary matter and physics — so routing it through 'ordinary physics is enough' (c0) is a judgment call.",   claims: ["c12", "c14"] },
   { id:  6, name: "Interactionist dualism", blurb: "A non-physical mind genuinely moves the brain.",          family: "Dualism",       claims: ["c15", "c16"] },
   { id:  7, name: "Emergent dualism", blurb: "The soul emerges from the brain but isn't reducible to it.",                family: "Dualism",       claims: ["c17", "c18", "c8"] },
   { id:  8, name: "Spinozan dual-aspect monism", blurb: "Mind and body are two aspects of one single reality.",     family: "Neutral monism",claims: ["c20", "c21"] },
