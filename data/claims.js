@@ -42,6 +42,10 @@
   Orch OR, Attention Schema Theory, Kashmir Shaivism, Berkeley, absolute
   idealism, Kant, and Schelling (pre-merge draft deleted; notes at
   data/claims-batch6-notes.md).
+  Batch 7 (c130-c153, theories 34/35/36/37/38/39/40/61/62/63) added Schopenhauer,
+  Yogacara, Nagarjuna, McGilchrist, Campbell Big TOE, Goswami, Builes,
+  A. Harris, Tye, and Morch (pre-merge draft deleted; notes at
+  data/claims-batch7-notes.md).
 */
 window.CLAIMS_VERSION = '6';
 
@@ -956,6 +960,174 @@ window.CLAIMS = Object.freeze([
     text: "Consciousness is nature's own coming-to-awareness: nature ascends through stages — from unconscious productivity to self-conscious mind.",
     plain: "Consciousness is nature waking up through you, stage by stage.",
     entails: ["c128"]
+  },
+  {
+    id: "c130",
+    short: "The world is representation",
+    text: "Ordinary experience is the world as representation: objects exist only for a subject, structured by the mind's forms of space, time, and causality — never things as they are in themselves.",
+    plain: "What you see isn't the world as it is — it's the world as your mind formats it.",
+    entails: ["c126"]
+  },
+  {
+    id: "c131",
+    short: "Will is the inner essence",
+    text: "Behind representation, the inner essence of everything — organic and inorganic alike — is will: a single, blind, aimless striving that is explicitly non-conscious.",
+    plain: "Underneath everything sits a mindless, hungry drive — not a mind, not a purpose.",
+    entails: []
+  },
+  {
+    id: "c132",
+    short: "Consciousness is the will's tool",
+    text: "Consciousness and intellect are not the essence of the self but secondary biological instruments the will develops in higher organisms to serve its striving — they can vanish while the will persists.",
+    plain: "Your awareness is a gadget your deeper drive built, not the boss of it.",
+    entails: ["c131"]
+  },
+  {
+    id: "c133",
+    short: "We know will from inside",
+    text: "Our own body is the single window onto reality as it is: known externally as a physical object and immediately from within as felt willing — and everything else is will in the same sense.",
+    plain: "You don't just see your body — you feel your own willing from the inside, and that feeling is what the whole world is made of.",
+    entails: ["c131"]
+  },
+  {
+    id: "c134",
+    short: "Store consciousness underlies experience",
+    text: "A subliminal store consciousness retains the seeds of past intentional actions and conditions the arising of ordinary awareness, explaining how experience coheres and resumes across gaps — without any eternal self.",
+    plain: "Below your everyday awareness sits a deep memory-bank that seeds each new moment of experience.",
+    entails: []
+  },
+  {
+    id: "c135",
+    short: "Subject and object are constructed",
+    text: "The felt split between an apprehending subject and apprehended objects is a bifurcation occurring within cognition itself — not a division in reality.",
+    plain: "The 'you vs. world' split happens inside experience; reality has no such split.",
+    entails: ["c1"]
+  },
+  {
+    id: "c136",
+    short: "Everything exists only dependently",
+    text: "Nothing possesses intrinsic nature — existence from its own side: everything, including consciousness, exists only in dependence on causes, parts, relations, and concepts.",
+    plain: "Nothing stands alone; everything exists only because of other things — including awareness itself.",
+    entails: []
+  },
+  {
+    id: "c137",
+    short: "Consciousness real, yet empty",
+    text: "Seeing, feeling, and suffering occur conventionally — but consciousness has no ultimate essence, no self-grounding core, and no enduring experiencer behind it; it is dependently arisen, and therefore empty.",
+    plain: "Experience genuinely happens, but there's no deep 'self' or essence behind it.",
+    entails: ["c136"]
+  },
+  {
+    id: "c138",
+    short: "No self-illuminating core",
+    text: "Awareness is not self-intimating in any way that could ground certainty: it has no privileged reflexive access to itself, so experience can never be its own foundation.",
+    plain: "Your awareness can't vouch for itself from the inside — there's no inner bedrock.",
+    entails: ["c137"]
+  },
+  {
+    id: "c139",
+    short: "Consciousness is primordial process",
+    text: "Consciousness is irreducible, primordial, and omnipresent — but it is not a thing; it is a creative, relational process, the fundamental given natural fact.",
+    plain: "Awareness isn't an object in the world — it's the creative flow the world is made of.",
+    entails: ["c9"]
+  },
+  {
+    id: "c140",
+    short: "Matter is a phase of consciousness",
+    text: "Matter is not a separate substance but a phase or kind of consciousness — like ice is a phase of water: different in properties, but part of the same ontology.",
+    plain: "Matter is what consciousness looks like when it hardens into a certain phase.",
+    entails: ["c1"]
+  },
+  {
+    id: "c141",
+    short: "Relations are primary, things secondary",
+    text: "Everything is relational, and what we call things — the relata — are secondary to relationship; subjects and objects co-arise, and neither is prior.",
+    plain: "Relationships come first; the 'things' in them come second — including you and the world you meet.",
+    entails: []
+  },
+  {
+    id: "c142",
+    short: "Reality is a computed virtuality",
+    text: "The physical universe is a virtual reality computed by a Larger Consciousness System; there is no objective world outside of us — the hard problem dissolves once the belief in a fundamental external reality is dropped.",
+    plain: "The world is a shared simulation run by a larger consciousness — not an objective place out there.",
+    entails: []
+  },
+  {
+    id: "c143",
+    short: "We are consciousness units evolving",
+    text: "We are individuated units of consciousness — immortal, interconnected parts of the Larger Consciousness System — who enter the virtual-reality game of life to evolve the quality of our consciousness, from fear to love.",
+    plain: "You are a fragment of a vast consciousness, here in this world to grow less fearful and more loving.",
+    entails: ["c28"]
+  },
+  {
+    id: "c144",
+    short: "Consciousness collapses the wave",
+    text: "Consciousness is the agency that collapses the wave function of a quantum object, choosing among its possibilities — it is consciousness, not matter, that makes the material world manifest.",
+    plain: "Your awareness picks which quantum possibility becomes real — that's how matter gets made.",
+    entails: []
+  },
+  {
+    id: "c145",
+    short: "One consciousness, we participate",
+    text: "There is only one consciousness, one subject of experience, in which we all participate; the ego is merely constricted consciousness, and expanded states reveal the participation.",
+    plain: "There's really one awareness, and you're a narrowed-down corner of it.",
+    entails: ["c35"]
+  },
+  {
+    id: "c146",
+    short: "Idealism is metaphysically necessary",
+    text: "It is metaphysically necessary — true in all possible worlds — that every fundamental entity is conscious and every fundamental property is a phenomenal property.",
+    plain: "It couldn't have been otherwise: reality had to be mind-first, in every possible world.",
+    entails: ["c1"]
+  },
+  {
+    id: "c147",
+    short: "Possible worlds are divine thoughts",
+    text: "Only one world is fundamental; all other possible worlds exist as ideas — precise, structured representations — in the mind of a divine being, or a structurally similar ideal observer.",
+    plain: "Every way things could have been exists as a thought in a divine mind; only our world is fundamental.",
+    entails: ["c146"]
+  },
+  {
+    id: "c148",
+    short: "Consciousness is a fundamental field",
+    text: "Consciousness is like spacetime: a fundamental field that is everywhere — not something generated only by complex brains, but intrinsic to matter all along.",
+    plain: "Awareness is woven through everything the way spacetime is — not switched on by brains.",
+    entails: ["c25"]
+  },
+  {
+    id: "c149",
+    short: "Field without selfhood",
+    text: "A conscious field in matter does not mean rocks have experiences or points of view; only certain complex arrangements of matter yield experience, subjects, and selfhood — there is no 'combining' problem for the field itself.",
+    plain: "Everything is in the field, but a rock isn't having a day — subjects need the right arrangement.",
+    entails: ["c148"]
+  },
+  {
+    id: "c150",
+    short: "Consciousness* is irreducible",
+    text: "At the most fundamental level there is 'consciousness*' — what others would call protoconsciousness — and it is irreducible: there is no plausible reductive physical candidate for it.",
+    plain: "At rock bottom sits something experience-like that no physical story can reduce away.",
+    entails: ["c34"]
+  },
+  {
+    id: "c151",
+    short: "Consciousness is on/off",
+    text: "There are no borderline cases of phenomenal consciousness itself — it is an on/off matter — and the best explanation of that sharpness is that consciousness is irreducible.",
+    plain: "Awareness isn't a dimmer switch — it's on or off, and that sharpness means it's fundamental.",
+    entails: ["c150"]
+  },
+  {
+    id: "c152",
+    short: "Complex minds from functional combinations",
+    text: "Consciousness* is transferred from fundamental entities to complex combinations of them that meet further conditions: combinations that play the right functional role and represent various properties — yielding full-blooded consciousness.",
+    plain: "Basic bits of consciousness* get passed up into complex systems that do the right jobs, making full experience.",
+    entails: ["c150"]
+  },
+  {
+    id: "c153",
+    short: "Phenomenal properties have causal powers",
+    text: "Phenomenal properties are not causally idle: they are essentially powerful — the categorical bases of causal powers — they are the very things that make matter behave as it does.",
+    plain: "How things feel isn't a side-show — feelings are what make matter move.",
+    entails: ["c25"]
   }
 ]);
 
@@ -1019,4 +1191,14 @@ window.CLAIM_THEORIES = Object.freeze([
   { id: 31, name: "Absolute idealism", blurb: "One Absolute Experience is all there is; subject and object are abstractions from it.", family: "Idealism", claims: ["c125"] },
   { id: 32, name: "Kant's transcendental idealism", blurb: "We know only things-as-experienced; the mind structures all possible experience.", family: "Idealism", claims: ["c127"], caveat: "Kant does not affirm “everything is mind” (c1) — only that the mind structures what experience can be; the claims stop deliberately short of that." },
   { id: 33, name: "Schelling's nature–spirit identity", blurb: "Nature and mind are two poles of one Absolute; consciousness is nature waking up.", family: "Idealism", claims: ["c129"] },
+  { id: 34, name: "Schopenhauer's world as Will", blurb: "The world is representation shaped by the mind; its inner essence is a blind, non-conscious Will.", family: "Idealism", claims: ["c132","c133","c130"], caveat: "Filed under Idealism by structural analogy: Schopenhauer's ultimate reality — the Will — is explicitly non-conscious. He demotes consciousness rather than making it fundamental, so he is not an idealist in the consciousness-first sense." },
+  { id: 35, name: "Yogācāra mind-only", blurb: "Experience is cognition-only, held together by a deep store consciousness; no external objects needed.", family: "Idealism", claims: ["c134","c135"], caveat: "Whether Yogācāra is ontological idealism or an epistemology that brackets ontology is the central interpretive dispute in modern scholarship; the 'everything is mind' inheritance reflects the stronger ontological reading." },
+  { id: 36, name: "Nāgārjuna's emptiness", blurb: "Experience is real but empty — nothing, not even awareness, has an intrinsic nature.", family: "Idealism", claims: ["c138"], caveat: "Filed under Idealism by structural analogy only: Nāgārjuna explicitly refuses both idealism and eliminativism about consciousness — experience is conventionally real and ultimately empty." },
+  { id: 37, name: "McGilchrist's relational creative-process idealism", blurb: "Consciousness is a primordial creative process; matter is one of its phases.", family: "Idealism", claims: ["c139","c140","c141"] },
+  { id: 38, name: "T. Campbell's Big TOE", blurb: "Reality is a virtual world computed by a Larger Consciousness System; we play to evolve.", family: "Idealism", claims: ["c142","c143"], caveat: "Campbell rejects the 'idealism' label — he presents this as a virtual-reality model rather than idealism; filed here by structural analogy." },
+  { id: 39, name: "Goswami's self-aware universe", blurb: "Consciousness, not matter, is the primary stuff; it collapses the quantum wave into the world.", family: "Idealism", claims: ["c144","c145"] },
+  { id: 40, name: "Builes's modal idealism", blurb: "It is metaphysically necessary that everything fundamental is conscious — possible worlds are divine thoughts.", family: "Idealism", claims: ["c147"], caveat: "The 'ideal observer' sustaining possible worlds is presented in the CTT entry as divine; Builes's argument requires an ideal observer, which may be divine or a structurally similar observer." },
+  { id: 61, name: "A. Harris's fundamental-field panpsychism", blurb: "Consciousness is a fundamental field, like spacetime; subjects need the right arrangement.", family: "Panpsychism", claims: ["c149"], caveat: "Harris herself remains split between brain-based and panpsychic explanations and is not convinced panpsychism is correct — she presents it as a valid category of possible solutions." },
+  { id: 62, name: "Tye's irreducible consciousness*", blurb: "Phenomenal consciousness is on/off and irreducible; fundamental 'consciousness*' scales up into complex minds.", family: "Panpsychism", claims: ["c151","c152"] },
+  { id: 63, name: "Mørch's phenomenal-powers panpsychism", blurb: "Phenomenal properties aren't idle — they are the causal powers that make matter behave.", family: "Panpsychism", claims: ["c153"] },
 ]);
