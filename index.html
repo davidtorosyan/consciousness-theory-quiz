@@ -15,149 +15,76 @@
   <main class="page">
     <section class="intro" aria-labelledby="page-heading">
       <div>
-        <p class="eyebrow">A philosophical decision tree</p>
-        <h1 id="page-heading">Where do you think consciousness begins?</h1>
+        <p class="eyebrow">A map of the landscape of consciousness</p>
+        <h1 id="page-heading">Which ideas about consciousness do you agree with?</h1>
       </div>
       <div>
-        <p class="dek">Make a handful of hard choices. Each answer cuts away theories until a philosophical family—or a single theory—remains.</p>
-        <p class="intro-note">Not a personality test. Think of it as a map of your current intuitions.</p>
+        <p class="dek">Answer a short series of claims. Each answer settles the claims it entails, and every theory is scored by how many of its claims you agree with.</p>
+        <p class="intro-note">Not a personality test — there are no wrong answers, and more than one theory can align with you.</p>
       </div>
     </section>
 
-    <section class="workspace" aria-live="polite">
-      <div class="quiz-card">
-        <div class="start-screen" id="startScreen">
-          <div class="start-copy">
-            <p class="micro">The starting field</p>
-            <h2>120 theories. One trail through the mind–matter maze.</h2>
-            <p>The route begins with the biggest split—whether ordinary physical matter is enough—then adapts to the theories still standing. “Not sure” keeps both sides alive.</p>
-            <div class="start-meta"><span>about 7–18 questions</span><span>progress travels in the link</span><span>quiz tree v6</span></div>
-          </div>
-          <button class="primary" id="startBtn">Begin with 120 <span class="arrow">→</span></button>
-        </div>
-
-        <div class="question-screen hidden" id="questionScreen">
-          <div class="question-top">
-            <div class="count-label">DECISION <strong id="stepNumber">01</strong></div>
-            <div class="progress" aria-label="Quiz progress"><span id="progressBar"></span></div>
-          </div>
-          <p class="micro" id="questionKicker">First principle</p>
-          <h2 id="questionText"></h2>
-          <p class="question-context" id="questionContext"></p>
-          <div class="answers">
-            <button class="answer-btn" id="answerA"><span></span><small></small></button>
-            <button class="answer-btn" id="answerB"><span></span><small></small></button>
-          </div>
-          <div class="question-actions">
-            <div class="question-action-left">
-              <button class="text-btn" id="backBtn">← Back</button>
-              <button class="text-btn copy-progress-btn" id="copyProgressBtn">Copy progress link</button>
-              <span class="copy-status" id="copyStatus" role="status" aria-live="polite"></span>
+    <section class="quiz-section" aria-live="polite" aria-label="The quiz">
+      <div class="lab-quiz" id="labQuizStart">
+        <p class="micro" id="quizCountLine">Loading…</p>
+        <h3>Answer claims. Watch the alignment move.</h3>
+        <p class="lab-plain">Each question is the claim that settles the most right now. Agreeing with a specific claim also agrees with the broader claims it entails. Theories are scored by how many of their claims you agree with — never by elimination.</p>
+        <button class="primary" id="labQuizBegin">Start the quiz <span class="arrow">→</span></button>
+      </div>
+      <div class="lab-quiz hidden" id="labQuizMain">
+        <div class="lab-quiz-grid">
+          <div>
+            <div class="count-label">CLAIM <strong id="labQCount">01</strong></div>
+            <h3 id="labQText"></h3>
+            <p class="lab-plain" id="labQPlain"></p>
+            <p class="lab-coverage" id="labQCoverage"></p>
+            <p class="lab-settled" id="labSettled"></p>
+            <div class="answers">
+              <button class="answer-btn" id="labAgree"><span>Agree</span><small>This is true, as far as I’m concerned.</small></button>
+              <button class="answer-btn" id="labDisagree"><span>Disagree</span><small>This is false, as far as I’m concerned.</small></button>
             </div>
-            <button class="text-btn" id="skipBtn">Not sure — keep both</button>
-          </div>
-          <details class="explainer" id="questionExplainer">
-            <summary>Explain this question</summary>
-            <div class="explainer-body">
-              <ul class="explainer-points">
-                <li><strong>Put simply:</strong> <span id="explainerText"></span></li>
-                <li><strong>Why this matters:</strong> <span id="explainerWhy"></span></li>
-                <li id="jargonItem"><strong>Terms:</strong> <span class="jargon-defs" id="jargonDefs"></span></li>
-              </ul>
-              <div class="explainer-contrast" id="explainerContrast"></div>
-              <p class="explainer-foot">Use the examples to identify the commitment that feels closer. You don’t need to accept every other claim made by the example theory.</p>
+            <div class="question-actions">
+              <div class="question-action-left">
+                <button class="text-btn hidden" id="labQBack">← Back</button>
+              </div>
+              <button class="text-btn" id="labSkip">Not sure — skip</button>
             </div>
-          </details>
-        </div>
-
-        <div class="result-screen" id="resultScreen">
-          <p class="micro result-label" id="resultLabel">Closest fit</p>
-          <h2><a class="result-link" id="resultLink" target="_blank" rel="noopener"><span id="resultName"></span><span class="result-arrow" aria-hidden="true">↗</span></a></h2>
-          <span class="category" id="resultCategory"></span>
-          <p class="result-summary" id="resultSummary"></p>
-          <p class="source-note" id="sourceNote"><a id="sourceLink" target="_blank" rel="noopener">Read the original Closer to Truth entry ↗</a></p>
-          <div class="result-grid">
-            <div class="result-block"><h3>The distinctive move</h3><p id="resultSignature"></p></div>
-            <div class="result-block"><h3>Another defining claim</h3><p id="resultTension"></p></div>
           </div>
-          <div class="alternatives" id="alternativesWrap">
-            <p class="micro">Still in the neighborhood</p>
-            <div class="alt-chips" id="altChips"></div>
-          </div>
-          <div class="result-actions">
-            <button class="primary" id="restartBtn">Trace another path <span class="arrow">↺</span></button>
-            <a href="https://loc.closertotruth.com/" target="_blank" rel="noopener">Explore the full landscape ↗</a>
-          </div>
+          <aside class="lab-rail" aria-label="Live alignment">
+            <p class="micro">Alignment so far</p>
+            <div id="labScores"></div>
+          </aside>
         </div>
       </div>
-
-      <aside class="rail" aria-label="Theories still in play">
-        <div class="rail-inner">
-          <p class="micro">Still in play</p>
-          <div class="survivor-number"><strong id="survivorCount">120</strong><span> / 120</span></div>
-          <p id="railCopy">Your first answer will make the largest cut.</p>
-          <div class="survivor-list" id="survivorList"></div>
+      <div class="lab-quiz hidden" id="labQuizResult">
+        <p class="micro">Your result · alignment, not elimination</p>
+        <h3>Where your answers land</h3>
+        <div id="labResultList"></div>
+        <div class="result-actions">
+          <button class="primary" id="labQuizRestart">Run it again <span class="arrow">↺</span></button>
         </div>
-        <div class="rail-note">Grouped by their broad outlook. Within each group, the clearest and closest starting points appear first. A skipped question removes nothing.</div>
-      </aside>
+      </div>
     </section>
 
-    <section class="claims-lab" aria-labelledby="claims-lab-heading">
+    <section class="claims-lab" aria-labelledby="explore-heading">
       <div class="lab-head">
         <div>
-          <p class="eyebrow">Prototype · auditable classification</p>
-          <h2 id="claims-lab-heading">The claims lab</h2>
-          <p class="dek">Fifteen positive claims form a directed acyclic graph. Take the claim-driven quiz, explore the graph itself, or inspect how each theory inherits its claims.</p>
+          <p class="eyebrow">Dig deeper</p>
+          <h2 id="explore-heading">Debug the claims</h2>
+          <p class="dek" id="exploreDek">Every claim below is linked to the broader claims it entails — general claims at the top, specific ones below. Tap anything to inspect it.</p>
         </div>
-        <div class="lab-tabs" role="tablist" aria-label="Claims lab views">
-          <button class="lab-tab active" id="labTabQuiz" role="tab" aria-selected="true" aria-controls="labQuiz">Quiz</button>
-          <button class="lab-tab" id="labTabClaims" role="tab" aria-selected="false" aria-controls="labClaims">Claim explorer</button>
+        <div class="lab-tabs" role="tablist" aria-label="Explorers">
+          <button class="lab-tab active" id="labTabClaims" role="tab" aria-selected="true" aria-controls="labClaims">Claim explorer</button>
           <button class="lab-tab" id="labTabTheories" role="tab" aria-selected="false" aria-controls="labTheories">Theory explorer</button>
         </div>
       </div>
 
-      <div class="lab-pane" id="labQuiz" role="tabpanel" aria-labelledby="labTabQuiz">
-        <div class="lab-quiz" id="labQuizStart">
-          <p class="micro">Prototype quiz · 5 theories</p>
-          <h3>Answer claims. Watch the alignment move.</h3>
-          <p class="lab-plain">Each question is the claim that settles the most right now. Theories score by how many of their claims you agree with — never by elimination.</p>
-          <button class="primary" id="labQuizBegin">Start the prototype <span class="arrow">→</span></button>
-        </div>
-        <div class="lab-quiz hidden" id="labQuizMain">
-          <div class="lab-quiz-grid">
-            <div>
-              <div class="count-label">CLAIM <strong id="labQCount">01</strong></div>
-              <h3 id="labQText"></h3>
-              <p class="lab-plain" id="labQPlain"></p>
-              <p class="lab-coverage" id="labQCoverage"></p>
-              <div class="answers">
-                <button class="answer-btn" id="labAgree"><span>Agree</span><small>This is true, as far as I’m concerned.</small></button>
-                <button class="answer-btn" id="labDisagree"><span>Disagree</span><small>This is false, as far as I’m concerned.</small></button>
-              </div>
-              <div class="question-actions">
-                <button class="text-btn hidden" id="labQBack">← Back</button>
-              </div>
-            </div>
-            <aside class="lab-rail" aria-label="Live alignment">
-              <p class="micro">Alignment so far</p>
-              <div id="labScores"></div>
-            </aside>
-          </div>
-        </div>
-        <div class="lab-quiz hidden" id="labQuizResult">
-          <p class="micro">Prototype result · alignment, not elimination</p>
-          <h3>Where your answers land</h3>
-          <div id="labResultList"></div>
-          <button class="primary" id="labQuizRestart">Run it again <span class="arrow">↺</span></button>
-        </div>
-      </div>
-
-      <div class="lab-pane hidden" id="labClaims" role="tabpanel" aria-labelledby="labTabClaims">
+      <div class="lab-pane" id="labClaims" role="tabpanel" aria-labelledby="labTabClaims">
         <div class="dag-key">
-          <p>Tap any claim to inspect its dependencies and the theories that affirm it. Arrows point from a more specific claim to what it entails.</p>
+          <p>Tap any claim to inspect what it entails, what is built on it, and which theories affirm it. Arrows point from a more specific claim to what it entails.</p>
           <span class="dag-root-key">Base claim</span>
         </div>
-        <div class="claim-graph" id="labClaimGraph" aria-label="Directed acyclic graph of fifteen consciousness claims"></div>
+        <div class="claim-graph" id="labClaimGraph" aria-label="Graph of consciousness claims"></div>
         <div class="claim-detail-panel" id="labClaimDetail" aria-live="polite"></div>
       </div>
 
@@ -179,30 +106,17 @@
     <section class="method">
       <div>
         <p class="micro">Reading the map</p>
-        <h2>No consensus hides behind the result.</h2>
-        <p>The quiz compares commitments, not scientific certainty. Its 120 outcomes include metaphysical, biological, computational, quantum, field, enactive, illusionist, and phenomenological approaches. A match means your answers share that theory’s central bets.</p>
-      </div>
-      <div class="legend" aria-label="Theory families and Closer to Truth colors">
-        <div style="--family:#65d3f7">Idealism · consciousness is fundamental</div>
-        <div style="--family:#007acc">Dualism · mind and matter differ</div>
-        <div style="--family:#6a22d1">Neutral monism · one deeper basis</div>
-        <div style="--family:#cf56ca">Panpsychism · experience is ubiquitous</div>
-        <div style="--family:#edcf4a">Materialism · consciousness is physical</div>
-        <div style="--family:#e4822d">Non-reductive physicalism · physical, not reducible</div>
-        <div style="--family:#ffa9a0">Quantum · new physics may matter</div>
-        <div style="--family:#FF5733">Phenomenology · describe experience first</div>
-        <div style="--family:#bf2b39">Information · structure and causal integration</div>
+        <h2>Alignment, not truth.</h2>
+        <p>The quiz compares your commitments against each theory’s claims. A high score means a theory’s picture matches your intuitions — not that it is scientifically proven. Every classification comes from the claim graph above, which you can inspect, trace, and challenge.</p>
       </div>
     </section>
 
-    <footer>Based on a curated 120-theory <a href="https://loc.closertotruth.com/" target="_blank" rel="noopener">Closer to Truth Landscape of Consciousness</a>. Classifications are simplified for navigation; several views cross category boundaries.</footer>
+    <footer>Based on the <a href="https://loc.closertotruth.com/" target="_blank" rel="noopener">Closer to Truth Landscape of Consciousness</a>. Something seem off? <a href="https://github.com/davidtorosyan/consciousness-theory-quiz/issues" target="_blank" rel="noopener">Raise an issue ↗</a>.</footer>
   </main>
 
-<script src="data/quiz-content.js"></script>
+<script src="data/theories.js"></script>
 <script src="data/claims.js"></script>
-<script src="src/content-lint.js"></script>
 <script src="src/claims-engine.js"></script>
 <script src="src/claims-lab.js"></script>
-<script src="src/app.js"></script>
 </body>
 </html>

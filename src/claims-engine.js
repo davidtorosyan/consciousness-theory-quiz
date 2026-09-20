@@ -61,10 +61,12 @@
   }
 
   // --- Quiz state -----------------------------------------------------------
-  // state = { answers: { claimId: 'yes' | 'no' } }
+  // state = { answers: { claimId: 'yes' | 'no' }, skipped: { claimId: true } }
+  // A skipped claim stays undecided (it still counts as "open" in scoring)
+  // but is never asked again.
 
   function newQuiz() {
-    return { answers: {} };
+    return { answers: {}, skipped: {} };
   }
 
   // Claims affirmed: every 'yes' answer plus all of its ancestors.
@@ -105,9 +107,11 @@
     return Math.max(ancCount, descCount) + 1;
   }
 
-  // Greedy: the undecided claim with the highest coverage. Ties -> stable id order.
+  // Greedy: the undecided, unskipped claim with the highest coverage.
+  // Ties -> stable id order.
   function nextQuestion(claims, state) {
-    const und = undecided(claims, state);
+    const skipped = state.skipped || {};
+    const und = undecided(claims, state).filter(id => !skipped[id]);
     if (!und.length) return null;
     let best = und[0], bestCov = -1;
     for (const id of und) {
@@ -125,6 +129,18 @@
 
   function undo(state, id) {
     delete state.answers[id];
+    if (state.skipped) delete state.skipped[id];
+    return state;
+  }
+
+  function skip(state, id) {
+    if (!state.skipped) state.skipped = {};
+    state.skipped[id] = true;
+    return state;
+  }
+
+  function unskip(state, id) {
+    if (state.skipped) delete state.skipped[id];
     return state;
   }
 
@@ -185,7 +201,7 @@
   const api = {
     ancestors, descendants, theoryFullClaims,
     newQuiz, affirmed, rejected, undecided, coverage,
-    nextQuestion, answer, undo, score, validate
+    nextQuestion, answer, undo, skip, unskip, score, validate
   };
 
   api.bound = function () {
@@ -205,6 +221,8 @@
       nextQuestion: (state) => api.nextQuestion(claims, state),
       answer: (state, id, yesNo) => api.answer(state, id, yesNo),
       undo: (state, id) => api.undo(state, id),
+      skip: (state, id) => api.skip(state, id),
+      unskip: (state, id) => api.unskip(state, id),
       score: (state) => api.score(claims, theories, state),
       validate: () => api.validate(claims, theories)
     };

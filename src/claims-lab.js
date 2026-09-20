@@ -8,16 +8,11 @@
     const $ = (id) => document.getElementById(id);
     const claimById = new Map(E.claims.map(c => [c.id, c]));
     const theoryById = new Map(E.theories.map(t => [t.id, t]));
-    const shortLabels = {
-      c0: 'Ordinary physics is enough', c1: 'Everything is mind',
-      c2: 'Matter is mind seen outside', c3: 'One cosmic mind',
-      c4: 'Many conscious agents', c5: 'Perception is an interface',
-      c6: 'Mind is nonphysical', c7: 'Self can outlive the body',
-      c8: 'Mind can affect the brain', c9: 'Experience is fundamental',
-      c10: 'Physical causes are closed', c11: 'Zombies are conceivable',
-      c12: 'Experience is causal structure', c13: 'Integrated structure matters',
-      c14: 'Simulation is not consciousness'
-    };
+    const META_THEORIES = window.THEORIES_120 || [];
+    const META_LINKS = window.THEORY_LINKS_120 || {};
+    const metaById = new Map(META_THEORIES.map(t => [t.id, t]));
+    const claimTheoryIds = new Set(E.theories.map(t => t.id));
+    const shortLabel = (c) => c.short || c.text;
 
     function escapeHtml(s) {
       return String(s).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
@@ -27,9 +22,8 @@
       return `<button class="lab-claim-chip${extra ? ' ' + extra : ''}" data-claim="${id}" title="${escapeHtml(c.text)}">${id}</button>`;
     }
 
-    /* ---------------- three views ---------------- */
+    /* ---------------- explorer views (quiz lives above, always visible) ---------------- */
     const views = {
-      quiz: { tab: $('labTabQuiz'), pane: $('labQuiz') },
       claims: { tab: $('labTabClaims'), pane: $('labClaims') },
       theories: { tab: $('labTabTheories'), pane: $('labTheories') }
     };
@@ -109,7 +103,7 @@
             button.style.top = `${18 + rank * 88}px`;
             button.title = claim.text;
             button.setAttribute('aria-label', `${id}: ${claim.text}`);
-            button.innerHTML = `<span class="dag-node-id">${id}</span><span class="dag-node-label">${escapeHtml(shortLabels[id] || claim.text)}</span>`;
+            button.innerHTML = `<span class="dag-node-id">${id}</span><span class="dag-node-label">${escapeHtml(shortLabel(claim))}</span>`;
             component.appendChild(button);
           });
         });
@@ -172,7 +166,7 @@
             <div class="lab-chip-row">${affirming.map(t => {
               const direct = (t.claims || []).includes(id);
               return `<button class="lab-theory-chip${direct ? ' direct' : ''}" data-theory="${t.id}" title="${direct ? 'Listed directly' : 'Inherited through entailment'}">${escapeHtml(t.name)}${direct ? '' : ' · inherited'}</button>`;
-            }).join('') || '<p class="lab-empty">None of the five prototype theories.</p>'}</div>
+            }).join('') || ('<p class="lab-empty">None of the ' + E.theories.length + ' theories with claims.</p>')}</div>
           </div>
         </div>`;
     }
@@ -205,12 +199,20 @@
     let theoryNav = [];
 
     function renderTheoryList() {
-      theoryList.innerHTML = E.theories.map(t =>
+      const withClaims = E.theories.map(t =>
         `<button class="lab-theory-btn" data-theory="${t.id}">
           <strong>${escapeHtml(t.name)}</strong>
           <span>${escapeHtml(t.family)} · ${t.claims.length} specific claim${t.claims.length === 1 ? '' : 's'}</span>
         </button>`
       ).join('');
+      const pending = META_THEORIES.filter(t => !claimTheoryIds.has(t.id)).map(t =>
+        `<button class="lab-theory-btn lab-theory-pending" data-meta="${t.id}">
+          <strong>${escapeHtml(t.name)}</strong>
+          <span>${escapeHtml(t.category)} · claims in progress</span>
+        </button>`
+      ).join('');
+      theoryList.innerHTML = withClaims +
+        (pending ? `<p class="lab-theory-group">More theories — claims in progress</p>${pending}` : '');
     }
     function viaWhich(theory, inheritedId) {
       return (theory.claims || []).filter(sid => sid !== inheritedId && E.ancestors(sid).has(inheritedId));
@@ -218,6 +220,8 @@
     function renderTheory(id) {
       const t = theoryById.get(id);
       if (!t) return;
+      const meta = metaById.get(id);
+      const link = META_LINKS[id];
       const full = E.theoryFullClaims(t);
       const direct = new Set(t.claims);
       const inherited = [...full].filter(x => !direct.has(x));
@@ -225,13 +229,29 @@
       detail.innerHTML = `
         <p class="micro">Theory · ${escapeHtml(t.family)}</p>
         <h3>${escapeHtml(t.name)}</h3>
+        ${meta ? `<p class="lab-plain">${escapeHtml(meta.summary)}</p>` : ''}
+        ${link ? `<p class="source-note"><a href="${escapeHtml(link)}" target="_blank" rel="noopener">Read the original Closer to Truth entry ↗</a></p>` : ''}
         <p class="micro">Specific claims (listed by the theory)</p>
         <div class="lab-chip-row">${[...direct].map(cid => claimChip(cid, 'direct')).join('')}</div>
         ${inherited.length ? `<p class="micro">Inherited claims (entailed by the specific ones)</p><div class="lab-chip-row">${inherited.map(cid => `<span class="lab-inherited-wrap">${claimChip(cid)}<small>via ${viaWhich(t, cid).join(', ')}</small></span>`).join('')}</div>` : ''}
         <div class="lab-claim-texts">${[...full].map(cid => {
           const claim = claimById.get(cid);
-          return `<div class="lab-claim-text${direct.has(cid) ? ' direct' : ''}"><span class="lab-claim-id">${cid}${direct.has(cid) ? '' : ' · inherited'}</span><p>${escapeHtml(claim.text)}</p></div>`;
+          return `<div class="lab-claim-text${direct.has(cid) ? ' direct' : ''}"><span class="lab-claim-id">${cid}${direct.has(cid) ? '' : ' · inherited'}</span><p>${escapeHtml(claim.text)}</p><p class="lab-claim-plain">Put simply: ${escapeHtml(claim.plain)}</p></div>`;
         }).join('')}</div>`;
+    }
+    function renderMeta(id) {
+      const t = metaById.get(id);
+      if (!t) return;
+      const link = META_LINKS[id];
+      theoryList.querySelectorAll('.lab-theory-btn').forEach(b => b.classList.toggle('active', Number(b.dataset.meta) === id));
+      detail.innerHTML = `
+        <p class="micro">Theory · ${escapeHtml(t.category)}</p>
+        <h3>${escapeHtml(t.name)}</h3>
+        <p class="lab-plain">${escapeHtml(t.summary)}</p>
+        <div class="result-block"><h3>The distinctive move</h3><p>${escapeHtml(t.signature)}</p></div>
+        <div class="result-block"><h3>Another defining claim</h3><p>${escapeHtml(t.detail)}</p></div>
+        ${link ? `<p class="source-note"><a href="${escapeHtml(link)}" target="_blank" rel="noopener">Read the original Closer to Truth entry ↗</a></p>` : ''}
+        <p class="lab-empty">Claims for this theory are in progress — check back as the map grows.</p>`;
     }
     function renderTheoryClaim(id) {
       const c = claimById.get(id);
@@ -244,7 +264,7 @@
         <h3 class="lab-claim-title">${escapeHtml(c.text)}</h3>
         <p class="lab-plain">Put simply: ${escapeHtml(c.plain)}</p>
         <div class="lab-claim-cols"><div><p class="micro">All claims this entails</p>${ancestors.length ? `<div class="lab-chip-row">${ancestors.map(a => claimChip(a)).join('')}</div>` : '<p class="lab-empty">Nothing — this is a base claim.</p>'}</div><div><p class="micro">Everything built on this</p>${descendants.length ? `<div class="lab-chip-row">${descendants.map(d => claimChip(d)).join('')}</div>` : '<p class="lab-empty">Nothing depends on this yet.</p>'}</div></div>
-        <p class="micro">Theories affirming this claim</p><div class="lab-chip-row">${affirming.map(t => `<button class="lab-theory-chip${(t.claims || []).includes(id) ? ' direct' : ''}" data-theory="${t.id}">${escapeHtml(t.name)}${(t.claims || []).includes(id) ? '' : ' · inherited'}</button>`).join('') || '<p class="lab-empty">None of the prototype theories.</p>'}</div>`;
+        <p class="micro">Theories affirming this claim</p><div class="lab-chip-row">${affirming.map(t => `<button class="lab-theory-chip${(t.claims || []).includes(id) ? ' direct' : ''}" data-theory="${t.id}">${escapeHtml(t.name)}${(t.claims || []).includes(id) ? '' : ' · inherited'}</button>`).join('') || ('<p class="lab-empty">None of the ' + E.theories.length + ' theories with claims.</p>')}</div>`;
     }
     function renderTheoryNav() {
       const current = theoryNav[theoryNav.length - 1];
@@ -253,6 +273,7 @@
         detail.innerHTML = '<p class="lab-empty">Pick a theory on the left to inspect its specific and inherited claims.</p>';
         theoryList.querySelectorAll('.lab-theory-btn').forEach(b => b.classList.remove('active'));
       } else if (current.kind === 'theory') renderTheory(current.id);
+      else if (current.kind === 'meta') renderMeta(current.id);
       else renderTheoryClaim(current.id);
     }
     detail.addEventListener('click', (e) => {
@@ -265,20 +286,34 @@
     });
     theoryList.addEventListener('click', (e) => {
       const b = e.target.closest('[data-theory]');
-      if (!b) return;
-      theoryNav = [{ kind: 'theory', id: Number(b.dataset.theory) }];
+      const m = e.target.closest('[data-meta]');
+      if (b) theoryNav = [{ kind: 'theory', id: Number(b.dataset.theory) }];
+      else if (m) theoryNav = [{ kind: 'meta', id: Number(m.dataset.meta) }];
+      else return;
       renderTheoryNav();
     });
     $('labBack').addEventListener('click', () => { theoryNav.pop(); renderTheoryNav(); });
+
+    function selectTheory(id) {
+      showTab('theories');
+      theoryNav = [{ kind: 'theory', id }];
+      renderTheoryNav();
+      $('labTheories').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+    }
     renderTheoryList();
     renderTheoryNav();
 
-    /* ---------------- DAG-driven quiz ---------------- */
+    /* ---------------- claim-driven quiz ---------------- */
     const qStart = $('labQuizStart');
     const qMain = $('labQuizMain');
     const qResult = $('labQuizResult');
     let qstate = null;
     let qhistory = [];
+
+    // Dynamic intro copy: counts come from the data, never hardcoded.
+    $('quizCountLine').textContent = `${E.claims.length} claims · ${E.theories.length} theories`;
+    $('exploreDek').textContent = `${E.claims.length} claims, each linked to the broader claims it entails — general claims at the top, specific ones below. ${E.theories.length} theories mapped so far; ${META_THEORIES.length - E.theories.length} more on the way. Tap anything to inspect it.`;
+    graph.setAttribute('aria-label', `Graph of ${E.claims.length} consciousness claims`);
 
     function startQuiz() {
       qstate = E.newQuiz();
@@ -302,8 +337,13 @@
       const claim = claimById.get(q.id);
       $('labQCount').textContent = String(qhistory.length + 1).padStart(2, '0');
       $('labQText').textContent = claim.text;
-      $('labQPlain').textContent = claim.plain;
+      $('labQPlain').textContent = `Put simply: ${claim.plain}`;
       $('labQCoverage').textContent = `Answering settles ${q.coverage} claim${q.coverage === 1 ? '' : 's'} — the most informative question right now.`;
+      const affN = E.affirmed(qstate).size;
+      const rejN = E.rejected(qstate).size;
+      $('labSettled').textContent = (affN + rejN)
+        ? `Settled so far: ${affN} agreed · ${rejN} rejected · ${E.claims.length - affN - rejN} open`
+        : '';
       $('labQBack').classList.toggle('hidden', qhistory.length === 0);
       renderScores();
     }
@@ -312,7 +352,15 @@
       const q = currentQuestion();
       if (!q) return;
       E.answer(qstate, q.id, yesNo);
-      qhistory.push(q.id);
+      qhistory.push({ id: q.id, action: 'answer' });
+      renderQuestion();
+    }
+
+    function skipQuestion() {
+      const q = currentQuestion();
+      if (!q) return;
+      E.skip(qstate, q.id);
+      qhistory.push({ id: q.id, action: 'skip' });
       renderQuestion();
     }
 
@@ -334,7 +382,8 @@
         <div class="lab-result-row${index === 0 ? ' top' : ''}">
           <span class="lab-result-rank">${index + 1}</span>
           <div><strong>${escapeHtml(result.theory.name)}</strong>
-          <p>You agree with ${result.agreed} of its ${result.total} claims${result.disagreed ? `, and reject ${result.disagreed}` : ''}.</p></div>
+          <p>You agree with ${result.agreed} of its ${result.total} claims${result.disagreed ? `, and reject ${result.disagreed}` : ''}.</p>
+          <button class="text-btn" data-inspect="${result.theory.id}">Inspect this theory’s claims</button></div>
         </div>`).join('');
     }
 
@@ -342,13 +391,20 @@
     $('labQuizRestart').addEventListener('click', startQuiz);
     $('labAgree').addEventListener('click', () => answerQuestion('yes'));
     $('labDisagree').addEventListener('click', () => answerQuestion('no'));
+    $('labSkip').addEventListener('click', skipQuestion);
+    $('labResultList').addEventListener('click', (e) => {
+      const b = e.target.closest('[data-inspect]');
+      if (b) selectTheory(Number(b.dataset.inspect));
+    });
     $('labQBack').addEventListener('click', () => {
       const last = qhistory.pop();
-      if (last) E.undo(qstate, last);
+      if (!last) return;
+      if (last.action === 'skip') E.unskip(qstate, last.id);
+      else E.undo(qstate, last.id);
       renderQuestion();
     });
 
-    showTab('quiz');
+    showTab('claims');
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
