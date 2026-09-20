@@ -58,6 +58,9 @@
   c111), Ward-Min, Dendritic Integration Theory, Morsella, Prinz (c217->c44),
   Bunge (materialist not physicalist; lists c221, no c0 entailment), Hobbes,
   and Armstrong (pre-merge draft deleted; notes at data/claims-batch10-notes.md).
+  Batch 11 (c228-c245, theories 94-103) added Kriegel, Cleeremans, Lau (reuses c41),
+  Metzinger, Brown HOROR (c237->c45), Churchland, Ryle, Humphrey (c242->c54),
+  Blackmore, Kammerer (pre-merge draft deleted; notes at data/claims-batch11-notes.md).
 */
 window.CLAIMS_VERSION = '6';
 
@@ -1658,6 +1661,132 @@ window.CLAIMS = Object.freeze([
     text: "The higher-order monitoring state need not itself be conscious — it may in turn be monitored, but no infinite regress follows, because being the object of a scan is what confers introspective consciousness, not being scanned while conscious.",
     plain: "The inner eye doesn't need to see itself — the watching can stop at any level without a paradox.",
     entails: ["c225"]
+  },
+  {
+    id: "c228",
+    short: "States represent themselves",
+    text: "A mental state is conscious in virtue of representing itself — the awareness of an experience is built into the experience, not a separate thought aimed at it from outside.",
+    plain: "A conscious feeling is aware of itself. You don't need a second thought watching the first.",
+    entails: []
+  },
+  {
+    id: "c229",
+    short: "Integration across representational orders",
+    text: "Consciousness requires the functional integration of two representations into one state: a first-order representation of the world and a higher-order representation of that very representation — neither side alone suffices.",
+    plain: "The 'what' of experience and the 'I'm aware of it' part must be woven into one thing. One without the other isn't consciousness.",
+    entails: ["c228"]
+  },
+  {
+    id: "c230",
+    short: "Mind represents its own states",
+    text: "A mental state becomes conscious when the brain forms a higher-order representation — a representation of its own first-order representations. Consciousness is the mind's representation of itself.",
+    plain: "Experience happens when your brain forms a picture of its own activity — a representation one level up.",
+    entails: []
+  },
+  {
+    id: "c231",
+    short: "Consciousness is learned",
+    text: "Consciousness is not an intrinsic property of certain neural states; it is an acquired capacity — the brain learns to be conscious through the same plasticity that produces skill and expertise elsewhere in cognition.",
+    plain: "No brain starts out conscious by design. Becoming conscious is something the brain learns to do.",
+    entails: []
+  },
+  {
+    id: "c232",
+    short: "The brain models itself",
+    text: "Through continuous unconscious learning, the brain redescribes its own activity to itself, building learned, non-conceptual meta-representations that track the strength, reliability, and emotional value of its own states — an implicit theory of itself.",
+    plain: "Your brain silently learns a model of its own workings, and learns to care about what it finds there. That self-model is what consciousness is.",
+    entails: ["c230","c231"]
+  },
+  {
+    id: "c233",
+    short: "Perception is tagged reliable",
+    text: "A perception becomes conscious when the brain forms a higher-order 'tag' judging that first-order perceptual representation to be a reliable reflection of the external world right now — a subpersonal reliability stamp, not a conscious thought.",
+    plain: "You consciously see something when your brain stamps the signal 'this is really out there right now.' No stamp, no seeing — that's why blindsight patients can respond without awareness.",
+    entails: ["c230"]
+  },
+  {
+    id: "c234",
+    short: "A discriminator gates awareness",
+    text: "The brain contains a discriminator mechanism that tells apart true perceptions of the world from memory, imagination, and neural noise; its verdict on early sensory information is what turns that information into conscious experience.",
+    plain: "A built-in sorter tells real sights from dreams and brain-noise. Its verdict is what makes things conscious.",
+    entails: ["c233"]
+  },
+  {
+    id: "c235",
+    short: "There is no self",
+    text: "There is no such thing as a self — nobody ever had or was one. What exists is a 'phenomenal self': an ongoing process, the content of the brain's transparent self-model, which refers to nothing real.",
+    plain: "The 'me' in your experience is a brain-built model, not a thing. Nobody ever was a self.",
+    entails: []
+  },
+  {
+    id: "c236",
+    short: "Conscious thought is passive",
+    text: "Conscious thinking is mostly not something we actively do — it unfolds without veto-control or self-determination, as an unintentional form of inner behavior; a stable first-person perspective is a rare, graded achievement, not the norm.",
+    plain: "Your conscious thoughts mostly happen to you. The feeling of being their author is a sometime-thing, not the everyday state.",
+    entails: []
+  },
+  {
+    id: "c237",
+    short: "Representation of a representation",
+    text: "Phenomenal consciousness consists in a thought-like higher-order representation of a representation — with content like 'I, myself, am having this representation' — rather than a higher-order thought about a sensation directly.",
+    plain: "You're conscious of red when your brain holds the claim-like thought 'I myself am representing red' — a representation about your representing, not about red itself.",
+    entails: ["c45"]
+  },
+  {
+    id: "c238",
+    short: "Folk psychology will fall",
+    text: "Our common-sense psychology — beliefs, desires, and the rest of its mentalistic vocabulary — is a radically false theory, so defective that completed neuroscience will displace it entirely rather than smoothly reduce it.",
+    plain: "Everyday talk about beliefs and desires isn't a rough version of the truth. It's a false theory that brain science will throw out.",
+    entails: ["c0"]
+  },
+  {
+    id: "c239",
+    short: "Introspection fabricates phenomenality",
+    text: "It is an introspective illusion that experience contains special phenomenal properties. What exists is functional neural processes — a complex informational engagement with the world — not an inner realm of 'what-it-is-like' qualities.",
+    plain: "It strongly seems like experiences have special inner qualities. That seeming is itself the illusion.",
+    entails: ["c53"]
+  },
+  {
+    id: "c240",
+    short: "The mind is no place",
+    text: "Talking about 'the mind' does not name a second, private thing alongside the body — a ghostly inner theatre. Mental vocabulary describes dispositions, skills, and styles of doing, not hidden episodes in a hidden arena.",
+    plain: "'Mind' is no more a place inside you than 'the university' is a building next to the colleges.",
+    entails: []
+  },
+  {
+    id: "c241",
+    short: "No inner eye",
+    text: "There is no special inner faculty of introspection scanning a private field, and no privileged access: we learn about ourselves the same ways we learn about others — through observed conduct and unstudied talk — not by peering inward.",
+    plain: "You know yourself the way others know you: by what you do and say. There is no inward-looking eye.",
+    entails: ["c240"]
+  },
+  {
+    id: "c242",
+    short: "Consciousness is adaptive enchantment",
+    text: "Consciousness evolved as a compelling illusion — a 'magical mystery show the brain lays on for itself' — that makes us feel special and significant, boosting self-preservation and social cohesion; the apparent richness of experience is an adaptive fiction.",
+    plain: "Evolution tricked us with a grand show. Feeling magically special helped us survive and stick together — it's a feature, not a bug.",
+    entails: ["c54"]
+  },
+  {
+    id: "c243",
+    short: "All models are conscious",
+    text: "There is no such thing as a conscious brain, animal, or person — only conscious mental models: every predictive model a creature builds has 'something it is like' to be it, while the bat, cat, or human as a whole does not.",
+    plain: "Not people or brains are conscious — the models inside them are. There is something it is like to be a model, not to be you.",
+    entails: []
+  },
+  {
+    id: "c244",
+    short: "No conscious/unconscious split",
+    text: "The division between conscious and unconscious processes is an illusion: no brain process is intrinsically conscious. Those we call 'conscious' are simply the predictive models currently connected to the self-model; 'becoming conscious' is just a model joining the self-model.",
+    plain: "Nothing in the brain is conscious or unconscious by nature. 'Conscious' just means 'hooked up to my self-model right now.'",
+    entails: ["c243"]
+  },
+  {
+    id: "c245",
+    short: "Introspection is rigged",
+    text: "Introspection systematically misleads about its own targets: we believe in phenomenal properties because phenomenal introspection applies concepts that frame ordinary brain states as epistemologically special — the seeming is produced by our naive theory of mind, not by anything real.",
+    plain: "Looking inward tells a false story. Your brain's own concepts paint ordinary neural states as magically special-feeling.",
+    entails: ["c53"]
   }
 ]);
 
@@ -1761,4 +1890,14 @@ window.CLAIM_THEORIES = Object.freeze([
   { id: 91, name: "Bunge's emergent materialism", blurb: "No soul, no mystery-stuff: mind is what a learning brain does — an emergent but wholly material property of neural systems.", family: "Materialism", claims: ["c221"], caveat: "Bunge is a materialist but not a physicalist: he holds that physics cannot explain life or mind, so his claims deliberately do not entail c0 ('ordinary physics is enough')." },
   { id: 92, name: "Hobbes's mechanical material mind", blurb: "The first modern materialist: everything mental is matter in motion — colors and pains are motions in you, not features of the world.", family: "Materialism", claims: ["c223","c224"], caveat: "Whether Hobbes strictly identifies the felt appearance (phantasm) with bodily motion or treats it as a mode of the perceiver is contested in scholarship." },
   { id: 93, name: "Armstrong's higher-order perception", blurb: "Part of your brain watches the rest of it: a first-order state becomes conscious when scanned by a perception-like inner sense.", family: "Materialism", claims: ["c225"], caveat: "Armstrong's inner sense explains introspective consciousness; whether it generates phenomenal consciousness itself or only makes an already-phenomenal state available is disputed — even his own texts point both ways." },
+  { id: 94, name: "Kriegel's cross-order self-representation", blurb: "A conscious state is one that represents itself: the mind's picture of the world and its picture of that very picture are woven into a single state.", family: "Materialism", claims: ["c229"] },
+  { id: 95, name: "Cleeremans's radical plasticity", blurb: "The brain isn't born conscious — it learns to be: plasticity teaches it to build a model of its own activity, and that self-model is experience.", family: "Materialism", claims: ["c232"] },
+  { id: 96, name: "Lau's perceptual reality monitoring", blurb: "Seeing something consciously means your brain has stamped the signal 'real, not fantasy' — a subpersonal reliability tag, like blindsight patients lack.", family: "Materialism", claims: ["c234","c41"] },
+  { id: 97, name: "Metzinger's no-self theory", blurb: "Phenomenal experience is real, but the 'self' having it isn't — it's a transparent brain-model of a subject.", family: "Materialism", claims: ["c235","c236"], caveat: "Metzinger affirms phenomenal consciousness with a causal role — he is not an illusionist. His distinctive claims here concern the self-model, not the reality of experience. Kept under Materialism by landscape convention (CTT files him under Eliminative/Materialism), not by fit with eliminativism." },
+  { id: 98, name: "Brown's HOROR", blurb: "Consciousness is a thought about a thought: you feel red because your brain represents, as a claim, 'I myself am representing red.'", family: "Materialism", claims: ["c237"] },
+  { id: 99, name: "Churchland's eliminative materialism", blurb: "Your everyday ideas about the mind — beliefs, feelings, the inner light — are a false folk theory that neuroscience will junk.", family: "Materialism", claims: ["c238","c239"], caveat: "The CTT page bundles several authors (Dennett, Frankish, Graziano) under the eliminativism banner; the folk-psychology displacement core (c238) is Churchland's, while the illusionism claim (c239) follows Frankish's formulation quoted on the page." },
+  { id: 100, name: "Ryle's category-dissolution", blurb: "There's no private theatre inside your head — 'mind' talk describes what you can do and how you do it, not ghostly inner objects.", family: "Materialism", claims: ["c241"], caveat: "Family is by landscape convention (CTT files Ryle under Materialism/Eliminative-Illusionism), not by fit: Ryle's project is logical-grammatical diagnosis, not materialism, and he conceded the analysis of sensation did not satisfy him. He is not a cartoon eliminativist — he accepts that pains and moods occur." },
+  { id: 101, name: "Humphrey's user illusion", blurb: "Your inner life is a magic show the brain stages for itself — an evolved trick that makes you feel special and keeps you alive.", family: "Materialism", claims: ["c242"] },
+  { id: 102, name: "Blackmore's \"it's all models\"", blurb: "Nobody is conscious — only the predictive models inside you are. 'Becoming conscious' is a model joining your self-model.", family: "Materialism", claims: ["c244"], caveat: "The CTT landscape files Blackmore under Eliminative/Illusionism, but 'all models are conscious' has a panpsychist-of-models flavor and she retains 'what it is like' language for models. She is a 'delusionist' about the conscious subject, not a standard illusionist — c53 is deliberately not entailed." },
+  { id: 103, name: "Kammerer's introspective illusionism", blurb: "Phenomenal consciousness doesn't exist — it only seems to, because introspection is rigged to paint brain states as special.", family: "Materialism", claims: ["c245"], caveat: "Kammerer argues illusionism makes the best case for physicalism, but his distinctive claims are about introspection's unreliability (TCE theory), not about physics — c0 is deliberately not entailed." },
 ]);
