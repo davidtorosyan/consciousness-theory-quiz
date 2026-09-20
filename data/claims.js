@@ -29,8 +29,12 @@
   theory, higher-order thought, predictive processing, EM-field theory,
   and illusionism. Pre-merge drafts lived in data/claims-batch3.js +
   data/claims-batch3-notes.md (see git history).
+  Batch 4 (c55-c73, theories 42-47/51-54) added Cartesian dualism, hylomorphism,
+  Avicenna, Malebranche, Bergson, Samkhya, trialism, epiphenomenalism,
+  Whitehead, and Leibniz. Pre-merge drafts lived in data/claims-batch4.js +
+  data/claims-batch4-notes.md (see git history).
 */
-window.CLAIMS_VERSION = '3';
+window.CLAIMS_VERSION = '4';
 
 window.CLAIMS = Object.freeze([
   {
@@ -417,6 +421,139 @@ window.CLAIMS = Object.freeze([
     text: "Conscious experience is a benign 'user illusion' produced by the brain's unconscious processes — real as a functional pattern, but not what it seems to be.",
     plain: "Your experience is like a desktop interface: useful and real as a pattern, but hiding what's really going on.",
     entails: ["c53", "c0"]
+  },
+  {
+    id: "c55",
+    short: "Physics allows mental causation",
+    text: "A nonphysical mind can affect the brain without violating physics; the conservation-of-energy objection to such interaction fails.",
+    plain: "Physics can't be used to prove that a mind can't move the brain.",
+    entails: ["c8"]
+  },
+  {
+    id: "c56",
+    short: "Soul as bodily form",
+    text: "A living thing's soul is its organizing form — not a separate thing inside it, but what makes this matter one living organism.",
+    plain: "The soul isn't a ghost in the machine; it's the organized way a living body is alive.",
+    entails: []
+  },
+  {
+    id: "c57",
+    short: "Perception notices itself",
+    text: "When we perceive, we also perceive that we perceive — awareness of perceiving is built into perceiving itself, not a separate act.",
+    plain: "Seeing comes with knowing that you see.",
+    entails: []
+  },
+  {
+    id: "c58",
+    short: "Self-awareness without senses",
+    text: "Even with no sensory contact at all — no sight, touch, or memory — you would still be aware that you exist; self-awareness needs no sensory content.",
+    plain: "Float in empty space with no senses and you'd still know you're there.",
+    entails: ["c6"]
+  },
+  {
+    id: "c59",
+    short: "God alone causes",
+    text: "No created thing — no body, no finite mind — has real causal power; God alone causes.",
+    plain: "Nothing in nature truly causes anything; only God does.",
+    entails: []
+  },
+  {
+    id: "c60",
+    short: "Brain only occasions sensation",
+    text: "Bodily and brain processes do not produce our sensations; they are only occasions on which God produces the corresponding experience in the soul.",
+    plain: "Your brain doesn't make your sensations; God makes them when your brain acts.",
+    entails: ["c59"]
+  },
+  {
+    id: "c61",
+    short: "Brain filters consciousness",
+    text: "The brain does not generate, store, or reconstruct experience; it transmits perception to consciousness and filters the past so we can act in the present.",
+    plain: "Your brain doesn't make consciousness — it narrows it down so you can act.",
+    entails: []
+  },
+  {
+    id: "c62",
+    short: "Consciousness is lived time",
+    text: "Consciousness is essentially duration — the felt, indivisible flow of the past melting into the future, utterly unlike the time on a clock.",
+    plain: "Your inner life is a flowing stream of time, not a string of frozen instants.",
+    entails: []
+  },
+  {
+    id: "c63",
+    short: "Mind is material",
+    text: "Intellect, ego, memory, emotion, and the senses are all products of unconscious nature — cognition is natural, and only the witness is not.",
+    plain: "Your whole mental machinery — thoughts, memories, ego — belongs to nature, not to consciousness.",
+    entails: []
+  },
+  {
+    id: "c64",
+    short: "Consciousness as pure witness",
+    text: "Consciousness itself is pure, contentless witnessing: it never acts, changes, thinks, or feels — it only watches.",
+    plain: "Consciousness is just the silent watcher; it does nothing and never changes.",
+    entails: ["c9"]
+  },
+  {
+    id: "c65",
+    short: "Consciousness can't emerge",
+    text: "No arrangement of insentient matter or mind, however complex, can produce consciousness; awareness cannot emerge from the non-aware.",
+    plain: "You can't stack up unconscious stuff and get consciousness out.",
+    entails: ["c34"]
+  },
+  {
+    id: "c66",
+    short: "Three irreducible domains",
+    text: "Mind, matter, and at least one further domain — such as their union, objective knowledge, or mathematical reality — are each irreducible; reality doesn't split into just one or two kinds.",
+    plain: "Reality has three basic realms relevant to consciousness, not one or two.",
+    entails: []
+  },
+  {
+    id: "c67",
+    short: "Consciousness does nothing",
+    text: "Subjective experience has no causal power of its own: all the work attributed to it — deciding, controlling, steering behavior — is done by nonconscious brain systems.",
+    plain: "Your feeling of being in control doesn't actually control anything.",
+    entails: []
+  },
+  {
+    id: "c68",
+    short: "Consciousness evolved socially",
+    text: "Subjective awareness evolved to serve social life: sharing inner states helps groups communicate, cooperate, and survive.",
+    plain: "Consciousness evolved to help us share our inner lives with each other.",
+    entails: []
+  },
+  {
+    id: "c69",
+    short: "Every event experiences",
+    text: "Every basic happening in nature has an inner experiential side — even the simplest events 'feel' something of the rest of reality, though they are not conscious.",
+    plain: "Every tiny event in nature has a flicker of inner life, but none of it is conscious.",
+    entails: ["c9"]
+  },
+  {
+    id: "c70",
+    short: "Consciousness rare, late",
+    text: "Consciousness, as full self-aware experience, is rare and late in nature — it arises only in complex organisms under special conditions; experience comes first, consciousness after.",
+    plain: "Experience is everywhere, but real consciousness is rare and came late.",
+    entails: []
+  },
+  {
+    id: "c71",
+    short: "Events are fundamental",
+    text: "The world is made of happenings and their becoming — drops of experience — not of static substances with properties.",
+    plain: "Reality is made of events, not stuff.",
+    entails: []
+  },
+  {
+    id: "c72",
+    short: "Reality is perceiving monads",
+    text: "The basic building blocks of reality are simple, partless, immaterial units — monads — each perceiving the whole universe from its own point of view, changing only from within.",
+    plain: "Everything is made of tiny mind-like units, each mirroring the whole universe inside itself.",
+    entails: []
+  },
+  {
+    id: "c73",
+    short: "No real interaction",
+    text: "No monad ever acts on another; mind and body only seem to interact because God set every monad's inner unfolding to run in perfect pre-established harmony.",
+    plain: "Nothing in the universe ever truly affects anything else — it's all choreographed in advance.",
+    entails: []
   }
 ]);
 
@@ -450,4 +587,14 @@ window.CLAIM_THEORIES = Object.freeze([
   { id: 22, name: "Predictive processing",           family: "Materialism",    claims: ["c48", "c49"] },
   { id: 25, name: "Electromagnetic-field theory",    family: "Materialism",    claims: ["c50", "c51", "c52"] },
   { id: 27, name: "Illusionism",                     family: "Materialism",    claims: ["c54"] },
+  { id: 42, name: "Interactive (Cartesian) dualism",   family: "Dualism",         claims: ["c55"] },
+  { id: 43, name: "Hylomorphism",                      family: "Dualism",         claims: ["c56", "c57"] },
+  { id: 44, name: "Avicenna's self-present soul",      family: "Dualism",         claims: ["c36", "c7", "c58"] },
+  { id: 45, name: "Malebranche's occasionalism",       family: "Dualism",         claims: ["c6", "c60"] },
+  { id: 46, name: "Bergson's duration dualism",        family: "Dualism",         claims: ["c61", "c62"] },
+  { id: 47, name: "Sāṃkhya witness dualism",           family: "Dualism",         claims: ["c63", "c64", "c65"] },
+  { id: 51, name: "Trialism",                          family: "Dualism",         claims: ["c66"] },
+  { id: 52, name: "Epiphenomenalism",                  family: "Materialism",     claims: ["c33", "c67", "c68"] },
+  { id: 53, name: "Whitehead's process theory",        family: "Neutral monism",  claims: ["c69", "c70", "c71"] },
+  { id: 54, name: "Leibniz's monads",                  family: "Neutral monism",  claims: ["c45", "c72", "c73"] }
 ]);
