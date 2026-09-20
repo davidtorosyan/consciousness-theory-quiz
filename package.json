@@ -1,0 +1,1 @@
+{"description":"A plain-language quiz that finds your closest-fit theory of consciousness (120 theories).","name":"consciousness-theory-quiz","private":true,"scripts":{"check":"node --check src/app.js && node --check src/content-lint.js && node --check data/quiz-content.js && echo OK","start":"npx --yes serve ."},"version":"1.0.0"}
