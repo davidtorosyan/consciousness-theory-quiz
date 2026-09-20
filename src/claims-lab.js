@@ -418,6 +418,7 @@
     function continueQuiz() {
       qRoundCount = 0;
       qRound++;
+      qhistory = [];
       lastSettledIds = [];
       lastSettledDir = null;
       qResult.classList.add('hidden');
@@ -559,7 +560,9 @@
       $('labResultList').innerHTML = E.score(qstate).map((result, index) => {
         const line = (result.agreed === 0 && result.disagreed === 0)
           ? `None of this theory's claims came up in your answers (${result.total} claim${result.total === 1 ? '' : 's'}).`
-          : `You agree with ${result.agreed} of its ${result.total} claims${result.disagreed ? `, and reject ${result.disagreed}` : ''}.`;
+          : (result.agreed === 0)
+            ? `You reject ${result.disagreed} of its ${result.total} claims (agreeing with none).`
+            : `You agree with ${result.agreed} of its ${result.total} claims${result.disagreed ? `, and reject ${result.disagreed}` : ''}.`;
         return `
         <div class="lab-result-row${index === 0 ? ' top' : ''}">
           <span class="lab-result-rank">#${index + 1}</span>
@@ -586,6 +589,7 @@
       if (!last) return;
       if (last.action === 'skip') E.unskip(qstate, last.id);
       else E.undo(qstate, last.id);
+      qRoundCount = Math.max(0, qRoundCount - 1);
       lastSettledIds = [];
       lastSettledDir = null;
       renderQuestion();

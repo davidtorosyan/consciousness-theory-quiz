@@ -156,6 +156,8 @@ async function main() {
   check(badShorts.length === 0, `no short label leads with unglossed 'Phenomenal'${badShorts.length ? ' (' + badShorts.join(',') + ')' : ''}`);
   const lowShorts = CLAIMS.filter(c => /^[a-z]/.test(c.short || 'x')).map(c => c.id);
   check(lowShorts.length === 0, `all short labels capitalized${lowShorts.length ? ' (' + lowShorts.join(',') + ')' : ''}`);
+  const noShorts = CLAIMS.filter(c => !(c.short || '').trim()).map(c => c.id);
+  check(noShorts.length === 0, `every claim has a short label${noShorts.length ? ' (' + noShorts.join(',') + ')' : ''}`);
 
   // theory search filter
   fireInput(env, 'labTheorySearch', 'integrated information');
@@ -191,8 +193,10 @@ async function main() {
   click(env, 'labAgree');
   const q2 = text(env, 'labQText');
   check(q1 !== q2, 'answering advances to next question');
+  check(text(env, 'labQCount') === '2 of 12', 'counter advances after answering: ' + text(env, 'labQCount'));
   click(env, 'labQBack');
   check(text(env, 'labQText') === q1, 'back returns to previous question');
+  check(text(env, 'labQCount') === '1 of 12', 'counter decrements on back: ' + text(env, 'labQCount'));
   click(env, 'labAgree'); // re-answer, move on
 
   check(html(env, 'labScores').includes(' of '), 'live alignment scores render');
