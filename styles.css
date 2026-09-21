@@ -572,3 +572,19 @@
     .chip-more { margin: 2px 0 0; }
     .lab-list-more { margin: 6px 0 0; }
     .result-show-all-wrap { margin-top: 12px; }
+
+    /* Build 38: collapsed settled trace, stable tension slot, rail deltas, detail flash, claim search */
+    .lab-settled-by .settled-details { margin: 8px 0 0; padding-left: 20px; color: var(--dim); font-size: 12.5px; }
+    .lab-settled-by .settled-details li { margin-bottom: 4px; }
+    .lab-tension { min-height: 38px; }
+    .lab-tension.tension-empty { visibility: hidden; }
+    .tension-details { margin: 6px 0 0; }
+    .lab-score-top .rank-delta { font: 600 10px/1 "IBM Plex Mono", monospace; padding: 3px 7px; border-radius: 999px; vertical-align: 1px; white-space: nowrap; }
+    .lab-score-top .rank-delta.up { color: #57d98a; background: #132620; }
+    .lab-score-top .rank-delta.down { color: #f08080; background: #281414; }
+    #labDetail.detail-flash { animation: detailFlash 1.6s ease-out; border-radius: 12px; }
+    @keyframes detailFlash { 0% { box-shadow: 0 0 0 3px var(--cyan); } 100% { box-shadow: 0 0 0 0 transparent; } }
+    .dag-search-row { display: flex; align-items: center; gap: 14px; margin-top: 12px; flex-wrap: wrap; }
+    .dag-search-row .lab-search { max-width: 300px; margin: 0; }
+    .dag-node { transition: opacity .18s ease; }
+    .dag-node.dimmed { opacity: .18; }

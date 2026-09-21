@@ -13,7 +13,8 @@
       'labSettledBy', 'labTension', 'labScores', 'labResultList', 'labClaimGraph',
       'labQRanking', 'labQuizResume', 'labResultKicker', 'labResultTitle',
       'labClaimDetail', 'labTheoryList', 'labDetail', 'labBack', 'labTabClaims', 'labTabTheories',
-      'labClaims', 'labTheories', 'quizCountLine', 'exploreDek', 'updateBanner', 'updateReload'];
+      'labClaims', 'labTheories', 'quizCountLine', 'exploreDek', 'updateBanner', 'updateReload',
+      'labClaimSearch', 'labClaimSearchCount'];
     if (!window.ClaimsEngine || !window.CLAIMS || need.some(id => !$(id))) {
       const el = $('quizCountLine') || $('labQuizStart');
       if (el) el.textContent = 'The site just updated — please reload the page to get the latest version.';
@@ -290,6 +291,26 @@
     });
     expandChipsIn(claimDetail);
 
+    // Claim explorer search: dim non-matching nodes so a keyword surfaces
+    // the claim in the 278-node graph. A highlight, not a filter — the map
+    // stays whole and the match count says what matched.
+    const claimSearch = $('labClaimSearch');
+    const claimSearchCount = $('labClaimSearchCount');
+    claimSearch.addEventListener('input', () => {
+      const q = claimSearch.value.trim().toLowerCase();
+      let hits = 0, total = 0;
+      graph.querySelectorAll('.dag-node').forEach(node => {
+        total++;
+        if (!q) { node.classList.remove('dimmed'); return; }
+        const hay = `${node.getAttribute('aria-label') || ''} ${node.getAttribute('data-plain') || ''}`.toLowerCase();
+        const hit = hay.includes(q);
+        node.classList.toggle('dimmed', !hit);
+        if (hit) hits++;
+      });
+      claimSearchCount.classList.toggle('hidden', !q);
+      if (q) claimSearchCount.textContent = `${hits} of ${total} claims match “${claimSearch.value.trim()}”`;
+    });
+
     renderGraph();
     requestAnimationFrame(layoutGraph);
     if ('ResizeObserver' in window) new ResizeObserver(() => layoutGraph()).observe(graph);
@@ -366,9 +387,9 @@
         ${meta ? `<p class="lab-plain">${escapeHtml(meta.summary)}</p>` : ''}
         ${link ? `<p class="source-note"><a href="${escapeHtml(link)}" target="_blank" rel="noopener">Read the original Closer to Truth entry ↗</a></p>` : ''}
         ${t.caveat ? `<p class="lab-caveat">A note on how this is classified: ${escapeHtml(t.caveat)}</p>` : ''}
-        <p class="micro">Specific claims (listed by the theory)</p>
+        <p class="micro">Claims this theory states directly</p>
         <div class="lab-chip-row">${[...direct].map(cid => claimChip(cid, 'direct')).join('')}</div>
-        ${inherited.length ? `<p class="micro">Implied claims (they follow from the specific ones)</p><div class="lab-chip-row">${inherited.map(cid => {
+        ${inherited.length ? `<p class="micro">Claims that follow from those</p><div class="lab-chip-row">${inherited.map(cid => {
           const via = viaWhich(t, cid).map(sid => { const sc = claimById.get(sid); return sc ? `“${sc.plain}”` : sid; });
           return `<span class="lab-implied-wrap">${claimChip(cid)}<small>via ${via.join(' · ')}</small></span>`;
         }).join('')}</div>` : ''}
@@ -439,6 +460,13 @@
       theoryNav = [{ kind: 'theory', id }];
       renderTheoryNav();
       $('labTheories').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+      // The button says the claims are "below" — flash the destination panel
+      // briefly so the scroll landing doesn't feel disorienting.
+      const dest = $('labDetail');
+      dest.classList.remove('detail-flash');
+      void dest.offsetWidth; // restart the animation when re-selecting
+      dest.classList.add('detail-flash');
+      setTimeout(() => dest.classList.remove('detail-flash'), 1700);
     }
     renderTheoryList();
     renderTheoryNav();
@@ -458,6 +486,12 @@
     const QUIZ_RAIL_TOP = 10;
     let railLimit = QUIZ_RAIL_TOP; // inline load-more in the live-alignment rail
     let resultLimit = 10;          // collapsed results list
+    // The live rail keeps a stable theory order for the whole session and
+    // shows rank-change indicators (▲/▼) instead of re-sorting the DOM every
+    // question, which testers found jumpy. railPrevRank maps theory id ->
+    // rank index at the last render, so deltas can be computed.
+    let railOrder = null;
+    let railPrevRank = new Map();
     let qstate = null;
     let qhistory = [];
     let forcedQuestionId = null; // Back re-shows the exact popped question instead of re-deriving
@@ -499,6 +533,8 @@
       revisitQueue = [];
       railLimit = QUIZ_RAIL_TOP;
       resultLimit = 10;
+      railOrder = null;
+      railPrevRank = new Map();
       lastSettledIds = [];
       lastSettledDir = null;
       qStart.classList.add('hidden');
@@ -585,7 +621,7 @@
       }
       const claim = claimById.get(q.id);
       $('labQCount').textContent = revisitLeft > 0
-        ? `Revisiting a skipped question — ${revisitTotal - revisitLeft + 1} of ${revisitTotal}`
+        ? `Revisiting a skipped claim — ${revisitTotal - revisitLeft + 1} of ${revisitTotal}`
         : (qRound > 1
           ? `${qRoundCount + 1} of ${QUIZ_ROUND_LENGTH} · round ${qRound}`
           : `${qRoundCount + 1} of ${QUIZ_ROUND_LENGTH}`);
@@ -606,17 +642,23 @@
 
     function renderSettledBy() {
       const el = $('labSettledBy');
-      if (!lastSettledDir) { el.textContent = ''; return; }
-      if (lastSettledDir === 'revisit') { el.textContent = 'You skipped some questions earlier — here’s another chance at them before your results.'; return; }
+      if (!lastSettledDir) { el.innerHTML = ''; return; }
+      if (lastSettledDir === 'revisit') { el.textContent = 'You skipped some claims earlier — here’s another chance at them before your results.'; return; }
       if (lastSettledDir === 'skip') { el.textContent = 'Last question: skipped — nothing decided.'; return; }
-      if (!lastSettledIds.length) { el.textContent = 'Last question: that decided just this claim.'; return; }
+      const n = lastSettledIds.length;
+      if (!n) { el.textContent = 'Last question: that decided just this claim.'; return; }
+      // Collapsed by default: one line plus a details expander. A big
+      // propagation used to list dozens of claims here and shove the answer
+      // buttons below the fold — the full list must never do that again.
+      const verb = lastSettledDir === 'no' ? 'ruled out' : 'decided';
       const labels = lastSettledIds.map(id => {
         const c = claimById.get(id);
-        return c ? c.plain : id;
-      }).join(' · ');
-      el.textContent = lastSettledDir === 'no'
-        ? `Last question: that also ruled out: ${labels} — they were built on the claim you ruled out.`
-        : `Last question: that also decided: ${labels} — they follow from the claim you agreed with.`;
+        return `<li>${escapeHtml(c ? c.plain : id)}</li>`;
+      }).join('');
+      el.innerHTML =
+        `<span>Last question: that also ${verb} ${n} claim${n === 1 ? '' : 's'}. </span>` +
+        `<button class="text-btn" data-settled-more="1" data-closed="details" aria-expanded="false">details</button>` +
+        `<ul class="settled-details hidden">${labels}</ul>`;
     }
 
     function answerQuestion(yesNo) {
@@ -658,7 +700,11 @@
       const c = claimById.get(id);
       if (!c) return;
       $('labExplainTitle').textContent = c.text;
-      $('labExplainPlain').textContent = `Put simply: ${c.plain}`;
+      // The panel leads with a plain restatement ("in other words") derived
+      // from the claim's put-simply gloss, then the bigger ideas, then
+      // illustrations — labeled honestly as illustrations, not explanations,
+      // because testers read them as competing claims and got more confused.
+      $('labExplainPlain').textContent = `In other words: ${c.plain}`;
       const parents = c.entails || [];
       const children = directChildren(id);
       const plainOf = (cid) => { const cc = claimById.get(cid); return cc ? `<li>${escapeHtml(cc.plain)}</li>` : ''; };
@@ -666,7 +712,7 @@
         (parents.length
           ? `<p class="micro">The bigger ideas behind it</p><ul class="explainer-points">${parents.map(plainOf).join('')}</ul>` : '') +
         (children.length
-          ? `<p class="micro">What it looks like in practice</p><ul class="explainer-points">${children.slice(0, 4).map(plainOf).join('')}</ul>` : '') +
+          ? `<p class="micro">Ways people picture this idea</p><p class="explain-note">These are illustrations of the idea above — not new claims to agree or disagree with.</p><ul class="explainer-points">${children.slice(0, 4).map(plainOf).join('')}</ul>` : '') +
         `<p class="explain-note">No wrong answers here — “Not sure” skips without judging, and skipping from here notes that this one was unclear.</p>`;
       $('labExplain').classList.remove('hidden');
       jumpTo($('labExplain'));
@@ -691,66 +737,97 @@
     // but a layperson deserves to know when two affirmed claims pull apart.
     // Before any pair exists, flag the question whose affirmation would create
     // the first one — the useful moment is before answering, not after.
+    //
+    // Layout stability: the note appears on some questions and not others, so
+    // it lives in a reserved slot (min-height in CSS, visibility toggle here)
+    // instead of popping in and out of the flow and shoving the buttons.
+    // At most one tension is shown inline; the rest hide behind an expander.
     function renderTension() {
       const el = $('labTension');
+      el.classList.remove('hidden'); // visibility (tension-empty) owns show/hide from here on
       const pairs = E.contradictions(qstate).slice(0, 2);
+      const pairText = ([a, b]) => {
+        const ca = claimById.get(a), cb = claimById.get(b);
+        return `“${ca.plain}” pulls against “${cb.plain}”`;
+      };
       if (!pairs.length) {
-        const q = currentQuestion();
-        if (q) {
+        // Act on the question on screen (shownQuestionId), never re-derive:
+        // currentQuestion() would consume the revisit queue / forced id.
+        const qid = shownQuestionId;
+        if (qid) {
           const probe = JSON.parse(JSON.stringify(qstate));
-          E.answer(probe, q.id, 'yes');
+          E.answer(probe, qid, 'yes');
           const fresh = E.contradictions(probe).slice(0, 1);
           if (fresh.length) {
             const affNow = E.affirmed(qstate);
             const [a, b] = fresh[0];
             const otherId = affNow.has(a) ? a : b;
             const other = claimById.get(otherId);
-            el.classList.remove('hidden');
-            el.textContent = `Heads up: agreeing here would pull against “${other ? other.plain : otherId}” — settled by your earlier answers. No wrong answers here; just flagging the tension before you answer.`;
+            el.classList.remove('tension-empty');
+            el.innerHTML = `<span>Heads up: agreeing here would pull against “${escapeHtml(other ? other.plain : otherId)}” — settled by your earlier answers.</span>`;
             return;
           }
         }
-        el.textContent = '';
-        el.classList.add('hidden');
+        el.classList.add('tension-empty');
+        el.innerHTML = '';
         return;
       }
-      el.classList.remove('hidden');
-      el.textContent = pairs.map(([a, b]) => {
-        const ca = claimById.get(a), cb = claimById.get(b);
-        return `Worth knowing: “${ca.plain}” pulls against “${cb.plain}” — you affirmed both. No wrong answers here; the quiz measures alignment, not consistency.`;
-      }).join(' ');
+      el.classList.remove('tension-empty');
+      const first = `Worth knowing: ${pairText(pairs[0])} — you affirmed both.`;
+      el.innerHTML = pairs.length > 1
+        ? `<span>${escapeHtml(first)} </span>` +
+          `<button class="text-btn" data-tension-more="1" data-closed="one more tension" aria-expanded="false">one more tension</button>` +
+          `<p class="tension-details hidden">${escapeHtml(`Also: ${pairText(pairs[1])} — you affirmed both.`)}</p>`
+        : `<span>${escapeHtml(first)}</span>`;
     }
 
     function renderScores() {
       const ranked = E.score(qstate);
-      const top = ranked.slice(0, railLimit);
+      const rankOf = new Map(ranked.map((r, i) => [r.theory.id, i]));
+      const byId = new Map(ranked.map(r => [r.theory.id, r]));
+      if (!railOrder) railOrder = ranked.map(r => r.theory.id);
+      const top = railOrder.slice(0, railLimit).map(id => byId.get(id)).filter(Boolean);
       $('labScores').innerHTML = top.map(result => {
         const pct = result.total ? Math.round(100 * result.agreed / result.total) : 0;
+        const rank = rankOf.get(result.theory.id);
+        const prev = railPrevRank.get(result.theory.id);
+        let delta = '';
+        if (prev !== undefined && prev !== rank) {
+          const d = prev - rank;
+          delta = d > 0
+            ? ` <span class="rank-delta up" title="Moved up ${d} since the last question">▲${d}</span>`
+            : ` <span class="rank-delta down" title="Moved down ${-d} since the last question">▼${-d}</span>`;
+        }
         return `<div class="lab-score-row">
-          <div class="lab-score-top"><strong>${escapeHtml(result.theory.name)}</strong><span>${result.agreed} of ${result.total}</span></div>
+          <div class="lab-score-top"><strong>${escapeHtml(result.theory.name)}${delta}</strong><span>${result.agreed} of ${result.total}</span></div>
           ${result.theory.blurb ? `<div class="lab-score-blurb">${escapeHtml(result.theory.blurb)}</div>` : ''}
           <div class="lab-score-bar"><span style="width:${pct}%"></span></div>
           ${result.disagreed ? `<small>${result.disagreed} ruled out</small>` : ''}
         </div>`;
-      }).join('') + (ranked.length > railLimit
-        ? `<button class="lab-scores-more text-btn" data-rail-more="1">Show 10 more (${ranked.length - railLimit} left)</button>`
+      }).join('') + (railOrder.length > railLimit
+        ? `<button class="lab-scores-more text-btn" data-rail-more="1">Show 10 more (${railOrder.length - railLimit} left)</button>`
         : '');
+      railPrevRank = rankOf;
     }
 
     // Results cite their own basis honestly: answers given, skips named,
     // claims settled — never a bare answer count after a skipped question.
+    // The propagation explainer answers the natural follow-up ("why did 12
+    // answers settle 70 claims?") wherever the basis line appears.
     function basisLine() {
       const answered = Object.keys(qstate.answers).length;
       const decided = E.affirmed(qstate).size + E.rejected(qstate).size;
       const skippedN = Object.keys(qstate.skipped || {}).length;
       return `Based on ${answered} answer${answered === 1 ? '' : 's'} from you${skippedN ? ` (${skippedN} skipped)` : ''} — ${decided} claim${decided === 1 ? '' : 's'} settled in total.`;
     }
+    function basisNote() {
+      return `${basisLine()} One answer can settle many claims, because answering a claim also settles the claims linked to it.`;
+    }
 
     function renderResults(exhausted) {
       qMain.classList.add('hidden');
       qResult.classList.remove('hidden');
       $('labQuizResume').classList.add('hidden');
-      const bl = basisLine();
       $('labQuizContinue').classList.toggle('hidden', exhausted);
       $('labResultKicker').textContent = 'Your result · alignment, not elimination';
       if (exhausted) {
@@ -760,7 +837,7 @@
         $('labContinueNote').textContent = 'Your answers settled the remaining questions on their own — every claim they could decide is decided.';
       } else {
         $('labResultTitle').textContent = 'Where your answers land';
-        $('labContinueNote').textContent = `${bl} Keep going any time for a sharper picture.`;
+        $('labContinueNote').textContent = `${basisNote()} Keep going any time for a sharper picture.`;
       }
       resultLimit = 10;
       paintResultList();
@@ -777,7 +854,7 @@
         <div><strong>${escapeHtml(result.theory.name)}</strong>
         ${result.theory.blurb ? `<p class="lab-result-blurb">${escapeHtml(result.theory.blurb)}</p>` : ''}
         <p>${line}</p>
-        <button class="text-btn" data-inspect="${result.theory.id}">Inspect this theory’s claims <span class="vh">— ${escapeHtml(result.theory.name)}</span></button></div>
+        <button class="text-btn" data-inspect="${result.theory.id}">See this theory’s claims below <span aria-hidden="true">↓</span><span class="vh"> — ${escapeHtml(result.theory.name)}</span></button></div>
       </div>`;
     }
     // The full ranking can be 120 rows: show the top 10, expand on demand.
@@ -826,7 +903,7 @@
       $('labQuizContinue').classList.add('hidden');
       $('labResultKicker').textContent = 'Live ranking · not the final result';
       $('labResultTitle').textContent = 'Where your answers land so far';
-      $('labContinueNote').textContent = basisLine();
+      $('labContinueNote').textContent = basisNote();
       const top = E.score(qstate)[0];
       if (top && top.agreed === 0) {
         // Scores are sorted best-first, so a zero top score means every
@@ -851,6 +928,19 @@
     $('labDontUnderstand').addEventListener('click', openExplain);
     $('labExplainStill').addEventListener('click', skipNotUnderstood);
     $('labExplainBack').addEventListener('click', closeExplain);
+    // Collapsed "settled" and "tension" details share one delegated toggle:
+    // the button names its own list, flips aria-expanded, and swaps its
+    // label between "hide" and its resting label.
+    qMain.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-settled-more],[data-tension-more]');
+      if (!btn) return;
+      const list = btn.parentElement.querySelector(
+        btn.hasAttribute('data-settled-more') ? '.settled-details' : '.tension-details');
+      const open = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!open));
+      if (list) list.classList.toggle('hidden', open);
+      btn.textContent = open ? (btn.getAttribute('data-closed') || 'details') : 'hide';
+    });
     $('labResultList').addEventListener('click', (e) => {
       const more = e.target.closest('[data-result-more]');
       if (more) { resultLimit = E.score(qstate).length; paintResultList(); return; }

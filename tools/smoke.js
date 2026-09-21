@@ -19,7 +19,8 @@ const NEED_IDS = ['labQuizStart', 'labQuizMain', 'labQuizResult', 'labQuizBegin'
   'labSettledBy', 'labTension', 'labScores', 'labResultList', 'labClaimGraph',
   'labQRanking', 'labQuizResume', 'labResultKicker', 'labResultTitle', 'labQRestart',
   'labClaimDetail', 'labTheoryList', 'labTheorySearch', 'labDetail', 'labBack', 'labTabClaims', 'labTabTheories',
-  'labClaims', 'labTheories', 'quizCountLine', 'exploreDek', 'updateBanner', 'updateReload'];
+  'labClaims', 'labTheories', 'quizCountLine', 'exploreDek', 'updateBanner', 'updateReload',
+  'labClaimSearch', 'labClaimSearchCount'];
 
 function matches(el, sel) {
   if (sel.startsWith('.')) {
@@ -188,6 +189,18 @@ async function main() {
     for (const b of banned) if (hay.includes(b)) bad.push(`theory${t.id}:${b}`);
   }
   check(bad.length === 0, `no regressed jargon in claims/theories${bad.length ? ' (' + bad.slice(0, 6).join(', ') + ')' : ''}`);
+  // round-2 jargon fixes: expansions and glosses for the tester-flagged terms
+  const t98 = THEORIES.find(t => t.id === 98);
+  check(t98 && t98.blurb.includes('Higher-Order Representation of a Representation'), 'HOROR acronym expanded in its blurb');
+  const t13 = THEORIES.find(t => t.id === 13);
+  check(t13 && t13.blurb.includes('seeds of experience'), 'panprotopsychism blurb glosses the jargon name');
+  const t38 = THEORIES.find(t => t.id === 38);
+  check(t38 && t38.name.includes('Theory of Everything'), 'Big TOE expanded in the theory name');
+  check(read('data/theories.js').includes('what matter is in itself, beneath the equations'),
+    'quiddities glossed in the Russellian monism summary');
+  check(read('src/claims-lab.js').includes('Claims this theory states directly') &&
+    read('src/claims-lab.js').includes('Claims that follow from those'),
+    'theory detail headers reworded in plain language');
   const badShorts = CLAIMS.filter(c => (c.short || '').startsWith('Phenomenal')).map(c => c.id);
   check(badShorts.length === 0, `no short label leads with unglossed 'Phenomenal'${badShorts.length ? ' (' + badShorts.join(',') + ')' : ''}`);
   const lowShorts = CLAIMS.filter(c => /^[a-z]/.test(c.short || 'x')).map(c => c.id);
@@ -289,7 +302,7 @@ async function main() {
   click(env, 'labDontUnderstand');
   check(!hidden(env, 'labExplain'), "don't-understand opens the explanation panel");
   check(text(env, 'labExplainTitle') === duQ, 'explanation panel names the current claim');
-  check(text(env, 'labExplainPlain').startsWith('Put simply:'), 'explanation panel reuses the plain-language gloss');
+  check(text(env, 'labExplainPlain').startsWith('In other words:'), 'explanation panel leads with a plain restatement');
   check(html(env, 'labExplainContext').length > 0, 'explanation panel adds broader/specific context');
   click(env, 'labExplainBack');
   check(hidden(env, 'labExplain'), 'back-to-question closes the explanation panel');
@@ -321,6 +334,19 @@ async function main() {
   check(html(env, 'labScores').includes(' of '), 'live alignment scores render');
   check(html(env, 'labScores').includes('lab-score-blurb'), 'live scores show theory blurbs');
 
+  // rail order is stable across answers; rank changes show as ▲/▼ deltas
+  // instead of re-sorting the list every question.
+  const railNames = () => (html(env, 'labScores').match(/<strong>([^<]*)/g) || []).map(s => s.slice(8).trim());
+  let railBefore = railNames(), sawDelta = html(env, 'labScores').includes('rank-delta');
+  for (let i = 0; i < 3; i++) {
+    click(env, 'labAgree');
+    const railAfter = railNames();
+    check(JSON.stringify(railBefore) === JSON.stringify(railAfter), `rail keeps a stable theory order across answers (pass ${i + 1})`);
+    railBefore = railAfter;
+    if (html(env, 'labScores').includes('rank-delta')) sawDelta = true;
+  }
+  check(sawDelta, 'rail shows rank-change deltas instead of re-sorting');
+
   // directional settled trace, verified against an engine mirror of quiz state.
   // Note: in a skip-free quiz, agreeing can never propagate — any undecided
   // ancestor would outscore its descendant and be asked first. So phase A
@@ -341,10 +367,10 @@ async function main() {
     if (newAnc.length) {
       click(env, 'labAgree');
       CE.answer(mirrorA, q.id, 'yes');
-      const t = text(env, 'labSettledBy');
+      const h = html(env, 'labSettledBy');
       sawAffirm = true;
-      check(t.startsWith('Last question: that also decided:') && t.endsWith('they follow from the claim you agreed with.'),
-        'affirm trace explains direction: ' + t.slice(0, 110));
+      check(h.includes('Last question: that also decided') && h.includes('data-settled-more="1"') && h.includes('settled-details hidden'),
+        'affirm trace collapses to a one-line summary with a details expander: ' + h.slice(0, 110));
     } else {
       click(env, 'labNotSure');
       CE.skip(mirrorA, q.id);
@@ -365,20 +391,20 @@ async function main() {
     if (newDesc.length) {
       click(env, 'labDisagree');
       CE.answer(mirrorB, q.id, 'no');
-      const t = text(env, 'labSettledBy');
+      const h = html(env, 'labSettledBy');
       sawReject = true;
-      check(t.startsWith('Last question: that also ruled out:') && t.endsWith('they were built on the claim you ruled out.'),
-        'reject trace explains direction: ' + t.slice(0, 110));
+      check(h.includes('Last question: that also ruled out') && h.includes('data-settled-more="1"') && h.includes('settled-details hidden'),
+        'reject trace collapses to a one-line summary with a details expander: ' + h.slice(0, 110));
     } else {
       const newAnc = [...CE.ancestors(CLAIMS, q.id)].filter((id) => !settled.has(id));
       click(env, 'labAgree');
       CE.answer(mirrorB, q.id, 'yes');
-      const t = text(env, 'labSettledBy');
       if (newAnc.length) {
-        check(t.startsWith('Last question: that also decided:') && t.endsWith('they follow from the claim you agreed with.'),
-          'affirm trace explains direction: ' + t.slice(0, 110));
+        const h2 = html(env, 'labSettledBy');
+        check(h2.includes('Last question: that also decided') && h2.includes('settled-details hidden'),
+          'affirm trace collapses to a one-line summary: ' + h2.slice(0, 110));
       } else {
-        check(t === 'Last question: that decided just this claim.', 'no-propagation line renders');
+        check(text(env, 'labSettledBy') === 'Last question: that decided just this claim.', 'no-propagation line renders');
       }
     }
   }
@@ -398,7 +424,7 @@ async function main() {
   const skippedQ = text(env, 'labQText');
   click(env, 'labNotSure'); // skip question 12 of 12
   check(hidden(env, 'labQuizResult'), 'round does not end on a skipped 12th question');
-  check(text(env, 'labQCount') === 'Revisiting a skipped question — 1 of 1',
+  check(text(env, 'labQCount') === 'Revisiting a skipped claim — 1 of 1',
     'skipped question is re-asked at round end: ' + text(env, 'labQCount'));
   check(text(env, 'labQText') === skippedQ, 'the re-asked question is the skipped one, not a fresh pick');
   check(text(env, 'labSettledBy').includes('another chance'),
@@ -425,6 +451,16 @@ async function main() {
   check(dualHtml.toLowerCase().includes('dualism') && !dualHtml.toLowerCase().includes('nondualism'),
     'theory search matches whole words ("dualism" finds dualists, not nondualists)');
   fireInput(env, 'labTheorySearch', '');
+
+  // claim explorer search: a keyword dims non-matching nodes and reports a count
+  fireInput(env, 'labClaimSearch', 'consciousness');
+  const graphNodes = () => env.els.get('labClaimGraph').querySelectorAll('.dag-node');
+  const dimmedCount = () => graphNodes().filter(n => n.classList.contains('dimmed')).length;
+  check(dimmedCount() > 0 && dimmedCount() < graphNodes().length,
+    `claim search dims non-matching nodes (${dimmedCount()}/${graphNodes().length} dimmed)`);
+  check(text(env, 'labClaimSearchCount').includes('claims match'), 'claim search reports a match count');
+  fireInput(env, 'labClaimSearch', '');
+  check(dimmedCount() === 0 && hidden(env, 'labClaimSearchCount'), 'clearing claim search restores every node');
 
   // content: round-22 jargon audit — the fixed claims must carry inline glosses
   const claimsSrc = read('data/claims.js');
@@ -458,12 +494,16 @@ async function main() {
   click(env, 'labScores', { target: { closest: (sel) => sel === '[data-rail-more]' ? {} : null }, preventDefault() {} });
   const railRows2 = (html(env, 'labScores').match(/lab-score-row/g) || []).length;
   check(railRows2 === 20, `rail load-more pages in 10 more (got ${railRows2})`);
+  check(read('styles.css').includes('.lab-tension.tension-empty') && /\.lab-tension\s*{\s*min-height/.test(read('styles.css')),
+    'tension note lives in a reserved min-height slot with a visibility toggle');
+  check(read('src/claims-lab.js').includes("classList.add('tension-empty')"),
+    'tension show/hide uses the visibility slot, not display toggling');
 
   // round cap + continue + tension notes (all-agree run)
   restartQuiz(env);
   let sawTension = false, sawPreNudge = false, answered = 0;
   while (hidden(env, 'labQuizResult') && answered < 20) {
-    const t = text(env, 'labTension');
+    const t = html(env, 'labTension');
     if (t.length > 0) sawTension = true;
     if (t.includes('would pull against')) sawPreNudge = true;
     click(env, 'labAgree');
@@ -506,6 +546,10 @@ async function main() {
   let guard = 0;
   while (hidden(env, 'labQuizResult') && guard++ < N + 50) click(env, 'labAgree');
   check(!hidden(env, 'labQuizResult'), 'quiz completes to results screen');
+  check(text(env, 'labContinueNote').includes('One answer can settle many claims'),
+    'results explain why a few answers settle many claims');
+  check(html(env, 'labResultList').includes('See this theory’s claims below'),
+    'inspect buttons signal the below-the-fold scroll to the theory explorer');
   // results collapse: top 10 first, "show all" expands to the full ranking
   const resCollapsed = html(env, 'labResultList');
   const resRows0 = (resCollapsed.match(/class="lab-result-row/g) || []).length;
