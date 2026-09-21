@@ -476,7 +476,15 @@
 
     function selectTheory(id) {
       showTab('theories');
+      // Clear any stale filter text so the search box matches the panel
+      // being opened (otherwise e.g. "Mandik" stays in the box while a
+      // different theory's panel is displayed).
+      theoryFilter = '';
+      theoryListLimit = 10;
+      const search = $('labTheorySearch');
+      if (search) search.value = '';
       theoryNav = [{ kind: 'theory', id }];
+      renderTheoryList();
       renderTheoryNav();
       $('labTheories').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
       // The button says the claims are "below" — flash the destination panel

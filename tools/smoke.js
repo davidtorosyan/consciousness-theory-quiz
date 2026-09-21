@@ -298,6 +298,48 @@ async function main() {
   }
   check(tagSweep.length === 0, `no unglossed phenomenal/qualia in theory taglines${tagSweep.length ? ' (' + tagSweep.slice(0, 6).join(', ') + ')' : ''}`);
 
+  // round-5: curator-voice phrases gone from classification notes
+  const caveats = THEORIES.filter(t => t.caveat).map(t => t.caveat).join(' ');
+  check(!/judgment call|landscape label|landscape convention|structural analogy|a reasonable map|could file it elsewhere|like Kriegel/.test(caveats),
+    'classification notes read as visitor copy, not curator memos');
+  const t19 = byId.get(19);
+  check(t19 && t19.caveat.includes("We've grouped it with theories that say ordinary physics is enough"),
+    'IIT classification note rewritten in plain visitor language');
+  const t104c = byId.get(104);
+  check(t104c && t104c.caveat.includes("Mandik himself says 'I'm not a physicalist'") && !t104c.caveat.includes('realist nor an eliminativist'),
+    "Mandik's classification note rewritten without curator jargon");
+  // round-5: Mandik's theories.js tagline rewritten
+  check(theoriesSrc.includes("what we call felt qualities are just brain processes that represent the world") &&
+    !theoriesSrc.includes('metaphysical posits') && !theoriesSrc.includes('naturalize them as brain-based'),
+    "Mandik's tagline rewritten in plain words");
+  // round-5: claim-title jargon sweep
+  const claimById = new Map(CLAIMS.map(c => [c.id, c]));
+  const jargonCases = [
+    ['c36', null, 'self-luminous glossed away'],
+    ['c41', /job description/, 'functional role glossed'],
+    ['c136', /independent of everything else/, 'intrinsic nature glossed'],
+    ['c138', /philosophers' word for directly self-revealing/, 'self-intimating glossed'],
+    ['c150', /the asterisk marks a stripped-down precursor/, 'consciousness* asterisk glossed'],
+    ['c150', /no plausible way physics could explain it/, 'reductive physical candidate reworded'],
+    ['c152', /full, rich experience like ours/, 'full-blooded consciousness glossed'],
+    ['c228', /because it represents itself/, 'in virtue of reworded'],
+    ['c253', /no inner stage where experience is put on show/, 'Cartesian theater glossed'],
+    ['c271', /philosophers' word for being 'of' or 'about' something/, 'philosophical intentional glossed'],
+  ];
+  for (const [id, re, label] of jargonCases) {
+    const c = claimById.get(id);
+    check(c && (re ? re.test(c.text || '') : !/self-luminous/.test(c.text || '')), `claim ${id}: ${label}`);
+  }
+  const c237 = claimById.get('c237');
+  check(c237 && /thought-like state \(not spoken words\)/.test(c237.plain || ''), "claim c237: 'claim-like thought' glossed");
+  // round-5: jumping to a theory via the results link clears stale filter text
+  fireInput(env, 'labTheorySearch', 'Mandik');
+  const searchEl = env.els.get('labTheorySearch');
+  searchEl.value = 'Mandik';
+  click(env, 'labResultList', { target: { closest: (sel) => sel === '[data-inspect]' ? { dataset: { inspect: '10' } } : null }, preventDefault() {} });
+  check(searchEl.value === '' && html(env, 'labDetail').includes('Russellian monism'),
+    'theory jump from results clears the filter text and opens the right panel');
+
   // theory search filter
   fireInput(env, 'labTheorySearch', 'integrated information');
   const filteredHtml = html(env, 'labTheoryList');
