@@ -74,26 +74,48 @@
     return { answers: {}, skipped: {}, notUnderstood: {} };
   }
 
-  // Claims affirmed: every 'yes' answer plus all of its ancestors.
-  function affirmed(claims, state) {
-    const out = new Set();
-    for (const [id, a] of Object.entries(state.answers)) {
-      if (a !== 'yes') continue;
-      out.add(id);
-      for (const anc of ancestors(claims, id)) out.add(anc);
+  // One worklist propagation over the raw answers: a 'yes' affirms the
+  // claim, all of its ancestors, and pushes a 'no' onto its anti partner
+  // (if any); a 'no' rejects the claim, all of its descendants, and pushes
+  // a 'yes' onto the anti partner. Terminates: anti is an involution and
+  // the visited sets guard the walk. `answer`/`undo`/`skip` need no
+  // changes — derived effects vanish on undo because the closures
+  // recompute from answers alone.
+  function propagate(claims, state) {
+    const byId = indexById(claims);
+    const kids = childrenMap(claims);
+    const aff = new Set(), rej = new Set();
+    const queue = [];
+    for (const [id, a] of Object.entries(state.answers || {})) {
+      if (a === 'yes' || a === 'no') queue.push([id, a]);
     }
-    return out;
+    while (queue.length) {
+      const [id, a] = queue.pop();
+      const target = a === 'yes' ? aff : rej;
+      if (target.has(id)) continue;
+      target.add(id);
+      const c = byId.get(id);
+      if (!c) continue;
+      if (a === 'yes') {
+        for (const p of (c.entails || [])) queue.push([p, 'yes']);
+      } else {
+        for (const d of (kids.get(id) || [])) queue.push([d, 'no']);
+      }
+      if (c.anti) queue.push([c.anti, a === 'yes' ? 'no' : 'yes']);
+    }
+    return { aff, rej };
   }
 
-  // Claims rejected: every 'no' answer plus all of its descendants.
+  // Claims affirmed: every 'yes' answer plus all of its ancestors,
+  // with anti-partner effects included.
+  function affirmed(claims, state) {
+    return propagate(claims, state).aff;
+  }
+
+  // Claims rejected: every 'no' answer plus all of its descendants,
+  // with anti-partner effects included.
   function rejected(claims, state) {
-    const out = new Set();
-    for (const [id, a] of Object.entries(state.answers)) {
-      if (a !== 'no') continue;
-      out.add(id);
-      for (const d of descendants(claims, id)) out.add(d);
-    }
-    return out;
+    return propagate(claims, state).rej;
   }
 
   function undecided(claims, state) {
@@ -109,13 +131,31 @@
     return Math.max(both.yes, both.no);
   }
 
-  // Per-direction coverage, so the UI can say honestly what each answer does.
+  function settledCount(claims, state) {
+    const p = propagate(claims, state);
+    return p.aff.size + p.rej.size;
+  }
+
+  function cloneAnswers(state) {
+    return {
+      answers: { ...(state.answers || {}) },
+      skipped: { ...(state.skipped || {}) },
+      notUnderstood: { ...(state.notUnderstood || {}) }
+    };
+  }
+
+  // Per-direction coverage, so the UI can say honestly what each answer
+  // does. Honest simulation: hypothetically answer each way and count the
+  // newly settled claims — this includes anti-partner knockouts.
   function coverageBoth(claims, state, id) {
-    const und = new Set(undecided(claims, state));
-    let ancCount = 0, descCount = 0;
-    for (const a of ancestors(claims, id)) if (und.has(a)) ancCount++;
-    for (const d of descendants(claims, id)) if (und.has(d)) descCount++;
-    return { yes: ancCount + 1, no: descCount + 1 };
+    const before = settledCount(claims, state);
+    const sy = cloneAnswers(state);
+    answer(sy, id, 'yes');
+    const yes = settledCount(claims, sy) - before;
+    const sn = cloneAnswers(state);
+    answer(sn, id, 'no');
+    const no = settledCount(claims, sn) - before;
+    return { yes, no };
   }
 
   // Greedy: the undecided, unskipped claim with the highest coverage.
@@ -232,6 +272,31 @@
         if (!byId.has(q)) problems.push(`claim ${c.id} contradicts unknown claim ${q}`);
         else if (q === c.id) problems.push(`claim ${c.id} contradicts itself`);
         else if (!((byId.get(q).contradicts || []).includes(c.id))) problems.push(`claim ${c.id} contradicts ${q} but ${q} does not list ${c.id} back`);
+      }
+    }
+    // Anti-pair checks: the target must exist and must not be self, the
+    // pairing must be symmetric, and no claim may have both members of an
+    // anti-pair among its ancestors (agreeing with such a claim would
+    // affirm and reject the same pair — a data contradiction).
+    const antiOf = new Map();
+    for (const c of claims) if (c.anti) antiOf.set(c.id, c.anti);
+    for (const c of claims) {
+      if (!c.anti) continue;
+      if (c.anti === c.id) {
+        problems.push(`claim ${c.id} is its own anti`);
+      } else if (!byId.has(c.anti)) {
+        problems.push(`claim ${c.id} anti-target ${c.anti} does not exist`);
+      } else if (byId.get(c.anti).anti !== c.id) {
+        problems.push(`claim ${c.id} anti ${c.anti} is not symmetric`);
+      }
+    }
+    for (const c of claims) {
+      const anc = ancestors(claims, c.id);
+      for (const x of anc) {
+        const a = antiOf.get(x);
+        if (a && anc.has(a) && x < a) {
+          problems.push(`claim ${c.id} has both ${x} and ${a} among its ancestors`);
+        }
       }
     }
     // Cycle detection (DFS on child -> parent edges).

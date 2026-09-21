@@ -455,6 +455,66 @@ async function main() {
   check(!(mNu.notUnderstood || {})['c0'] && !(mNu.skipped || {})['c0'],
     'back/undo clears the not-understood skip');
 
+  // Anti-pair propagation (c0 <-> c278): agreeing with one means
+  // disagreeing with the other, with ladder effects on both sides.
+  {
+    const mA = CE2.newQuiz();
+    CE2.answer(mA, 'c0', 'yes');
+    const affA = CE2.affirmed(mA), rejA = CE2.rejected(mA);
+    check(rejA.has('c278'), 'agree c0 rejects its anti-claim c278');
+    check(rejA.has('c6') && rejA.has('c34') && rejA.has('c81'),
+      'agree c0 rejects the claims laddered to c278 (c6, c34, c81)');
+    check([...rejA].some(id => id !== 'c278' && id !== 'c6' && id !== 'c34' && id !== 'c81'),
+      'agree c0 rejects descendants of the laddered claims too');
+    check(affA.size + rejA.size > 1, `agree c0 settles more than itself (${affA.size + rejA.size})`);
+    const mB = CE2.newQuiz();
+    CE2.answer(mB, 'c278', 'yes');
+    const affB = CE2.affirmed(mB), rejB = CE2.rejected(mB);
+    check(rejB.has('c0'), 'agree c278 rejects its anti-claim c0');
+    check(rejB.has('c32'),
+      'agree c278 rejects a physicalist-ladder claim (c32 entails c0)');
+    check(rejB.size > 2,
+      `agree c278 rejects the physicalist ladder (${rejB.size} rejected)`);
+    const mC = CE2.newQuiz();
+    CE2.answer(mC, 'c6', 'yes');
+    check(CE2.affirmed(mC).has('c278') && CE2.rejected(mC).has('c0'),
+      'agree c6 affirms c278 and rejects c0 through the anti-pair');
+    CE2.undo(mA, 'c0');
+    check(CE2.affirmed(mA).size === 0 && CE2.rejected(mA).size === 0,
+      'undo(c0) clears all derived anti effects');
+    const mS = CE2.newQuiz();
+    CE2.skip(mS, 'c0');
+    check(CE2.undecided(mS).includes('c278'), 'skip(c0) leaves c278 askable');
+    const cb = CE2.coverageBoth(mS, 'c278');
+    check(cb.yes > 1 && cb.no > 1,
+      `coverageBoth counts include the anti side (c278: yes=${cb.yes}, no=${cb.no})`);
+    // validate() anti checks against synthetic bad data
+    const bad1 = win.ClaimsEngine.validate(CLAIMS, THEORIES);
+    check(bad1.length === 0, 'validate() is clean on the real anti data');
+    const solo = [{ id: 'x', short: 'x', text: 'x', plain: 'x', entails: [], anti: 'y' }];
+    check(win.ClaimsEngine.validate(solo, []).some(p => p.includes('does not exist')),
+      'validate() catches an anti target that does not exist');
+    const selfA = [{ id: 'x', short: 'x', text: 'x', plain: 'x', entails: [], anti: 'x' }];
+    check(win.ClaimsEngine.validate(selfA, []).some(p => p.includes('its own anti')),
+      'validate() catches self-anti');
+    const asym = [
+      { id: 'x', short: 'x', text: 'x', plain: 'x', entails: [], anti: 'y' },
+      { id: 'y', short: 'y', text: 'y', plain: 'y', entails: [] }
+    ];
+    check(win.ClaimsEngine.validate(asym, []).some(p => p.includes('not symmetric')),
+      'validate() catches asymmetric anti');
+    const bothAnc = [
+      { id: 'x', short: 'x', text: 'x', plain: 'x', entails: [], anti: 'y' },
+      { id: 'y', short: 'y', text: 'y', plain: 'y', entails: [], anti: 'x' },
+      { id: 'z', short: 'z', text: 'z', plain: 'z', entails: ['x', 'y'] }
+    ];
+    check(win.ClaimsEngine.validate(bothAnc, []).some(p => p.includes('among its ancestors')),
+      'validate() catches a claim with both anti members as ancestors');
+    check(read('src/claims-engine.js').includes('c.anti') &&
+      read('data/claims.js').includes('id: "c278"'),
+      'served bundle contains the anti logic and c278');
+  }
+
   // mid-round restart: first tap arms it, second tap restarts the quiz
   check(!!env.els.get('labQRestart'), 'mid-round restart button exists');
   click(env, 'labQRestart');
@@ -631,7 +691,11 @@ async function main() {
   check(read('src/claims-lab.js').includes("classList.add('tension-empty')"),
     'tension show/hide uses the visibility slot, not display toggling');
 
-  // round cap + continue + tension notes (all-agree run)
+  // round cap + continue + tension notes (all-agree run). Since anti-pairs
+  // landed, an all-agree run can no longer affirm both sides of a
+  // contradiction (agreeing with c0 auto-rejects c6/c34/c81 via c278), so
+  // the tension UI must stay silent — the engine-level contradiction check
+  // above still covers the rendering data path directly.
   restartQuiz(env);
   let sawTension = false, sawPreNudge = false, answered = 0;
   while (hidden(env, 'labQuizResult') && answered < 20) {
@@ -642,8 +706,8 @@ async function main() {
     answered++;
   }
   check(answered === 12 && !hidden(env, 'labQuizResult'), `quiz stops after a 12-question round (answered ${answered})`);
-  check(sawTension, 'tension note appears when affirming contradictory claims');
-  check(sawPreNudge, 'pre-answer heads-up appears before affirming a contradictory claim');
+  check(!sawTension && !sawPreNudge, 'all-agree run stays contradiction-free: anti-pairs absorb the old c0/c6 tension');
+  check(env.els.get('labTension').classList.contains('tension-empty'), 'tension slot stays in its reserved empty state');
   check(!hidden(env, 'labQuizContinue'), 'continue button offered after a round');
   check(text(env, 'labContinueNote').includes('Based on 12 answers from you'), 'continue note cites answer count and settled claims');
   click(env, 'labQuizContinue');

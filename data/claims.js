@@ -80,7 +80,8 @@ window.CLAIMS = Object.freeze([
     text: "Consciousness is entirely explainable by ordinary matter and physics.",
     plain: "Nothing about experience needs anything beyond the physical world.",
     contradicts: ["c6", "c34"],
-    entails: []
+    entails: [],
+    anti: "c278"
   },
   {
     id: "c1",
@@ -123,7 +124,7 @@ window.CLAIMS = Object.freeze([
     text: "Your mind is not made of physical matter at all: it is a wholly different kind of stuff from your body.",
     plain: "Mind and body are two fundamentally different kinds of thing.",
     contradicts: ["c0", "c93"],
-    entails: []
+    entails: ["c278"]
   },
   {
     id: "c7",
@@ -323,7 +324,7 @@ window.CLAIMS = Object.freeze([
     plain: "Experience is genuinely real; no redescription in brain terms makes its first-person character disappear.",
     opener: true,
     contradicts: ["c0"],
-    entails: []
+    entails: ["c278"]
   },
   {
     id: "c35",
@@ -660,7 +661,7 @@ window.CLAIMS = Object.freeze([
     short: "Nonphysical, not a substance",
     text: "Conscious experience is nonphysical — not describable in physical terms — yet it is not a separate substance that could exist apart from the brain; it is a property of the neural system.",
     plain: "Experience isn't physical, but it isn't a ghost that could float free of the brain either.",
-    entails: []
+    entails: ["c278"]
   },
   {
     id: "c82",
@@ -2029,6 +2030,14 @@ window.CLAIMS = Object.freeze([
     text: "Consciousness is narrative awareness: stories — sequential, causally coherent structures — are not powerless byproducts ('epiphenomena') but real causal scaffolding of the mind, operating at the emergent level where experience lives.",
     plain: "Your inner story isn't just decoration. The narrative your mind tells has real causal power — it's part of what runs you.",
     entails: ["c276"]
+  },
+  {
+    id: "c278",
+    short: "Not explainable by physics alone",
+    text: "Consciousness is not entirely explainable by ordinary matter and physics.",
+    plain: "Something about experience goes beyond what physics describes.",
+    entails: [],
+    anti: "c0"
   }
 ]);
 

@@ -328,6 +328,7 @@
     }
     .lab-claim-title { font-size: 22px; line-height: 1.35; font-weight: 500; }
     .lab-plain { color: var(--muted); margin: 0 0 24px; }
+    .lab-anti-note { color: var(--muted); font-size: 14px; margin: -12px 0 20px; }
     .lab-claim-cols {
       display: grid;
       grid-template-columns: 1fr 1fr;

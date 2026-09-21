@@ -264,9 +264,14 @@
       const parents = c.entails || [];
       const children = directChildren(id);
       const affirming = E.theories.filter(t => E.theoryFullClaims(t).has(id));
+      const antiClaim = c.anti ? claimById.get(c.anti) : null;
+      const antiNote = antiClaim
+        ? `<p class="lab-anti-note">↔ Anti-claim: “${escapeHtml(antiClaim.short)}” — agreeing here means disagreeing there, and vice versa.</p>`
+        : '';
       claimDetail.innerHTML = `
         <h3 class="lab-claim-title">${escapeHtml(c.text)}</h3>
         <p class="lab-plain">Put simply: ${escapeHtml(c.plain)}</p>
+        ${antiNote}
         <div class="claim-detail-groups">
           <div>
             <p class="micro">↑ Broader claims this leads to</p>
