@@ -780,7 +780,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c98",
     short: "Astrocytes make feelings",
-    text: "Networks of astrocyte glial cells integrate distributed neural information into large waves that instantiate feelings, then feed back to modulate synapses.",
+    text: "Networks of astrocytes — star-shaped support cells in the brain, not neurons themselves — integrate distributed neural information into large waves that instantiate feelings, then feed back to modulate synapses.",
     plain: "Star-shaped brain cells stitch neural signals into feelings, then tune the neurons back.",
     entails: ["c96"]
   },
@@ -822,14 +822,14 @@ window.CLAIMS = Object.freeze([
   {
     id: "c105",
     short: "Inner striving drives change",
-    text: "Each monad changes only from within, driven by an inner striving — Leibniz's word was 'appetition' — that carries it from one perception to the next.",
+    text: "Each monad — Leibniz's name for a tiny mind-like unit of reality — changes only from within, driven by an inner striving — Leibniz's word was 'appetition' — that carries it from one perception to the next.",
     plain: "Each tiny unit is self-propelled: an inner push carries it from one perception to the next.",
     entails: ["c72"]
   },
   {
     id: "c106",
     short: "Mind-like units come in degrees",
-    text: "Monads come in degrees: bare monads with only faint perception, souls with memory, and rational minds that can reflect on themselves.",
+    text: "Monads — those tiny mind-like units — come in degrees: bare monads (simple ones with only faint perception), souls with memory, and rational minds that can reflect on themselves.",
     plain: "Mind-like units range from dim and forgetful, to memory-having, to fully self-aware.",
     entails: ["c72"]
   }
@@ -1152,7 +1152,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c152",
     short: "Complex minds from functional combinations",
-    text: "Consciousness* is transferred from fundamental entities to complex combinations of them that meet further conditions: combinations that play the right functional role (the right causal job) and represent various properties — yielding full-blooded consciousness (full, rich experience like ours).",
+    text: "Consciousness* — the asterisk marks a stripped-down precursor of experience, a bare flicker of 'what it's like', not full consciousness — is transferred from fundamental entities to complex combinations of them that meet further conditions: combinations that play the right functional role (the right causal job) and represent various properties — yielding full-blooded consciousness (full, rich experience like ours).",
     plain: "Basic bits of this stripped-down experience get passed up into complex systems that do the right jobs, making full experience.",
     entails: ["c150"]
   },
@@ -1173,7 +1173,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c155",
     short: "Tiniest building blocks have perspective",
-    text: "The simplest, partless building blocks of reality ('simples') possess a bare, basic consciousness — a point of view with no rich content of its own — which is what makes them subjects at all.",
+    text: "The simplest, partless building blocks of reality — philosophers call them 'simples' because they cannot be divided into parts — possess a bare, basic consciousness — a point of view with no rich content of its own — which is what makes them subjects at all.",
     plain: "The tiniest building blocks have a bare inner point of view, nothing richer.",
     entails: ["c25"]
   },
@@ -1404,14 +1404,14 @@ window.CLAIMS = Object.freeze([
   {
     id: "c188",
     short: "The zero-point field carries feeling",
-    text: "The quantum vacuum's zero-point field (ZPF) has an intrinsic side: it carries felt qualities — a sentient background field of potential consciousness.",
+    text: "The quantum vacuum's zero-point field (ZPF) — the faint energy that quantum theory says fills even 'empty' space — has an intrinsic side: it carries felt qualities — a sentient background field of potential consciousness.",
     plain: "Empty space isn't empty — the quantum vacuum itself carries the raw stuff of feeling.",
     entails: ["c25"]
   },
   {
     id: "c189",
     short: "Brain tunes into ZPF modes",
-    text: "The brain acts as a resonant oscillator that selectively excites specific modes of the zero-point field; a conscious state is the selective amplification of particular field modes.",
+    text: "The brain acts as a resonant oscillator — a tuned vibrator, like a radio — that selectively excites specific modes (vibration patterns) of the zero-point field, that faint energy filling empty space; a conscious state is the selective amplification of particular field modes.",
     plain: "The brain works like a radio tuning into the vacuum's frequencies — each conscious state is a tuned-in mode.",
     entails: ["c188"]
   },
@@ -1432,7 +1432,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c192",
     short: "Consciousness is nested EM fields",
-    text: "Consciousness just is a nested hierarchy of interacting electromagnetic fields; resonance (parts vibrating in sync) builds the hierarchy, field shapes are qualia (your feelings, like the redness of red), and fields causally shape neural firing directly through the field itself — one field pushing neurons around without synapses (this direct field-to-neuron push is what scientists call ephaptic coupling).",
+    text: "Consciousness just is a nested hierarchy of interacting electromagnetic fields; resonance (parts vibrating in sync) builds the hierarchy, field shapes are qualia (your feelings, like the redness of red), and fields causally shape neural firing directly through the field itself — one field pushing neurons around without synapses (this direct field-to-neuron push is what scientists call ephaptic coupling — 'ephaptic' just means electrical influence between neurons with no synapse in between).",
     plain: "Consciousness is literally layers of resonating electric and magnetic fields — their shapes are your feelings.",
     entails: ["c191","c50","c52"]
   },
@@ -1572,7 +1572,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c212",
     short: "Apical dendrites gate awareness",
-    text: "Awareness is gated by a coincidence detector inside single neurons: when a pyramidal neuron's far-reaching branches (its 'apical' dendrites, carrying top-down context) receive signals at the same moment as its near branches (carrying bottom-up sensory input), the neuron fires an amplified burst — a calcium spike — and that burst is what lets information into conscious perception.",
+    text: "Awareness is gated inside single neurons by a match-detector (something that fires only when two signals arrive at the same moment): when a pyramid-shaped brain cell's far-reaching tip-branches (its 'apical' dendrites, carrying top-down context) receive signals at the same moment as its near branches (carrying bottom-up sensory input), the cell fires an amplified burst — a calcium spike, an extra-strong firing using calcium — and that burst is what lets information into conscious perception.",
     plain: "Inside single brain cells, the branch-tips act as gatekeepers — when top-down and bottom-up signals meet there, perception is born.",
     entails: ["c0"]
   },

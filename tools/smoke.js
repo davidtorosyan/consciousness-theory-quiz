@@ -20,12 +20,16 @@ const NEED_IDS = ['labQuizStart', 'labQuizMain', 'labQuizResult', 'labQuizBegin'
   'labQRanking', 'labQuizResume', 'labResultKicker', 'labResultTitle', 'labQRestart',
   'labClaimDetail', 'labTheoryList', 'labTheorySearch', 'labDetail', 'labBack', 'labTabClaims', 'labTabTheories',
   'labClaims', 'labTheories', 'quizCountLine', 'exploreDek', 'updateBanner', 'updateReload',
-  'labClaimSearch', 'labClaimSearchCount'];
+  'labClaimSearch', 'labClaimSearchCount', 'labClaimOpposites'];
 
 function matches(el, sel) {
-  if (sel.startsWith('.')) {
-    const cls = (el.className || '').split(/\s+/);
-    return cls.includes(sel.slice(1));
+  // Supports single and compound class selectors (".a", ".a.b") as used by
+  // the app. A real browser's selector engine handles these; the shim must too.
+  if (sel.startsWith('.') && !sel.includes(' ') && !sel.includes('[')) {
+    // Union of className and the classList set: the app mutates both, and
+    // a real browser's selector engine sees both.
+    const cls = new Set([...(el.className || '').split(/\s+/), ...(el._classes || [])]);
+    return sel.slice(1).split('.').every((w) => cls.has(w));
   }
   const m = sel.match(/^\[data-claim="([^"]+)"\]$/);
   if (m) return el.dataset && el.dataset.claim === m[1];
@@ -921,6 +925,84 @@ async function main() {
   const fresh = boot({ siteBuild: 6, fetchImpl: () => Promise.resolve({ json: () => Promise.resolve({ build: 6 }) }) });
   await new Promise((r) => setTimeout(r, 50));
   check(fresh.els.get('updateBanner').classList.contains('hidden'), 'banner stays hidden when build is current');
+
+  // ---- Build 45: round-3 fresh-eyes feedback ----
+  console.log('testing build-45 fixes…');
+  // 1. settled-by marker reflects the answer direction (was always ✓)
+  check(read('styles.css').includes('.lab-settled-by.dir-no') && read('styles.css').includes('.lab-settled-by.dir-yes'),
+    'settled-by marker is direction-aware in CSS (✓ agree / ✗ disagree / • other)');
+  const dir = boot();
+  click(dir, 'labQuizBegin');
+  check(claimText.get(text(dir, 'labQText')) === 'c34', 'test setup: fresh quiz opens on c34');
+  click(dir, 'labAgree'); // c34 yes -> affirms c278 -> rejects anti-partner c0
+  check(dir.els.get('labSettledBy').classList.contains('dir-yes') && !dir.els.get('labSettledBy').classList.contains('dir-no'),
+    'agreeing marks the settled line dir-yes (✓, not a bare checkmark for every answer)');
+  const settledHtml = html(dir, 'labSettledBy');
+  const lis = (settledHtml.match(/<li>/g) || []).length;
+  const marks = (settledHtml.match(/settled-mark-/g) || []).length;
+  check(lis > 0 && marks >= lis, `every settled bullet carries an agree/ruled-out mark (got ${marks} marks on ${lis} bullets)`);
+  check(settledHtml.includes('↔ direct opposite of'),
+    'anti-partner firing is annotated in the settled list (c0 ruled out via c278)');
+  check(/settled-mark-no" aria-hidden="true">✗<\/span><span class="vh">ruled out: <\/span>/.test(settledHtml) || settledHtml.includes('settled-mark-no'),
+    'ruled-out bullets show ✗ (screen readers hear "ruled out")');
+  click(dir, 'labDisagree');
+  check(dir.els.get('labSettledBy').classList.contains('dir-no'),
+    'disagreeing marks the settled line dir-no (✗ instead of the misleading ✓)');
+
+  // 2. live-alignment header copy is a complete sentence
+  check(read('index.html').includes('show movement since your last answer'),
+    'rail note completes the sentence ("…show movement since your last answer")');
+  check(!read('index.html').includes('show movement since.</p>'),
+    'truncated "…movement since." copy is gone');
+
+  // 4. anti-claim badges discoverable: marked graph nodes + opposites toggle
+  check(read('index.html').includes('id="labClaimOpposites"'), 'claim explorer has a "show opposite claims" control');
+  const antiNodes = env.els.get('labClaimGraph').querySelectorAll('.has-anti');
+  check(antiNodes.length === 2, `exactly the anti-pair claims are marked ↔ in the graph (got ${antiNodes.length})`);
+  click(env, 'labClaimOpposites');
+  check(env.els.get('labClaimOpposites').getAttribute('aria-pressed') === 'true',
+    'opposites toggle activates');
+  const dimmedAnti = env.els.get('labClaimGraph').querySelectorAll('.dimmed-anti');
+  check(dimmedAnti.length === N - 2, `opposites view dims everything except the pair (got ${dimmedAnti.length} dimmed of ${N})`);
+  check(html(env, 'labClaimDetail').includes('↔ Anti-claim'),
+    'opposites view opens a claim detail showing the ↔ anti-claim badge');
+  click(env, 'labClaimOpposites');
+  check(env.els.get('labClaimOpposites').getAttribute('aria-pressed') === 'false' &&
+    env.els.get('labClaimGraph').querySelectorAll('.dimmed-anti').length === 0,
+    'opposites toggle clears the highlight');
+  // typing in search also clears the opposites view
+  click(env, 'labClaimOpposites');
+  fireInput(env, 'labClaimSearch', 'physics');
+  check(env.els.get('labClaimGraph').querySelectorAll('.dimmed-anti').length === 0,
+    'searching clears the opposites highlight');
+  fireInput(env, 'labClaimSearch', '');
+
+  // 5. round-3 jargon sweep: long-text layer glosses
+  const claimById45 = new Map(CLAIMS.map((c) => [c.id, c]));
+  const glossCases = [
+    ['c98', 'star-shaped support cells', 'astrocytes glossed'],
+    ['c105', "Leibniz's name for a tiny mind-like unit", 'monad glossed'],
+    ['c106', 'bare monads (simple ones with only faint perception)', 'bare monads glossed'],
+    ['c152', 'the asterisk marks a stripped-down precursor of experience', 'consciousness* glossed locally'],
+    ['c155', "philosophers call them 'simples'", "'simples' glossed"],
+    ['c188', "fills even 'empty' space", 'zero-point field glossed'],
+    ['c189', 'like a radio', 'resonant oscillator glossed'],
+    ['c192', "'ephaptic' just means", 'ephaptic coupling glossed'],
+    ['c212', 'match-detector', 'coincidence detector glossed'],
+  ];
+  for (const [id, phrase, label] of glossCases) {
+    const c = claimById45.get(id);
+    check(!!c && (c.text || '').includes(phrase), `round-5 jargon: ${label} (${id})`);
+  }
+
+  // 6. AX quirk: agreement count lines are plain text, never aria-hidden
+  // (the tester's intermittent omission was a snapshot-timing artifact —
+  // no aria-hidden exists on these lines; assert that stays true)
+  let dirGuard = 0;
+  while (hidden(dir, 'labQuizResult') && dirGuard++ < N + 50) click(dir, 'labAgree');
+  const resultHtml = html(dir, 'labResultList');
+  check(/<p>You agree with/.test(resultHtml) && !/<p[^>]*aria-hidden[^>]*>You agree with/.test(resultHtml),
+    'result agreement counts render as plain text with no aria-hidden wrapper');
 
   console.log(failures ? `\n${failures} FAILURES` : '\nALL SMOKE TESTS PASSED');
   process.exit(failures ? 1 : 0);

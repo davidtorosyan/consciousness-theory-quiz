@@ -190,10 +190,14 @@
             // for clicks. data-plain feeds a CSS-only hover tooltip for
             // sighted users, so jargon-y short labels get an in-context
             // plain-language gloss without duplicating anything for
-            // assistive tech.
-            button.setAttribute('aria-label', `${shortLabel(claim)}. ${claim.text}`);
+            // assistive tech. Claims with a direct opposite get a visible
+            // ↔ mark (and the aria-label says so) so the opposites
+            // mechanic is discoverable in the map itself.
+            const hasAnti = !!(claim.anti && claimById.has(claim.anti));
+            if (hasAnti) button.classList.add('has-anti');
+            button.setAttribute('aria-label', `${shortLabel(claim)}. ${claim.text}${hasAnti ? ' This claim has a direct opposite.' : ''}`);
             button.setAttribute('data-plain', `Put simply: ${claim.plain}`);
-            button.innerHTML = `<span class="dag-node-label">${escapeHtml(shortLabel(claim))}</span>`;
+            button.innerHTML = `<span class="dag-node-label">${escapeHtml(shortLabel(claim))}${hasAnti ? '<span class="dag-anti-mark" aria-hidden="true">↔</span>' : ''}</span>`;
             inner.appendChild(button);
             return { el: button, col: index };
           });
@@ -315,7 +319,33 @@
     // stays whole and the match count says what matched.
     const claimSearch = $('labClaimSearch');
     const claimSearchCount = $('labClaimSearchCount');
+    // "↔ Show opposite claims": dims everything except the anti-pair claims
+    // and opens the first one's detail panel, so the opposites mechanic is
+    // one tap away instead of hidden on two specific claims. Typing in the
+    // search box clears the opposites view (it is a highlight like search).
+    const oppositesBtn = $('labClaimOpposites');
+    const antiIds = E.claims.filter(c => c.anti).map(c => c.id);
+    function clearOppositesView() {
+      oppositesBtn.setAttribute('aria-pressed', 'false');
+      oppositesBtn.innerHTML = '↔ Show opposite claims';
+      graph.querySelectorAll('.dag-node.dimmed-anti').forEach(node => node.classList.remove('dimmed-anti'));
+    }
+    oppositesBtn.addEventListener('click', () => {
+      const showing = oppositesBtn.getAttribute('aria-pressed') === 'true';
+      if (showing) { clearOppositesView(); return; }
+      oppositesBtn.setAttribute('aria-pressed', 'true');
+      oppositesBtn.innerHTML = '↔ Hide opposite claims';
+      claimSearch.value = '';
+      claimSearchCount.classList.add('hidden');
+      graph.querySelectorAll('.dag-node').forEach(node => {
+        const hit = antiIds.includes(node.dataset.claim);
+        node.classList.remove('dimmed');
+        node.classList.toggle('dimmed-anti', !hit);
+      });
+      if (antiIds.length) { renderClaimDetail(antiIds[0]); jumpTo(claimDetail); }
+    });
     claimSearch.addEventListener('input', () => {
+      clearOppositesView();
       const q = claimSearch.value.trim().toLowerCase();
       let hits = 0, total = 0;
       graph.querySelectorAll('.dag-node').forEach(node => {
@@ -690,9 +720,13 @@
 
     function renderSettledBy() {
       const el = $('labSettledBy');
+      el.classList.remove('dir-yes', 'dir-no');
       if (!lastSettledDir) { el.innerHTML = ''; return; }
       if (lastSettledDir === 'revisit') { el.textContent = 'You skipped some claims earlier — here’s another chance at them before your results.'; return; }
       if (lastSettledDir === 'skip') { el.textContent = 'Last question: skipped — nothing decided.'; return; }
+      // The leading marker (a CSS ::before) reflects the answer direction:
+      // ✓ after Agree, ✗ after Disagree, • for anything else.
+      el.classList.add(lastSettledDir === 'yes' ? 'dir-yes' : 'dir-no');
       const n = lastSettledIds.length;
       if (!n) { el.textContent = 'Last question: that decided just this claim.'; return; }
       // Collapsed by default: one line plus a details expander. A big
@@ -703,9 +737,32 @@
       // number undershoots the progress-pill delta (e.g. 5 shown for a
       // 279 → 273 drop), which testers read as wrong arithmetic.
       const total = n + 1;
+      // Per-bullet disposition: each newly settled claim is either affirmed
+      // or rejected by this answer — mark it (✓/✗) so "settled" is never
+      // ambiguous. A claim settled as the direct opposite of another claim
+      // gets an explicit ↔ note, so the opposites mechanic surfaces in the
+      // quiz itself. This covers both directions: the answered claim may
+      // itself be anti-paired, or (the common case) the answer may affirm a
+      // claim whose entailment chain reaches one side of an anti-pair,
+      // which rejects the other side.
+      const aff = E.affirmed(qstate), rej = E.rejected(qstate);
       const labels = lastSettledIds.map(id => {
         const c = claimById.get(id);
-        return `<li>${escapeHtml(c ? c.plain : id)}</li>`;
+        const dispo = aff.has(id) ? 'yes' : (rej.has(id) ? 'no' : null);
+        const mark = dispo === 'yes'
+          ? '<span class="settled-mark settled-mark-yes" aria-hidden="true">✓</span>'
+          : dispo === 'no'
+            ? '<span class="settled-mark settled-mark-no" aria-hidden="true">✗</span>'
+            : '<span class="settled-mark" aria-hidden="true">•</span>';
+        const dispoWord = dispo === 'yes' ? 'agreed' : dispo === 'no' ? 'ruled out' : 'settled';
+        const antiId = (c || {}).anti;
+        const antiFired = antiId &&
+          ((dispo === 'no' && aff.has(antiId)) || (dispo === 'yes' && rej.has(antiId)));
+        const antiClaim = antiFired ? claimById.get(antiId) : null;
+        const antiNote = antiClaim
+          ? ` <span class="settled-anti-note">↔ direct opposite of “${escapeHtml(shortLabel(antiClaim))}”</span>`
+          : '';
+        return `<li>${mark}<span class="vh">${dispoWord}: </span>${escapeHtml(c ? c.plain : id)}${antiNote}</li>`;
       }).join('');
       el.innerHTML =
         `<span>Last question: that settled ${total} claim${total === 1 ? '' : 's'} — the one you just answered plus the ${n} below. </span>` +

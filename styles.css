@@ -519,7 +519,20 @@
     .lab-theory-pending { opacity: .72; }
     .lab-claim-plain { color: var(--muted); font-size: 14px; }
     .lab-settled-by { color: var(--dim); font-size: 13px; margin: -14px 0 20px; }
-    .lab-settled-by:not(:empty)::before { content: "✓ "; color: var(--cyan); }
+    /* The leading marker reflects the last answer's direction: a ✓ after
+       Agree used to appear after Disagree too, implying affirmation. */
+    .lab-settled-by.dir-yes:not(:empty)::before { content: "✓ "; color: var(--cyan); }
+    .lab-settled-by.dir-no:not(:empty)::before { content: "✗ "; color: var(--coral); }
+    .lab-settled-by:not(.dir-yes):not(.dir-no):not(:empty)::before { content: "• "; color: var(--dim); }
+    /* Per-bullet disposition marks in the settled list: ✓ settled-as-agreed,
+       ✗ settled-as-ruled-out, so "settled" is never ambiguous. */
+    .settled-mark { display: inline-block; width: 1.25em; font-weight: 700; }
+    .settled-mark-yes { color: var(--cyan); }
+    .settled-mark-no { color: var(--coral); }
+    .settled-anti-note { color: var(--cyan); font-weight: 600; }
+    /* ↔ mark on graph nodes that have a direct opposite claim. */
+    .dag-anti-mark { color: var(--cyan); font-weight: 700; margin-left: 6px; }
+    .dag-anti-key { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; color: var(--cyan); font-weight: 700; }
     .lab-tension { color: #f2d98c; font-size: 13px; margin: -14px 0 20px; border-left: 2px solid #8a6d1f; padding-left: 10px; }
     .lab-scores-more { color: var(--dim); font-size: 13px; margin: 8px 0 0; text-align: left; cursor: pointer; }
     .lab-continue-note { color: var(--dim); font-size: 14px; margin: 0 0 16px; }
@@ -611,3 +624,4 @@
     .dag-search-row .lab-search { max-width: 300px; margin: 0; }
     .dag-node { transition: opacity .18s ease; }
     .dag-node.dimmed { opacity: .18; }
+    .dag-node.dimmed-anti { opacity: .18; }
