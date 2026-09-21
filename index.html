@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,650&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=43">
+  <link rel="stylesheet" href="styles.css?v=44">
 </head>
 <body>
   <main class="page">
@@ -71,6 +71,7 @@
           </div>
           <aside class="lab-rail" aria-label="Live alignment">
             <p class="micro">Alignment so far</p>
+            <p class="micro rail-note">Order follows your first answers — ▲▼ show movement since.</p>
             <div id="labScores"></div>
           </aside>
         </div>
@@ -79,6 +80,7 @@
         <p class="micro" id="labResultKicker">Your result · alignment, not elimination</p>
         <h3 id="labResultTitle">Where your answers land</h3>
         <p class="lab-continue-note" id="labContinueNote"></p>
+        <p class="micro" id="labSortNote">Ranked by most claims you agree with, then fewest you rule out.</p>
         <div id="labResultList"></div>
         <div class="result-actions">
           <button class="primary" id="labQuizContinue">Keep answering <span class="arrow">→</span></button>
@@ -103,7 +105,7 @@
 
       <div class="lab-pane" id="labClaims" role="tabpanel" aria-labelledby="labTabClaims">
         <div class="dag-key">
-          <p>Select any claim to inspect what it implies, what is built on it, and which theories affirm it. Arrows point from a more specific claim to the broader claim it implies. Hover or focus any node for its plain-language gloss.</p>
+          <p>Select any claim to inspect what it implies, what is built on it, and which theories affirm it. Arrows point from a more specific claim to the broader claim it implies. Hover or focus any node for its plain-language gloss. The graph is a reference map — quiz answers never cross out or change its nodes. Dimmed nodes are filtered out by the search above.</p>
           <span class="dag-root-key">Base claim</span>
           <div class="dag-search-row">
             <input type="search" id="labClaimSearch" class="lab-search" placeholder="Find a claim…" aria-label="Find a claim by keyword">
@@ -141,10 +143,10 @@
     <footer>Based on the <a href="https://loc.closertotruth.com/" target="_blank" rel="noopener">Closer to Truth Landscape of Consciousness</a>. Something seems off? <a href="https://github.com/davidtorosyan/consciousness-theory-quiz/issues" target="_blank" rel="noopener">Raise an issue ↗</a>.</footer>
   </main>
 
-<script>window.SITE_BUILD = 43;</script>
-<script src="data/theories.js?v=43"></script>
-<script src="data/claims.js?v=43"></script>
-<script src="src/claims-engine.js?v=43"></script>
-<script src="src/claims-lab.js?v=43"></script>
+<script>window.SITE_BUILD = 44;</script>
+<script src="data/theories.js?v=44"></script>
+<script src="data/claims.js?v=44"></script>
+<script src="src/claims-engine.js?v=44"></script>
+<script src="src/claims-lab.js?v=44"></script>
 </body>
 </html>

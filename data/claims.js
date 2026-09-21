@@ -196,7 +196,7 @@ window.CLAIMS = Object.freeze([
     short: "Mind moves matter indirectly",
     text: "Objective products of thought — theories, ideas, artifacts — can change the physical world only by passing through a conscious mind.",
     plain: "An idea changes the world only when a mind grasps it; subjective experience is an indispensable link in the chain.",
-    entails: ["c8"]
+    entails: []
   },
   {
     id: "c17",
@@ -263,7 +263,7 @@ window.CLAIMS = Object.freeze([
   },
   {
     id: "c26",
-    short: "Micro-subjects",
+    short: "Particles are tiny subjects",
     text: "The smallest building blocks of nature are conscious subjects with their own rudimentary experiences.",
     plain: "Even particles have a flicker of experience — tiny subjects with tiny viewpoints.",
     entails: ["c9"]
@@ -448,7 +448,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c52",
     short: "The field pushes neurons around",
-    text: "The brain's electromagnetic field exerts downward causation on neural firing — field and neurons influence each other in both directions.",
+    text: "The brain's electromagnetic field exerts 'downward causation' — the whole pushing back on its parts — on neural firing: field and neurons influence each other in both directions.",
     plain: "The field isn't just an echo of neurons; it pushes back and steers them.",
     entails: ["c40"]
   },
@@ -531,14 +531,14 @@ window.CLAIMS = Object.freeze([
   },
   {
     id: "c102",
-    short: "Only the witness is outside nature",
+    short: "Only pure witnessing stands outside nature",
     text: "The witness — pure witnessing awareness — stands entirely outside nature; everything else about the mind is natural, and only the witness is not.",
     plain: "One thing alone isn't part of nature: the silent witness itself.",
     entails: ["c63"]
   },
   {
     id: "c64",
-    short: "Consciousness as pure witness",
+    short: "Consciousness only watches, never acts",
     text: "Consciousness itself is pure, contentless witnessing: it never acts, changes, thinks, or feels — it only watches.",
     plain: "Consciousness is just the silent watcher; it does nothing and never changes.",
     entails: ["c9"]
@@ -595,7 +595,7 @@ window.CLAIMS = Object.freeze([
   },
   {
     id: "c72",
-    short: "Reality is perceiving monads",
+    short: "Reality is tiny mind-like perceivers",
     text: "The basic building blocks of reality are tiny mind-like units — Leibniz called them 'monads': simple, partless, non-material, each perceiving the whole universe from its own point of view, changing only from within.",
     plain: "Everything is made of tiny mind-like units, each mirroring the whole universe inside itself.",
     entails: []
@@ -828,7 +828,7 @@ window.CLAIMS = Object.freeze([
   },
   {
     id: "c106",
-    short: "Monads come in degrees",
+    short: "Mind-like units come in degrees",
     text: "Monads come in degrees: bare monads with only faint perception, souls with memory, and rational minds that can reflect on themselves.",
     plain: "Mind-like units range from dim and forgetful, to memory-having, to fully self-aware.",
     entails: ["c72"]
@@ -914,7 +914,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c118",
     short: "Model mistaken for a soul",
-    text: "What we call awareness is the brain's attention-schema applied to itself; the brain attributes this simplified model to itself as a ghostly, nonphysical essence.",
+    text: "What we call awareness is the brain's attention-schema (its simplified model of attention) applied to itself; the brain attributes this simplified model to itself as a ghostly, nonphysical essence.",
     plain: "We take our brain's crude self-sketch for a mysterious inner essence — but it's just data.",
     entails: ["c117"]
   },
@@ -1025,7 +1025,7 @@ window.CLAIMS = Object.freeze([
   },
   {
     id: "c134",
-    short: "Store consciousness underlies experience",
+    short: "A subliminal memory-bank underlies experience",
     text: "A subliminal store consciousness retains the seeds of past intentional actions and conditions the arising of ordinary awareness, explaining how experience coheres and resumes across gaps — without any eternal self.",
     plain: "Below your everyday awareness sits a deep memory-bank that seeds each new moment of experience.",
     entails: []
@@ -1137,7 +1137,7 @@ window.CLAIMS = Object.freeze([
   },
   {
     id: "c150",
-    short: "Consciousness* is irreducible",
+    short: "A stripped-down precursor of experience is irreducible",
     text: "At the most fundamental level there is 'consciousness*' (the asterisk marks a stripped-down precursor of experience, not full consciousness — what others call protoconsciousness) — and it is irreducible: there is no plausible way physics could explain it.",
     plain: "At rock bottom sits something experience-like that no physical story can reduce away.",
     entails: ["c34"]
@@ -1153,7 +1153,7 @@ window.CLAIMS = Object.freeze([
     id: "c152",
     short: "Complex minds from functional combinations",
     text: "Consciousness* is transferred from fundamental entities to complex combinations of them that meet further conditions: combinations that play the right functional role (the right causal job) and represent various properties — yielding full-blooded consciousness (full, rich experience like ours).",
-    plain: "Basic bits of consciousness* get passed up into complex systems that do the right jobs, making full experience.",
+    plain: "Basic bits of this stripped-down experience get passed up into complex systems that do the right jobs, making full experience.",
     entails: ["c150"]
   },
   {
@@ -1298,7 +1298,7 @@ window.CLAIMS = Object.freeze([
   },
   {
     id: "c173",
-    short: "Superposition structure fixes qualia",
+    short: "Quantum shape fixes what experience feels like",
     text: "The qualitative character of experience is fixed by the structure of the superposition: from the inside, experience is classical and definite even though its substrate is quantum.",
     plain: "What an experience feels like is set by the shape of its quantum superposition.",
     entails: ["c172"]
@@ -1333,7 +1333,7 @@ window.CLAIMS = Object.freeze([
   },
   {
     id: "c178",
-    short: "Everything enfolds in implicate order",
+    short: "Everything is enfolded in a deeper order",
     text: "Reality has a deeper enfolded level — the 'implicate order' — underlying the unfolded world of separate things we ordinarily experience — the 'explicate order': everything is in a process of folding and unfolding — a universal flux.",
     plain: "The everyday world is an unfolding of a deeper, enfolded order where everything is connected.",
     entails: []
@@ -1417,7 +1417,7 @@ window.CLAIMS = Object.freeze([
   },
   {
     id: "c190",
-    short: "Slow DC body fields hold experience",
+    short: "Slow body-wide electric fields hold experience",
     text: "Felt experience — 'phenomenal' experience, what things feel like from the inside — emerges from continuous, slow direct-current electromagnetic fields of the whole body, not merely from discrete synaptic transmissions.",
     plain: "Your experience rides on slow electric currents running through your whole body, not just the brain's on-off neural chatter.",
     entails: []
@@ -1501,7 +1501,7 @@ window.CLAIMS = Object.freeze([
   },
   {
     id: "c202",
-    short: "Reentrant signaling weaves the dynamic core",
+    short: "Looping signals weave the dynamic core",
     text: "Massively parallel signals looping back and forth between neuronal groups — 'reentrant signaling', especially between thalamus and cortex — integrate distributed brain areas into one unified, ever-changing core; its shifting semi-stable states carry the moment-to-moment unity of experience.",
     plain: "The brain constantly talks back to itself across wide networks, weaving scattered areas into one coherent scene after another.",
     entails: ["c0"]
@@ -1753,7 +1753,7 @@ window.CLAIMS = Object.freeze([
   },
   {
     id: "c238",
-    short: "Folk psychology will fall",
+    short: "Common-sense psychology will fall",
     text: "Our common-sense psychology — beliefs, desires, and the rest of its mentalistic vocabulary — is a radically false theory, so defective that completed neuroscience will displace it entirely rather than smoothly reduce it.",
     plain: "Everyday talk about beliefs and desires isn't a rough version of the truth. It's a false theory that brain science will throw out.",
     entails: ["c0"]
@@ -1886,7 +1886,7 @@ window.CLAIMS = Object.freeze([
   },
   {
     id: "c257",
-    short: "The self is a strange loop",
+    short: "The self is a self-referential loop",
     text: "Consciousness and the self emerge from 'strange loops' — abstract, level-crossing feedback loops in which the brain represents itself, recursively representing its own representations; the 'I' is a dynamic, self-inventing pattern, not a substance.",
     plain: "The self is a loop: a system thinking about itself thinking about itself — that loop is you.",
     entails: ["c0"]

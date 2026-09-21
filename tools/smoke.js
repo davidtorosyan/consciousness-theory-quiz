@@ -557,12 +557,14 @@ async function main() {
     const settled = settledOf(mirrorA);
     const newAnc = [...CE.ancestors(CLAIMS, q.id)].filter((id) => !settled.has(id));
     if (newAnc.length) {
+      const before = settled.size; // engine-side delta mirror for the invariant
       click(env, 'labAgree');
       CE.answer(mirrorA, q.id, 'yes');
       const h = html(env, 'labSettledBy');
       sawAffirm = true;
-      check(h.includes('Last question: that also decided') && h.includes('data-settled-more="1"') && h.includes('settled-details hidden'),
-        'affirm trace collapses to a one-line summary with a details expander: ' + h.slice(0, 110));
+      const total = settledOf(mirrorA).size - before; // answered claim included
+      check(h.includes(`Last question: that settled ${total} claims`) && h.includes('data-settled-more="1"') && h.includes('settled-details hidden'),
+        `affirm trace collapses to a one-line summary with a details expander, and the count (${total}) matches the engine-settled delta: ` + h.slice(0, 120));
     } else {
       click(env, 'labNotSure');
       CE.skip(mirrorA, q.id);
@@ -581,20 +583,24 @@ async function main() {
     const settled = settledOf(mirrorB);
     const newDesc = [...CE.descendants(CLAIMS, q.id)].filter((id) => !settled.has(id));
     if (newDesc.length) {
+      const before = settled.size; // engine-side delta mirror for the invariant
       click(env, 'labDisagree');
       CE.answer(mirrorB, q.id, 'no');
       const h = html(env, 'labSettledBy');
       sawReject = true;
-      check(h.includes('Last question: that also ruled out') && h.includes('data-settled-more="1"') && h.includes('settled-details hidden'),
-        'reject trace collapses to a one-line summary with a details expander: ' + h.slice(0, 110));
+      const total = settledOf(mirrorB).size - before; // answered claim included
+      check(h.includes(`Last question: that settled ${total} claims`) && h.includes('data-settled-more="1"') && h.includes('settled-details hidden'),
+        `reject trace collapses to a one-line summary with a details expander, and the count (${total}) matches the engine-settled delta: ` + h.slice(0, 120));
     } else {
       const newAnc = [...CE.ancestors(CLAIMS, q.id)].filter((id) => !settled.has(id));
+      const before = settled.size; // engine-side delta mirror for the invariant
       click(env, 'labAgree');
       CE.answer(mirrorB, q.id, 'yes');
       if (newAnc.length) {
         const h2 = html(env, 'labSettledBy');
-        check(h2.includes('Last question: that also decided') && h2.includes('settled-details hidden'),
-          'affirm trace collapses to a one-line summary: ' + h2.slice(0, 110));
+        const total = settledOf(mirrorB).size - before; // answered claim included
+        check(h2.includes(`Last question: that settled ${total} claims`) && h2.includes('settled-details hidden'),
+          `affirm trace collapses to a one-line summary, and the count (${total}) matches the engine-settled delta: ` + h2.slice(0, 120));
       } else {
         check(text(env, 'labSettledBy') === 'Last question: that decided just this claim.', 'no-propagation line renders');
       }
@@ -676,6 +682,94 @@ async function main() {
   CE.answer(mContra, 'c6', 'yes');
   check(CE.contradictions(CLAIMS, mContra).length === 1, 'engine reports the c0/c6 contradiction');
   check(CE.validate(CLAIMS, THEORIES).length === 0, 'claims-engine validation has no problems');
+
+  // Build 44: c16 no longer entails c8 — a mind moving matter through
+  // conscious ideas must not knock out dualist claims.
+  {
+    const q = CE.newQuiz();
+    CE.answer(q, 'c16', 'yes');
+    const aff = CE.affirmed(CLAIMS, q), rej = CE.rejected(CLAIMS, q);
+    check(aff.has('c16') && !aff.has('c8') && !rej.has('c8'), 'agreeing with c16 settles nothing about c8');
+    check(!aff.has('c6') && !aff.has('c278') && !rej.has('c278'),
+      'agreeing with c16 no longer ladders into the c6/c278 anti-claim');
+  }
+  // Build 44: c24 has no outgoing edges — agreeing with it must not affirm
+  // the panpsychism-family claims built on top of it.
+  {
+    const q = CE.newQuiz();
+    CE.answer(q, 'c24', 'yes');
+    const aff = CE.affirmed(CLAIMS, q);
+    check(aff.has('c24') && !aff.has('c25') && !aff.has('c26') && !aff.has('c27'),
+      'agreeing with c24 affirms only c24, never c25/c26/c27');
+  }
+  // Build 44: the explainer no longer frames children as mere illustrations
+  check(read('src/claims-lab.js').includes('Stronger ideas built on this one') &&
+    !read('src/claims-lab.js').includes('Ways people picture this idea'),
+    'explainer relabels children as stronger ideas built on the claim');
+  // Build 44: theory panels name whose logic the implied-claim chains are
+  check(read('src/claims-lab.js').includes("the theory's own logic, not something inferred from your answers"),
+    'theory panel glosses the implied-claims section as the theory’s own logic');
+  // Build 44: the anti-claim badge links into the claim explorer
+  check(read('src/claims-lab.js').includes('data-claim="${antiClaim.id}"'),
+    'anti-claim badge is a clickable link into the claim explorer');
+  // Build 44: ranking sort is stated on the results page
+  check(read('index.html').includes('Ranked by most claims you agree with, then fewest you rule out.'),
+    'results page states the ranking rule');
+  // Build 44: graph legend clarifies the map never changes under quiz answers
+  check(read('index.html').includes('The graph is a reference map — quiz answers never cross out or change its nodes.'),
+    'graph legend states nodes are never crossed out by quiz answers');
+  // Build 44: rail caption explains the stable order and movement indicators
+  check(read('index.html').includes('▲▼ show movement'),
+    'rail caption explains the stable order and ▲▼ indicators');
+  // Build 44: jargon sweep — plain-first short labels, old terms gone
+  {
+    const newShorts = ['The self is a self-referential loop', 'Reality is tiny mind-like perceivers',
+      'Mind-like units come in degrees', 'Everything is enfolded in a deeper order',
+      'A stripped-down precursor of experience is irreducible', 'A subliminal memory-bank underlies experience',
+      'Looping signals weave the dynamic core', 'Particles are tiny subjects',
+      'Quantum shape fixes what experience feels like', 'Common-sense psychology will fall',
+      'Only pure witnessing stands outside nature', 'Consciousness only watches, never acts',
+      'Slow body-wide electric fields hold experience'];
+    const goneShorts = ['short: "Micro-subjects"', 'short: "The self is a strange loop"',
+      'short: "Reality is perceiving monads"', 'short: "Monads come in degrees"',
+      'short: "Everything enfolds in implicate order"', 'short: "Consciousness* is irreducible"',
+      'short: "Store consciousness underlies experience"', 'short: "Reentrant signaling weaves the dynamic core"',
+      'short: "Superposition structure fixes qualia"', 'short: "Folk psychology will fall"',
+      'short: "Only the witness is outside nature"', 'short: "Consciousness as pure witness"',
+      'short: "Slow DC body fields hold experience"'];
+    const missingNew = newShorts.filter(s => !claimsSrc.includes(s));
+    const lingering = goneShorts.filter(s => claimsSrc.includes(s));
+    check(missingNew.length === 0 && lingering.length === 0,
+      `jargon sweep: ${newShorts.length} plain-first shorts in place, old bare-term shorts gone` +
+      (missingNew.length || lingering.length ? ` (missing: ${missingNew.join('; ')}; lingering: ${lingering.join('; ')})` : ''));
+  }
+  // Build 44: causal-closure and synchronicity glosses in theory copy
+  {
+    const theoriesSrc44 = read('data/theories.js');
+    check(theoriesSrc44.includes('causally closed (a physical event can have a non-physical cause)'),
+      'interactionist dualism summary glosses causal closure');
+    check(theoriesSrc44.includes("(physics is causally closed); no soul pushing neurons around"),
+      'epiphenomenalist signature glosses causal closure');
+    check(theoriesSrc44.includes('Synchronicity (meaningful coincidences with no causal link)'),
+      'Pauli–Jung detail glosses synchronicity');
+  }
+  // Build 44: peeking at the ranking mid-revisit must not strand the skipped question
+  {
+    restartQuiz(env);
+    let rguard44 = 0;
+    for (let i = 0; i < 12 && rguard44++ < 40; i++) click(env, 'labNotSure');
+    const revisitLabel = text(env, 'labQCount');
+    check(revisitLabel.includes('Revisiting a skipped claim'), 'revisit pass starts after 12 skips: ' + revisitLabel);
+    const qBefore = text(env, 'labQText');
+    click(env, 'labQRanking');
+    check(!hidden(env, 'labQuizResult'), 'ranking peek opens during a revisit');
+    click(env, 'labQuizResume');
+    check(hidden(env, 'labQuizResult'), 'back to quiz hides the results again');
+    check(text(env, 'labQText') === qBefore,
+      'the same revisit question is re-asked after a ranking peek — the skipped question is not stranded');
+    check(text(env, 'labQCount').includes('Revisiting a skipped claim'),
+      'revisit label intact after the peek: ' + text(env, 'labQCount'));
+  }
 
   // rail shows top 10 with inline load-more, never all 120 at once
   const railRows = (html(env, 'labScores').match(/lab-score-row/g) || []).length;
@@ -760,9 +854,11 @@ async function main() {
   // every result row must explain its own ranking — no silent rows
   const resHtml = html(env, 'labResultList');
   const resRows = (resHtml.match(/class="lab-result-row/g) || []).length;
-  const resLines = (resHtml.match(/You agree with \d+ of its|You rule out \d+ of its|None of this theory's claims came up/g) || []).length;
+  const resLines = (resHtml.match(/You agree with \d+ of its/g) || []).length;
   check(resRows === M, `results render all ${M} theories (got ${resRows})`);
   check(resLines === M, `every result row explains its alignment (got ${resLines}/${resRows})`);
+  const rankSpans = (resHtml.match(/<span class="lab-result-rank">#\d+<\/span>/g) || []).length;
+  check(rankSpans === resRows, `every result row carries its rank (got ${rankSpans}/${resRows})`);
   check(!resHtml.includes('No theory matched your answers'), 'ordering explainer absent when theories do match');
 
   // untouched theories: a fresh all-skip run leaves every theory untouched
@@ -771,7 +867,7 @@ async function main() {
   while (hidden(env, 'labQuizResult') && guard++ < N + 50) click(env, 'labNotSure');
   check(!hidden(env, 'labQuizResult'), 'all-skip run completes');
   click(env, 'labResultList', { target: { closest: (sel) => sel === '[data-result-more]' ? {} : null }, preventDefault() {} });
-  const untouched = (html(env, 'labResultList').match(/None of this theory's claims came up/g) || []).length;
+  const untouched = (html(env, 'labResultList').match(/You agree with 0 of its \d+ claims? — none of this theory's claims came up/g) || []).length;
   check(untouched === M, `all ${M} theories explain themselves when untouched (got ${untouched})`);
   check(html(env, 'labResultList').includes('No theory matched your answers — nothing you decided lines up'),
     'zero-match results explain the ordering instead of presenting a bare ranking');

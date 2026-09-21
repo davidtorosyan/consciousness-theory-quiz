@@ -266,7 +266,7 @@
       const affirming = E.theories.filter(t => E.theoryFullClaims(t).has(id));
       const antiClaim = c.anti ? claimById.get(c.anti) : null;
       const antiNote = antiClaim
-        ? `<p class="lab-anti-note">↔ Anti-claim: “${escapeHtml(antiClaim.short)}” — agreeing here means disagreeing there, and vice versa.</p>`
+        ? `<p class="lab-anti-note">↔ Anti-claim: <button class="text-btn" data-claim="${antiClaim.id}">“${escapeHtml(antiClaim.short)}”</button> — agreeing here means disagreeing there, and vice versa.</p>`
         : '';
       claimDetail.innerHTML = `
         <h3 class="lab-claim-title">${escapeHtml(c.text)}</h3>
@@ -411,7 +411,7 @@
         ${t.caveat ? `<p class="lab-caveat">A note on how this is classified: ${escapeHtml(t.caveat)}</p>` : ''}
         <p class="micro">Claims this theory states directly</p>
         <div class="lab-chip-row">${[...direct].map(cid => claimChip(cid, 'direct')).join('')}</div>
-        ${inherited.length ? `<p class="micro">Claims that follow from those</p><div class="lab-chip-row">${inherited.map(cid => {
+        ${inherited.length ? `<p class="micro">Claims that follow from those</p><p class="lab-gloss">How this theory connects its claims — the theory's own logic, not something inferred from your answers.</p><div class="lab-chip-row">${inherited.map(cid => {
           const via = viaWhich(t, cid).map(sid => { const sc = claimById.get(sid); return sc ? `“${sc.plain}”` : sid; });
           return `<span class="lab-implied-wrap">${claimChip(cid)}<small>via ${via.join(' · ')}</small></span>`;
         }).join('')}</div>` : ''}
@@ -611,13 +611,24 @@
       }
       // During the revisit pass, the re-queued claims go first so the
       // "another chance" promise is literal, not just pool-level.
+      // Peek, don't consume: the item leaves the queue only when it is
+      // answered or skipped. Consuming on display stranded questions when
+      // the visitor left mid-revisit (e.g. peeked at the ranking) — the
+      // queue item was gone but no answer was recorded, so a fresh
+      // question appeared under the "revisiting" label.
       if (revisitQueue.length) {
         const settled = new Set([...E.affirmed(qstate), ...E.rejected(qstate), ...Object.keys(qstate.skipped || {})]);
         revisitQueue = revisitQueue.filter(id => !settled.has(id));
-        const next = revisitQueue.shift();
-        if (next) return { id: next };
+        if (!revisitQueue.length) revisitLeft = 0;
+        else return { id: revisitQueue[0] };
       }
       return E.nextQuestion(qstate);
+    }
+
+    // A revisit item is done once the visitor answers or skips it — only
+    // then does it leave the queue.
+    function consumeRevisit(id) {
+      if (revisitQueue.length) revisitQueue = revisitQueue.filter(x => x !== id);
     }
 
     function renderQuestion() {
@@ -687,13 +698,17 @@
       // Collapsed by default: one line plus a details expander. A big
       // propagation used to list dozens of claims here and shove the answer
       // buttons below the fold — the full list must never do that again.
-      const verb = lastSettledDir === 'no' ? 'ruled out' : 'decided';
+      // The count includes the answered claim itself: lastSettledIds holds
+      // only the *other* claims the answer settled, and without +1 the
+      // number undershoots the progress-pill delta (e.g. 5 shown for a
+      // 279 → 273 drop), which testers read as wrong arithmetic.
+      const total = n + 1;
       const labels = lastSettledIds.map(id => {
         const c = claimById.get(id);
         return `<li>${escapeHtml(c ? c.plain : id)}</li>`;
       }).join('');
       el.innerHTML =
-        `<span>Last question: that also ${verb} ${n} claim${n === 1 ? '' : 's'}. </span>` +
+        `<span>Last question: that settled ${total} claim${total === 1 ? '' : 's'} — the one you just answered plus the ${n} below. </span>` +
         `<button class="text-btn settled-more-btn" data-settled-more="1" data-closed="▸ details" aria-expanded="false">▸ details</button>` +
         `<ul class="settled-details hidden">${labels}</ul>`;
     }
@@ -709,6 +724,7 @@
       qhistory.push({ id: q.id, action: 'answer' });
       qRoundCount++;
       if (revisitLeft > 0) revisitLeft--;
+      consumeRevisit(q.id);
       lastSettledIds = [...E.affirmed(qstate), ...E.rejected(qstate)]
         .filter(id => !before.has(id) && id !== q.id);
       lastSettledDir = yesNo;
@@ -723,6 +739,7 @@
       qhistory.push({ id: q.id, action: 'skip' });
       qRoundCount++;
       if (revisitLeft > 0) revisitLeft--;
+      consumeRevisit(q.id);
       lastSettledIds = [];
       lastSettledDir = 'skip';
       renderQuestion();
@@ -749,7 +766,7 @@
         (parents.length
           ? `<p class="micro">The bigger ideas behind it</p><ul class="explainer-points">${parents.map(plainOf).join('')}</ul>` : '') +
         (children.length
-          ? `<p class="micro">Ways people picture this idea</p><p class="explain-note">These are illustrations of the idea above — not new claims to agree or disagree with.</p><ul class="explainer-points">${children.slice(0, 4).map(plainOf).join('')}</ul>` : '') +
+          ? `<p class="micro">Stronger ideas built on this one</p><p class="explain-note">These go further than the claim above — agreeing with the claim above does <em>not</em> mean agreeing with these.</p><ul class="explainer-points">${children.slice(0, 4).map(plainOf).join('')}</ul>` : '') +
         `<p class="explain-note">No wrong answers here — “Not sure” skips without judging, and skipping from here notes that this one was unclear.</p>`;
       $('labExplain').classList.remove('hidden');
       jumpTo($('labExplain'));
@@ -765,6 +782,7 @@
       qhistory.push({ id: q.id, action: 'skipNu' });
       qRoundCount++;
       if (revisitLeft > 0) revisitLeft--;
+      consumeRevisit(q.id);
       lastSettledIds = [];
       lastSettledDir = 'skip';
       renderQuestion();
@@ -880,10 +898,13 @@
       paintResultList();
     }
     function resultRowHtml(result, index) {
+      // Every row states the agreement count explicitly — including zero —
+      // so a visitor can always tell *why* a theory outranks another, and
+      // every row carries its rank so no row ever looks rankless.
       const line = (result.agreed === 0 && result.disagreed === 0)
-        ? `None of this theory's claims came up in your answers (${result.total} claim${result.total === 1 ? '' : 's'}).`
+        ? `You agree with 0 of its ${result.total} claim${result.total === 1 ? '' : 's'} — none of this theory's claims came up in your answers.`
         : (result.agreed === 0)
-          ? `You rule out ${result.disagreed} of its ${result.total} claims (agreeing with none).`
+          ? `You agree with 0 of its ${result.total} claims, and rule out ${result.disagreed}.`
           : `You agree with ${result.agreed} of its ${result.total} claims${result.disagreed ? `, and rule out ${result.disagreed}` : ''}.`;
       return `
       <div class="lab-result-row${index === 0 ? ' top' : ''}">
