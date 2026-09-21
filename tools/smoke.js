@@ -208,6 +208,49 @@ async function main() {
   const noShorts = CLAIMS.filter(c => !(c.short || '').trim()).map(c => c.id);
   check(noShorts.length === 0, `every claim has a short label${noShorts.length ? ' (' + noShorts.join(',') + ')' : ''}`);
 
+  // round-3: theory search aliases — a layperson typing a proponent's name
+  // from the Closer to Truth entry must find the theory
+  const aliasCases = [
+    ['descartes', 'Substance dualism'],
+    ['tononi', 'Integrated Information Theory'],
+    ['dennett', 'Illusionism'],
+    ['searle', 'Biological naturalism'],
+    ['aristotle', 'Hylomorphism'],
+    ['penrose', 'Orchestrated Objective Reduction'],
+  ];
+  for (const [q, name] of aliasCases) {
+    fireInput(env, 'labTheorySearch', q);
+    check(html(env, 'labTheoryList').includes(name), `alias search "${q}" finds ${name}`);
+  }
+  fireInput(env, 'labTheorySearch', '');
+  check(html(env, 'labTheoryList').includes('Show 10 more'), 'clearing the search restores the full list');
+
+  // round-3: claim panels explain the stated-directly vs implied distinction
+  check(read('src/claims-lab.js').includes('Stated directly: the theory says this outright. Implied: it follows from claims the theory does state.'),
+    'claim panels gloss the stated-directly vs implied distinction');
+
+  // round-3 jargon sweep: every tester-flagged tagline now carries its gloss
+  const byId = new Map(THEORIES.map(t => [t.id, t]));
+  const jargonFixes = [
+    [62, t => t.blurb.includes("what Tye calls 'consciousness*'"), "Tye's consciousness* explained"],
+    [94, t => t.blurb.includes("'cross-order' self-representation"), "Kriegel's cross-order glossed"],
+    [81, t => t.name.includes('electromagnetic'), "Pockett's EM expanded in the name"],
+    [83, t => t.blurb.includes("'operational architectonics' is their name for"), 'Operational Architectonics glossed'],
+    [88, t => t.blurb.includes("the branch-tips reaching toward the brain's surface"), 'apical dendrites glossed'],
+    [117, t => t.blurb.includes('the open-ended ability to link brand-new situations'), 'unlimited associative learning glossed'],
+    [40, t => t.blurb.includes("Modal means 'about what is possible and necessary'"), 'modal glossed'],
+    [87, t => t.blurb.includes("the 'dynamic core'"), 'dynamic core glossed'],
+    [75, t => t.blurb.includes('(tiny calcium-phosphate clusters)'), 'Posner molecules glossed'],
+  ];
+  for (const [id, ok, label] of jargonFixes) {
+    const t = byId.get(id);
+    check(t && ok(t), `round-3 jargon: ${label} (theory ${id})`);
+  }
+
+  // round-3: question text reserves vertical room so the buttons drift less
+  check(read('styles.css').includes('.lab-quiz #labQText') && read('styles.css').includes('min-height: 3.2em'),
+    'question text has a min-height to steady the answer buttons');
+
   // theory search filter
   fireInput(env, 'labTheorySearch', 'integrated information');
   const filteredHtml = html(env, 'labTheoryList');

@@ -265,6 +265,7 @@
           </div>
           <div>
             <p class="micro">Theories affirming this claim</p>
+            <p class="lab-gloss">Stated directly: the theory says this outright. Implied: it follows from claims the theory does state.</p>
             <div class="lab-chip-row">${affirming.length ? collapsedChips(affirming.map(t => {
               const direct = (t.claims || []).includes(id);
               return `<button class="lab-theory-chip${direct ? ' direct' : ''}" data-theory="${t.id}" title="${direct ? 'Stated directly by this theory' : 'Not stated directly — it follows from claims this theory does state'}">${escapeHtml(t.name)}${direct ? '' : ' · implied'}</button>`;
@@ -346,7 +347,10 @@
         || qRe.test(t.name || '')
         || qRe.test(t.family || '')
         || qRe.test(t.blurb || '')
-        || qRe.test(t.category || '');
+        || qRe.test(t.category || '')
+        // Searchable aliases: well-known proponent names / alternative names
+        // that don't appear in the title (e.g. "descartes" -> Substance dualism).
+        || (t.aliases || []).some(a => qRe.test(a));
       const all = E.theories.filter(matches);
       const withClaims = all.slice(0, theoryListLimit).map(t => {
         const fullN = E.theoryFullClaims(t).size;
@@ -422,7 +426,9 @@
         <h3 class="lab-claim-title">${escapeHtml(c.text)}</h3>
         <p class="lab-plain">Put simply: ${escapeHtml(c.plain)}</p>
         <div class="lab-claim-cols"><div><p class="micro">↑ Broader claims this leads to</p>${ancestors.length ? `<div class="lab-chip-row">${ancestors.map(a => claimChip(a)).join('')}</div>` : '<p class="lab-empty">Nothing — this is a base claim.</p>'}</div><div><p class="micro">↓ More specific claims built on this</p>${descendants.length ? `<div class="lab-chip-row">${descendants.map(d => claimChip(d)).join('')}</div>` : '<p class="lab-empty">Nothing depends on this yet.</p>'}</div></div>
-        <p class="micro">Theories affirming this claim</p><div class="lab-chip-row">${affirming.length ? collapsedChips(affirming.map(t => `<button class="lab-theory-chip${(t.claims || []).includes(id) ? ' direct' : ''}" data-theory="${t.id}">${escapeHtml(t.name)}${(t.claims || []).includes(id) ? '' : ' · implied'}</button>`)) : ('<p class="lab-empty">None of the ' + E.theories.length + ' theories with claims.</p>')}</div>`;
+        <p class="micro">Theories affirming this claim</p>
+        <p class="lab-gloss">Stated directly: the theory says this outright. Implied: it follows from claims the theory does state.</p>
+        <div class="lab-chip-row">${affirming.length ? collapsedChips(affirming.map(t => `<button class="lab-theory-chip${(t.claims || []).includes(id) ? ' direct' : ''}" data-theory="${t.id}">${escapeHtml(t.name)}${(t.claims || []).includes(id) ? '' : ' · implied'}</button>`)) : ('<p class="lab-empty">None of the ' + E.theories.length + ' theories with claims.</p>')}</div>`;
     }
     function renderTheoryNav() {
       const current = theoryNav[theoryNav.length - 1];
