@@ -571,6 +571,7 @@
     let revisitTotal = 0;
     let revisitDone = new Set(); // claim ids already re-asked — never re-queue twice
     let revisitQueue = []; // re-queued claim ids, asked first so the revisit is literal
+    let revisitShown = new Set(); // claim ids actually re-asked this pass — the honest "X of Y"
     let restartArmed = false;
     let restartTimer = null;
     // Mid-round restart is a two-step tap: the first arms it ("tap again"),
@@ -597,6 +598,7 @@
       revisitTotal = 0;
       revisitDone = new Set();
       revisitQueue = [];
+      revisitShown = new Set();
       railLimit = QUIZ_RAIL_TOP;
       resultLimit = 10;
       railOrder = null;
@@ -625,6 +627,7 @@
       revisitTotal = 0;
       revisitDone = new Set();
       revisitQueue = [];
+      revisitShown = new Set();
       lastSettledIds = [];
       lastSettledDir = null;
       qResult.classList.add('hidden');
@@ -637,7 +640,9 @@
       if (forcedQuestionId) {
         const q = { id: forcedQuestionId };
         forcedQuestionId = null;
-        return q;
+        // Back re-asks the exact popped question: it is a genuine revisit
+        // only if it came from this pass's re-queue.
+        return { ...q, revisit: revisitShown.has(q.id) || revisitQueue.includes(q.id) };
       }
       // During the revisit pass, the re-queued claims go first so the
       // "another chance" promise is literal, not just pool-level.
@@ -650,9 +655,10 @@
         const settled = new Set([...E.affirmed(qstate), ...E.rejected(qstate), ...Object.keys(qstate.skipped || {})]);
         revisitQueue = revisitQueue.filter(id => !settled.has(id));
         if (!revisitQueue.length) revisitLeft = 0;
-        else return { id: revisitQueue[0] };
+        else return { id: revisitQueue[0], revisit: true };
       }
-      return E.nextQuestion(qstate);
+      const nq = E.nextQuestion(qstate);
+      return nq ? { ...nq, revisit: false } : nq;
     }
 
     // A revisit item is done once the visitor answers or skips it — only
@@ -668,8 +674,8 @@
         // A skipped question must not vanish silently: re-ask it before
         // results. The re-ask pass is bounded (one question each), and a
         // second skip is final. Propagation may have settled a re-queued
-        // claim meanwhile — drop those so the pass never asks a fresh
-        // question under a "revisiting" label.
+        // claim meanwhile — drop those up front so the pass never asks a
+        // decided question and the "X of Y" counts only live re-asks.
         if (revisitQueue.length) {
           const settled = new Set([...E.affirmed(qstate), ...E.rejected(qstate), ...Object.keys(qstate.skipped || {})]);
           revisitQueue = revisitQueue.filter(id => !settled.has(id));
@@ -679,11 +685,21 @@
           const skipped = Object.keys(qstate.skipped || {}).filter(id => !revisitDone.has(id));
           if (skipped.length) {
             skipped.forEach(id => { E.unskip(qstate, id); revisitDone.add(id); });
-            revisitQueue = skipped.slice();
-            revisitLeft = skipped.length;
-            revisitTotal = skipped.length;
+            // Your answers may already have settled some of these via
+            // propagation — re-asking a decided claim is pointless, and
+            // counting it would inflate the "X of Y".
+            const decided = new Set([...E.affirmed(qstate), ...E.rejected(qstate)]);
+            revisitQueue = skipped.filter(id => !decided.has(id));
+            revisitLeft = revisitQueue.length;
+            revisitTotal = revisitQueue.length;
+            revisitShown = new Set();
             lastSettledIds = [];
-            lastSettledDir = 'revisit';
+            if (revisitQueue.length) {
+              lastSettledDir = 'revisit';
+            } else {
+              renderResults(false);
+              return;
+            }
           } else {
             renderResults(false);
             return;
@@ -696,12 +712,20 @@
         renderResults(true);
         return;
       }
+      // Provenance-based labeling: the counter tracks claims actually
+      // re-asked this pass (revisitShown), never a countdown that can drift
+      // from the queue. A question that is not a genuine revisit is never
+      // labeled as one — it is a follow-up to sharpen the result.
+      const isRevisit = !!q.revisit;
+      if (isRevisit) revisitShown.add(q.id);
       const claim = claimById.get(q.id);
-      $('labQCount').textContent = revisitLeft > 0
-        ? `Revisiting a skipped claim — ${revisitTotal - revisitLeft + 1} of ${revisitTotal}`
-        : (qRound > 1
-          ? `${qRoundCount + 1} of ${QUIZ_ROUND_LENGTH} · round ${qRound}`
-          : `${qRoundCount + 1} of ${QUIZ_ROUND_LENGTH}`);
+      $('labQCount').textContent = isRevisit
+        ? `${(qstate.notUnderstood || {})[q.id] ? 'Revisiting a claim you found unclear' : 'Revisiting a skipped claim'} — ${revisitShown.size} of ${revisitTotal}`
+        : (qRoundCount >= QUIZ_ROUND_LENGTH
+          ? 'A few more claims to sharpen your result'
+          : (qRound > 1
+            ? `${qRoundCount + 1} of ${QUIZ_ROUND_LENGTH} · round ${qRound}`
+            : `${qRoundCount + 1} of ${QUIZ_ROUND_LENGTH}`));
       $('labQText').textContent = claim.text;
       $('labQPlain').textContent = `Put simply: ${claim.plain}`;
       // Progress pill: claims still in play out of the original total.
@@ -823,7 +847,7 @@
         (parents.length
           ? `<p class="micro">The bigger ideas behind it</p><ul class="explainer-points">${parents.map(plainOf).join('')}</ul>` : '') +
         (children.length
-          ? `<p class="micro">Stronger ideas built on this one</p><p class="explain-note">These go further than the claim above — agreeing with the claim above does <em>not</em> mean agreeing with these.</p><ul class="explainer-points">${children.slice(0, 4).map(plainOf).join('')}</ul>` : '') +
+          ? `<p class="micro">Stronger ideas built on this one</p><p class="explain-note">These go further than the claim above — agreeing with the claim above does <em>not</em> mean agreeing with these. They are competing views, not a package: they can disagree with each other.</p><ul class="explainer-points">${children.slice(0, 4).map(plainOf).join('')}</ul>` : '') +
         `<p class="explain-note">No wrong answers here — “Not sure” skips without judging, and skipping from here notes that this one was unclear.</p>`;
       $('labExplain').classList.remove('hidden');
       jumpTo($('labExplain'));
@@ -955,14 +979,17 @@
       paintResultList();
     }
     function resultRowHtml(result, index) {
-      // Every row states the agreement count explicitly — including zero —
+      // Every row states the alignment count explicitly — including zero —
       // so a visitor can always tell *why* a theory outranks another, and
       // every row carries its rank so no row ever looks rankless.
+      // "Aligns with", not "you agree with": the count includes claims
+      // settled by entailment and opposites, which the visitor never saw —
+      // the headline must not overstate conscious endorsement.
       const line = (result.agreed === 0 && result.disagreed === 0)
-        ? `You agree with 0 of its ${result.total} claim${result.total === 1 ? '' : 's'} — none of this theory's claims came up in your answers.`
+        ? `Aligns with 0 of its ${result.total} claim${result.total === 1 ? '' : 's'} — none of this theory's claims came up in your answers.`
         : (result.agreed === 0)
-          ? `You agree with 0 of its ${result.total} claims, and rule out ${result.disagreed}.`
-          : `You agree with ${result.agreed} of its ${result.total} claims${result.disagreed ? `, and rule out ${result.disagreed}` : ''}.`;
+          ? `Aligns with 0 of its ${result.total} claims, and rules out ${result.disagreed}.`
+          : `Aligns with ${result.agreed} of its ${result.total} claims${result.disagreed ? `, and rules out ${result.disagreed}` : ''}.`;
       return `
       <div class="lab-result-row${index === 0 ? ' top' : ''}">
         <span class="lab-result-rank">#${index + 1}</span>
@@ -1072,7 +1099,7 @@
       if (inRevisit) revisitLeft = Math.min(revisitTotal, revisitLeft + 1);
       // Backing into the round discards the revisit pass: the un-skipped
       // claims are simply back in the question pool, so nothing vanishes.
-      if (qRoundCount < QUIZ_ROUND_LENGTH) { revisitLeft = 0; revisitTotal = 0; revisitDone = new Set(); revisitQueue = []; }
+      if (qRoundCount < QUIZ_ROUND_LENGTH) { revisitLeft = 0; revisitTotal = 0; revisitDone = new Set(); revisitQueue = []; revisitShown = new Set(); }
       forcedQuestionId = last.id;
       lastSettledIds = [];
       lastSettledDir = null;

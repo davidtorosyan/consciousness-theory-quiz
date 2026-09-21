@@ -137,7 +137,7 @@ window.CLAIMS = Object.freeze([
     id: "c8",
     short: "Mind can affect the brain",
     text: "Conscious minds can causally affect the physical brain.",
-    plain: "Your thoughts can move matter — physics isn't causally closed.",
+    plain: "Your thoughts can move matter — physics isn't causally closed (a physical event can have a non-physical cause).",
     contradicts: ["c10"],
     entails: ["c6"]
   },
@@ -645,7 +645,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c79",
     short: "Qualities are in objects",
-    text: "Sensible qualities like color, sound, and smell are real qualities of mind-independent objects — veridical perception presents the world itself, not an inner replica.",
+    text: "Sensible qualities like color, sound, and smell are real qualities of mind-independent objects — veridical perception (perception that shows things as they really are) presents the world itself, not an inner replica.",
     plain: "The redness is out there in the apple, not in your head.",
     entails: []
   },
@@ -1481,7 +1481,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c199",
     short: "Mind mirrors field architecture",
-    text: "The brain builds nested space-and-time patterns from local electromagnetic fields; operational modules (OMs) mirror the structure of experience one-to-one, each presenting specific content.",
+    text: "The brain builds nested space-and-time patterns from local electromagnetic fields; operational modules (OMs — temporary teams of neurons firing in sync) mirror the structure of experience one-to-one, each presenting specific content.",
     plain: "Brain activity organizes into nested 3D electric patterns — and those patterns mirror the structure of your experience.",
     entails: []
   },
@@ -1635,7 +1635,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c221",
     short: "Emergence is real but material",
-    text: "The mental is an emergent property of the nervous system: a property possessed by the whole system but not by its components, ontologically reducible to matter without being epistemologically reducible to physics — materialist, but not physicalist.",
+    text: "The mental is an emergent property of the nervous system: a property possessed by the whole system but not by its components, ontologically reducible to matter (at bottom, it's all matter) without being epistemologically reducible to physics (yet physics alone can't fully explain it) — materialist, but not physicalist (matter is all there is, but physics as we know it doesn't capture everything about mind).",
     plain: "Mind really emerges from the brain — genuinely new, yet made of nothing but matter; physics alone just can't tell the whole story.",
     entails: ["c220"]
   },
@@ -1649,7 +1649,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c223",
     short: "Qualities live in the perceiver",
-    text: "Sensible qualities are not in objects: colors and sounds are only motions in objects, while the appearances themselves — the phantasms — lie wholly in the perceiving body.",
+    text: "Sensible qualities are not in objects: colors and sounds are only motions in objects, while the appearances themselves — the phantasms (the raw colors, sounds, and smells, as you experience them) — lie wholly in the perceiving body.",
     plain: "Red isn't in the apple — it's in you. The world has only motion; the colors and sounds are your body's doing.",
     entails: ["c222"]
   },
@@ -1663,7 +1663,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c225",
     short: "Brain scanning itself",
-    text: "Introspective consciousness is a perception-like inner sense: one neural process scanning and representing another, producing non-inferential information about the mind's current states — a first-order state becomes introspectively conscious when it is the object of such a scan.",
+    text: "Introspective consciousness is a perception-like inner sense: one neural process scanning and representing another, producing non-inferential information (information picked up directly, without reasoning it out) about the mind's current states — a first-order state becomes introspectively conscious when it is the object of such a scan.",
     plain: "Part of your brain watches the rest of it — when a brain state gets scanned by this inner sense, you become aware of it.",
     entails: ["c0"]
   },
@@ -1712,7 +1712,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c232",
     short: "The brain models itself",
-    text: "Through continuous unconscious learning, the brain redescribes its own activity to itself, building learned, non-conceptual meta-representations that track the strength, reliability, and emotional value of its own states — an implicit theory of itself.",
+    text: "Through continuous unconscious learning, the brain redescribes its own activity to itself, building learned, non-conceptual meta-representations (inner models of its own modeling — models about its models, with no words or concepts attached) that track the strength, reliability, and emotional value of its own states — an implicit theory of itself.",
     plain: "Your brain silently learns a model of its own workings, and learns to care about what it finds there. That self-model is what consciousness is.",
     entails: ["c230","c231"]
   },
@@ -1845,7 +1845,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c251",
     short: "Awareness is synchronized inspection",
-    text: "Conscious awareness arises when all processors simultaneously inspect a globally broadcast chunk of information — this synchronized unpacking evokes a unique subjective experience whose intensity and valence come from the chunk's weight.",
+    text: "Conscious awareness arises when all processors simultaneously inspect a globally broadcast chunk of information — this synchronized unpacking evokes a unique subjective experience whose intensity and valence (how strong it feels, and how pleasant or unpleasant) come from the chunk's weight.",
     plain: "Awareness happens when every part of the system looks at the same broadcast message at the same time — and that shared looking is the feeling.",
     entails: ["c43"]
   },

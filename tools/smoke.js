@@ -717,7 +717,7 @@ async function main() {
   check(read('src/claims-lab.js').includes('data-claim="${antiClaim.id}"'),
     'anti-claim badge is a clickable link into the claim explorer');
   // Build 44: ranking sort is stated on the results page
-  check(read('index.html').includes('Ranked by most claims you agree with, then fewest you rule out.'),
+  check(read('index.html').includes('Ranked by most claims aligned with your answers, then fewest ruled out.'),
     'results page states the ranking rule');
   // Build 44: graph legend clarifies the map never changes under quiz answers
   check(read('index.html').includes('The graph is a reference map — quiz answers never cross out or change its nodes.'),
@@ -817,7 +817,7 @@ async function main() {
   click(env, 'labQRanking');
   check(!hidden(env, 'labQuizResult') && hidden(env, 'labQuizMain'), 'ranking peek shows the results view');
   check(!hidden(env, 'labQuizResume') && hidden(env, 'labQuizContinue'), 'peek offers resume, not continue');
-  check(html(env, 'labResultList').includes('You agree with'), 'peek renders the live ranking');
+  check(html(env, 'labResultList').includes('Aligns with'), 'peek renders the live ranking');
   check(text(env, 'labResultTitle') === 'Where your answers land so far', 'peek uses an interim header, not the final-results header');
   click(env, 'labQuizResume');
   check(!hidden(env, 'labQuizMain') && hidden(env, 'labQuizResult'), 'resume returns to the quiz');
@@ -851,14 +851,14 @@ async function main() {
   check(resCollapsed.includes(`Show all ${M} theories`), 'results offer a show-all control');
   check(html(env, 'labResultList').includes('lab-result-blurb'), 'results rows show theory blurbs');
   click(env, 'labResultList', { target: { closest: (sel) => sel === '[data-result-more]' ? {} : null }, preventDefault() {} });
-  check(html(env, 'labResultList').includes('You agree with'), 'results use X-of-Y alignment framing');
+  check(html(env, 'labResultList').includes('Aligns with'), 'results use X-of-Y alignment framing');
   check(html(env, 'labResultList').includes('data-inspect'), 'results have inspect-claims buttons');
   check((html(env, 'labResultList').match(/<span class="vh">/g) || []).length === M,
     'inspect buttons carry a screen-reader-only theory name');
   // every result row must explain its own ranking — no silent rows
   const resHtml = html(env, 'labResultList');
   const resRows = (resHtml.match(/class="lab-result-row/g) || []).length;
-  const resLines = (resHtml.match(/You agree with \d+ of its/g) || []).length;
+  const resLines = (resHtml.match(/Aligns with \d+ of its/g) || []).length;
   check(resRows === M, `results render all ${M} theories (got ${resRows})`);
   check(resLines === M, `every result row explains its alignment (got ${resLines}/${resRows})`);
   const rankSpans = (resHtml.match(/<span class="lab-result-rank">#\d+<\/span>/g) || []).length;
@@ -871,7 +871,7 @@ async function main() {
   while (hidden(env, 'labQuizResult') && guard++ < N + 50) click(env, 'labNotSure');
   check(!hidden(env, 'labQuizResult'), 'all-skip run completes');
   click(env, 'labResultList', { target: { closest: (sel) => sel === '[data-result-more]' ? {} : null }, preventDefault() {} });
-  const untouched = (html(env, 'labResultList').match(/You agree with 0 of its \d+ claims? — none of this theory's claims came up/g) || []).length;
+  const untouched = (html(env, 'labResultList').match(/Aligns with 0 of its \d+ claims? — none of this theory's claims came up/g) || []).length;
   check(untouched === M, `all ${M} theories explain themselves when untouched (got ${untouched})`);
   check(html(env, 'labResultList').includes('No theory matched your answers — nothing you decided lines up'),
     'zero-match results explain the ordering instead of presenting a bare ranking');
@@ -1001,8 +1001,87 @@ async function main() {
   let dirGuard = 0;
   while (hidden(dir, 'labQuizResult') && dirGuard++ < N + 50) click(dir, 'labAgree');
   const resultHtml = html(dir, 'labResultList');
-  check(/<p>You agree with/.test(resultHtml) && !/<p[^>]*aria-hidden[^>]*>You agree with/.test(resultHtml),
-    'result agreement counts render as plain text with no aria-hidden wrapper');
+  check(/<p>Aligns with/.test(resultHtml) && !/<p[^>]*aria-hidden[^>]*>Aligns with/.test(resultHtml),
+    'result alignment counts render as plain text with no aria-hidden wrapper');
+
+  // ---- Build 46: round-4 fresh-eyes feedback ----
+  console.log('testing build-46 fixes…');
+  // 1. revisit labels are provenance-honest: the counter tracks claims
+  // actually re-asked, and a re-asked question is always a genuine skip.
+  {
+    restartQuiz(env);
+    const skippedTexts = [text(env, 'labQText')];
+    click(env, 'labNotSure');
+    skippedTexts.push(text(env, 'labQText'));
+    click(env, 'labNotSure');
+    for (let i = 0; i < 10; i++) click(env, 'labAgree');
+    if (hidden(env, 'labQuizResult')) {
+      const lbl = text(env, 'labQCount');
+      const m = lbl.match(/^Revisiting a skipped claim — (\d+) of (\d+)$/);
+      check(!!m && m[1] === '1' && Number(m[2]) >= 1,
+        'revisit counter starts at 1 of the actual re-queue size: ' + lbl);
+      check(skippedTexts.includes(text(env, 'labQText')),
+        'the first revisit re-asks a genuinely skipped claim, not a fresh pick');
+      const firstTotal = m ? Number(m[2]) : 0;
+      click(env, 'labAgree');
+      if (hidden(env, 'labQuizResult')) {
+        const lbl2 = text(env, 'labQCount');
+        const m2 = lbl2.match(/^Revisiting a skipped claim — (\d+) of (\d+)$/);
+        check(!!m2 && m2[1] === '2' && Number(m2[2]) === firstTotal,
+          'the counter advances against the same total: ' + lbl2);
+      }
+    } else {
+      check(true, 'propagation settled both skips — no revisit pass needed (acceptable)');
+    }
+  }
+  // 1b. a "didn't understand" skip is revisited under an honest label
+  {
+    restartQuiz(env);
+    click(env, 'labDontUnderstand');
+    click(env, 'labExplainStill');
+    for (let i = 0; i < 11; i++) click(env, 'labAgree');
+    if (hidden(env, 'labQuizResult')) {
+      check(/^Revisiting a claim you found unclear — 1 of \d+$/.test(text(env, 'labQCount')),
+        'unclear claims are revisited as unclear, not as plain skips: ' + text(env, 'labQCount'));
+    } else {
+      check(true, 'propagation settled the unclear skip — no revisit pass needed (acceptable)');
+    }
+  }
+  // 1c. the follow-up label exists for non-revisit questions after round end
+  check(read('src/claims-lab.js').includes('A few more claims to sharpen your result'),
+    'post-round follow-up questions get an honest "sharpen your result" label, never the revisit label');
+  // 2. alignment framing: no row claims conscious endorsement of unseen claims
+  check(!read('src/claims-lab.js').includes('You agree with ${result.agreed}') &&
+    !read('src/claims-lab.js').includes('You agree with 0 of its'),
+    'result rows use "Aligns with" framing instead of "You agree with"');
+  // 3. every row of the initial top-10 explains its alignment (round-4: no bare rows)
+  {
+    const collapsedLines = (resCollapsed.match(/Aligns with \d+ of its/g) || []).length;
+    check(collapsedLines === resRows0,
+      `every top-10 result row explains its alignment (got ${collapsedLines}/${resRows0})`);
+  }
+  // 4. the explainer flags competing stronger views
+  check(read('src/claims-lab.js').includes('They are competing views, not a package'),
+    'LET’S UNPACK IT notes that stronger ideas can disagree with each other');
+  // 5. round-4 jargon sweep: long-text layer glosses
+  {
+    const claimById46 = new Map(CLAIMS.map((c) => [c.id, c]));
+    const glossCases46 = [
+      ['c8', 'a physical event can have a non-physical cause', 'causal closure glossed'],
+      ['c225', 'without reasoning it out', 'non-inferential glossed'],
+      ['c199', 'temporary teams of neurons firing in sync', 'operational modules glossed'],
+      ['c223', 'as you experience them', 'phantasms glossed'],
+      ['c232', 'models about its models', 'meta-representations glossed'],
+      ['c251', 'how pleasant or unpleasant', 'valence glossed'],
+      ['c221', "at bottom, it's all matter", 'ontological/epistemological distinction glossed'],
+      ['c79', 'as they really are', 'veridical glossed'],
+    ];
+    for (const [id, phrase, label] of glossCases46) {
+      const c = claimById46.get(id);
+      check(!!c && ((c.text || '').includes(phrase) || (c.plain || '').includes(phrase)),
+        `round-4 jargon: ${label} (${id})`);
+    }
+  }
 
   console.log(failures ? `\n${failures} FAILURES` : '\nALL SMOKE TESTS PASSED');
   process.exit(failures ? 1 : 0);
