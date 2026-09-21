@@ -61,12 +61,17 @@
   }
 
   // --- Quiz state -----------------------------------------------------------
-  // state = { answers: { claimId: 'yes' | 'no' }, skipped: { claimId: true } }
+  // state = { answers: { claimId: 'yes' | 'no' }, skipped: { claimId: true },
+  //           notUnderstood: { claimId: true } }
   // A skipped claim stays undecided (it still counts as "open" in scoring)
   // but is never asked again.
+  // A "don't understand" skip is recorded in notUnderstood as well: it is
+  // still just a skip (no agree/disagree signal, never eliminates a theory)
+  // but the flag stays so the quiz can report honestly which claims were
+  // unclear. It must never feed affirmed()/rejected()/score().
 
   function newQuiz() {
-    return { answers: {}, skipped: {} };
+    return { answers: {}, skipped: {}, notUnderstood: {} };
   }
 
   // Claims affirmed: every 'yes' answer plus all of its ancestors.
@@ -147,12 +152,23 @@
   function undo(state, id) {
     delete state.answers[id];
     if (state.skipped) delete state.skipped[id];
+    if (state.notUnderstood) delete state.notUnderstood[id];
     return state;
   }
 
   function skip(state, id) {
     if (!state.skipped) state.skipped = {};
     state.skipped[id] = true;
+    return state;
+  }
+
+  // "Still don't get it" skip: behaves exactly like skip for routing and
+  // revisits, and additionally flags the claim as not understood. The flag
+  // is inert for scoring — affirmed/rejected derive from answers only.
+  function skipNotUnderstood(state, id) {
+    skip(state, id);
+    if (!state.notUnderstood) state.notUnderstood = {};
+    state.notUnderstood[id] = true;
     return state;
   }
 
@@ -256,7 +272,7 @@
   const api = {
     ancestors, descendants, theoryFullClaims,
     newQuiz, affirmed, rejected, undecided, coverage, coverageBoth,
-    nextQuestion, answer, undo, skip, unskip, score, validate,
+    nextQuestion, answer, undo, skip, skipNotUnderstood, unskip, score, validate,
     contradictions
   };
 
@@ -279,6 +295,7 @@
       answer: (state, id, yesNo) => api.answer(state, id, yesNo),
       undo: (state, id) => api.undo(state, id),
       skip: (state, id) => api.skip(state, id),
+      skipNotUnderstood: (state, id) => api.skipNotUnderstood(state, id),
       unskip: (state, id) => api.unskip(state, id),
       score: (state) => api.score(claims, theories, state),
       contradictions: (state) => api.contradictions(claims, state),

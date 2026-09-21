@@ -339,7 +339,6 @@
     .lab-theory-chip.direct { border-color: var(--cyan); color: var(--cyan); }
     .lab-quiz h3 { margin: 8px 0 12px; font-size: 26px; }
     .lab-quiz .lab-plain { max-width: 640px; }
-    .lab-coverage { color: var(--dim); font-size: 13px; margin: 14px 0 20px; }
     .lab-quiz-grid {
       display: grid;
       grid-template-columns: minmax(0, 1.6fr) minmax(220px, .7fr);
@@ -497,7 +496,6 @@
     }
       /* Quiz-first landing (round 1 restructure) */
     .quiz-section { padding: 36px 0 8px; }
-    .lab-settled { color: var(--dim); font-size: 13px; margin: -8px 0 20px; }
     .lab-theory-group {
       margin: 18px 0 8px;
       font: 500 11px/1.25 "IBM Plex Mono", monospace;
@@ -515,3 +513,62 @@
     .update-banner { background: #3a2f10; border: 1px solid #8a6d1f; color: #f2d98c; border-radius: 10px; padding: 10px 14px; margin: 0 0 16px; font-size: 14px; }
     .update-banner .text-btn { color: #ffe9a8; text-decoration: underline; font-size: 14px; }
     .lab-score-blurb, .lab-result-blurb { color: var(--dim); font-size: 13px; margin: 2px 0 6px; }
+
+    /* Build 37: simpler verdict buttons, progress pill, explain panel, load-more */
+    .question-head-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      padding: 10px 2px;
+      background: color-mix(in srgb, var(--panel) 92%, transparent);
+    }
+    .progress-pill {
+      font: 500 12px/1.4 "IBM Plex Mono", monospace;
+      color: var(--cyan);
+      border: 1px solid #2c3f3e;
+      border-radius: 999px;
+      background: #101819;
+      padding: 8px 14px;
+      white-space: nowrap;
+    }
+    .lab-quiz .answers { grid-template-columns: 1fr 1fr; }
+    .lab-quiz .answer-btn {
+      min-height: 84px;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      text-align: center;
+      font-size: 19px;
+    }
+    .lab-quiz .answer-btn .verdict { font-size: 24px; line-height: 1; }
+    .lab-quiz .answer-btn.agree { border-color: #2f6b4e; }
+    .lab-quiz .answer-btn.agree .verdict { color: #57d98a; }
+    .lab-quiz .answer-btn.agree:hover { border-color: #57d98a; background: #132620; }
+    .lab-quiz .answer-btn.disagree { border-color: #74403d; }
+    .lab-quiz .answer-btn.disagree .verdict { color: #f08080; }
+    .lab-quiz .answer-btn.disagree:hover { border-color: #f08080; background: #281414; }
+    .skip-actions { display: flex; gap: 16px; align-items: center; }
+    .explain-panel {
+      margin-top: 20px;
+      padding: 22px;
+      border: 1px solid var(--cyan);
+      border-radius: 14px;
+      background: #101c1d;
+    }
+    .explain-panel .micro { margin-bottom: 6px; }
+    .explain-panel h4 { margin: 0 0 10px; font-size: 19px; line-height: 1.4; font-weight: 600; }
+    .explain-panel .lab-plain { margin-bottom: 16px; }
+    .explain-panel .explainer-points { margin: 0 0 16px; }
+    .explain-note { color: var(--dim); font-size: 13px; margin: 4px 0 0; }
+    .explain-actions { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin-top: 18px; }
+    .explain-actions .primary { padding: 12px 18px; }
+    .chip-more { margin: 2px 0 0; }
+    .lab-list-more { margin: 6px 0 0; }
+    .result-show-all-wrap { margin-top: 12px; }

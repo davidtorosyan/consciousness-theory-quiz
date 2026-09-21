@@ -13,8 +13,10 @@ const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
 
 // ---------------------------------------------------------------- shim
 const NEED_IDS = ['labQuizStart', 'labQuizMain', 'labQuizResult', 'labQuizBegin', 'labQuizRestart',
-  'labQuizContinue', 'labContinueNote', 'labAgree', 'labDisagree', 'labSkip', 'labQBack', 'labQText', 'labQPlain', 'labQCount',
-  'labQCoverage', 'labSettled', 'labSettledBy', 'labTension', 'labScores', 'labResultList', 'labClaimGraph',
+  'labQuizContinue', 'labContinueNote', 'labAgree', 'labDisagree', 'labNotSure', 'labDontUnderstand',
+  'labExplain', 'labExplainTitle', 'labExplainPlain', 'labExplainContext', 'labExplainStill', 'labExplainBack',
+  'labQBack', 'labQText', 'labQPlain', 'labQCount', 'labProgressPill',
+  'labSettledBy', 'labTension', 'labScores', 'labResultList', 'labClaimGraph',
   'labQRanking', 'labQuizResume', 'labResultKicker', 'labResultTitle', 'labQRestart',
   'labClaimDetail', 'labTheoryList', 'labTheorySearch', 'labDetail', 'labBack', 'labTabClaims', 'labTabTheories',
   'labClaims', 'labTheories', 'quizCountLine', 'exploreDek', 'updateBanner', 'updateReload'];
@@ -149,10 +151,16 @@ async function main() {
     'graph node buttons carry no title (claim text exposed once to screen readers)');
   check(String(firstNode.getAttribute('data-plain') || '').startsWith('Put simply:'),
     'graph nodes carry a plain-language tooltip for sighted users');
+  // theory list collapses: 10 shown, load-more pages the rest in
+  const listHtml0 = html(env, 'labTheoryList');
+  const initialTheories = (listHtml0.match(/data-theory="/g) || []).length;
+  check(initialTheories === 10, `theory list shows 10 theories initially (got ${initialTheories})`);
+  check(listHtml0.includes(`Show 10 more (${M - 10} left)`), 'theory list offers a load-more control');
+  for (let i = 0; i < 12; i++) click(env, 'labTheoryList', { target: { closest: (sel) => sel === '[data-theory-more]' ? {} : null }, preventDefault() {} });
   const listHtml = html(env, 'labTheoryList');
   const withClaims = (listHtml.match(/data-theory="/g) || []).length;
   const pending = (listHtml.match(/data-meta="/g) || []).length;
-  check(withClaims === M && pending === 120 - M, `theory list: ${M} with claims + ${120 - M} pending (got ${withClaims}+${pending})`);
+  check(withClaims === M && pending === 120 - M, `theory list expands to ${M} with claims + ${120 - M} pending (got ${withClaims}+${pending})`);
 
   // no internal claim ids leak into visible UI
   const graphHtml = html(env, 'labClaimGraph');
@@ -213,6 +221,11 @@ async function main() {
     'clicking a graph node scrolls the detail panel into view (block: start)');
   check(!html(env, 'labClaimDetail').includes('>Claim c'),
     'claim detail header shows no internal claim id');
+  click(env, 'labClaimGraph', { target: { closest: () => ({ dataset: { claim: 'c0' } }) } });
+  const c0Detail = html(env, 'labClaimDetail');
+  const c0Hidden = (c0Detail.match(/extra-chip hidden/g) || []).length;
+  check(c0Detail.includes('data-chip-more') && c0Hidden > 0,
+    `claim detail collapses long affirming-theory lists (${c0Hidden} hidden behind show-all)`);
   click(env, 'labQuizBegin');
   check(html(env, 'labClaimDetail') === '' && html(env, 'labDetail') === '',
     'starting a fresh quiz clears any open explorer panels');
@@ -231,8 +244,18 @@ async function main() {
   check(claimText.get(text(env, 'labQText')) === 'c34', 'first question is the gentle opener (c34), not c0');
   check(text(env, 'labQCount') === '1 of 12', 'progress shows question N of 12: ' + text(env, 'labQCount'));
   check(text(env, 'labQPlain').startsWith('Put simply:'), 'put-simply line renders');
-  check(text(env, 'labQCoverage').includes('Why this question') && text(env, 'labQCoverage').includes('agreeing decides') && text(env, 'labQCoverage').includes('disagreeing decides'),
-    'coverage copy is per-direction and plain-language: ' + text(env, 'labQCoverage').slice(0, 90));
+  check(text(env, 'labProgressPill') === `${N} of ${N} claims still in play`,
+    'progress pill shows claims still in play out of the total: ' + text(env, 'labProgressPill'));
+  const agreeTag = read('index.html').match(/<button[^>]*id="labAgree"[^>]*>[\s\S]*?<\/button>/);
+  check(!!agreeTag && !agreeTag[0].includes('<small>') && agreeTag[0].includes('✓') && agreeTag[0].includes('>Agree<'),
+    'agree button is a simple ✓ Agree with no subtitle');
+  const disagreeTag = read('index.html').match(/<button[^>]*id="labDisagree"[^>]*>[\s\S]*?<\/button>/);
+  check(!!disagreeTag && !disagreeTag[0].includes('<small>') && disagreeTag[0].includes('✗') && disagreeTag[0].includes('>Disagree<'),
+    'disagree button is a simple ✗ Disagree with no subtitle');
+  check(!read('index.html').includes('labQCoverage') && !read('src/claims-lab.js').includes('labQCoverage'),
+    'the "why this question" section is gone from the quiz');
+  check(read('index.html').includes('id="labNotSure"') && read('index.html').includes('id="labDontUnderstand"') && !read('index.html').includes('id="labSkip"'),
+    'single skip button replaced by the two small skip buttons');
   check(!hidden(env, 'labQRanking'), 'ranking peek is offered from round 1, not just round 2');
 
   // back button
@@ -240,6 +263,10 @@ async function main() {
   click(env, 'labAgree');
   const q2 = text(env, 'labQText');
   check(q1 !== q2, 'answering advances to next question');
+  const pillAfter = text(env, 'labProgressPill');
+  const pillN = parseInt(pillAfter, 10);
+  check(pillAfter.endsWith(`of ${N} claims still in play`) && pillN < N,
+    `progress pill counts down as claims are decided (${pillAfter})`);
   check(text(env, 'labQCount') === '2 of 12', 'counter advances after answering: ' + text(env, 'labQCount'));
   click(env, 'labQBack');
   check(text(env, 'labQText') === q1, 'back returns to previous question');
@@ -248,13 +275,40 @@ async function main() {
 
   // skip -> back must return the exact skipped question, not a re-derived one
   const qs1 = text(env, 'labQText');
-  click(env, 'labSkip');
+  click(env, 'labNotSure');
   const qs2 = text(env, 'labQText');
   check(qs1 !== qs2, 'skipping advances to the next question');
   click(env, 'labQBack');
   check(text(env, 'labQText') === qs1, 'back after skip returns the exact skipped question');
   check(text(env, 'labQCount') === '2 of 12', 'counter decrements on back after skip');
-  click(env, 'labSkip'); // skip again, move on
+  click(env, 'labNotSure'); // skip again, move on
+
+  // "Don't understand" opens a bigger explanation first; "Still don't get
+  // it" skips and flags the claim as not understood (no signal, no elimination).
+  const duQ = text(env, 'labQText');
+  click(env, 'labDontUnderstand');
+  check(!hidden(env, 'labExplain'), "don't-understand opens the explanation panel");
+  check(text(env, 'labExplainTitle') === duQ, 'explanation panel names the current claim');
+  check(text(env, 'labExplainPlain').startsWith('Put simply:'), 'explanation panel reuses the plain-language gloss');
+  check(html(env, 'labExplainContext').length > 0, 'explanation panel adds broader/specific context');
+  click(env, 'labExplainBack');
+  check(hidden(env, 'labExplain'), 'back-to-question closes the explanation panel');
+  check(text(env, 'labQText') === duQ, 'closing the panel keeps the same question on screen');
+  click(env, 'labDontUnderstand');
+  click(env, 'labExplainStill');
+  check(text(env, 'labQText') !== duQ || !hidden(env, 'labQuizResult'), "still-don't-get-it skips the question");
+  check(text(env, 'labSettledBy') === 'Last question: skipped — nothing decided.', 'flagged skip records no signal');
+  // engine-level: the flag is recorded and inert for scoring
+  const mNu = CE2.newQuiz();
+  CE2.skipNotUnderstood(mNu, 'c0');
+  check(!!(mNu.notUnderstood || {})['c0'], 'engine records the not-understood flag');
+  check(CE2.affirmed(mNu).size === 0 && CE2.rejected(mNu).size === 0,
+    'a not-understood skip affirms and rejects nothing');
+  check(CE2.score(mNu).every(r => r.agreed === 0 && r.disagreed === 0),
+    'a not-understood skip eliminates no theories');
+  CE2.undo(mNu, 'c0');
+  check(!(mNu.notUnderstood || {})['c0'] && !(mNu.skipped || {})['c0'],
+    'back/undo clears the not-understood skip');
 
   // mid-round restart: first tap arms it, second tap restarts the quiz
   check(!!env.els.get('labQRestart'), 'mid-round restart button exists');
@@ -265,8 +319,6 @@ async function main() {
   check(text(env, 'labQRestart') === 'Restart ↺', 'restart button disarms after restarting');
   click(env, 'labAgree'); // answer once more to resync the engine mirror below
   check(html(env, 'labScores').includes(' of '), 'live alignment scores render');
-  check(html(env, 'labScores').includes('data-peek-ranking'),
-    'rail "full ranking any time" is a live button that opens the ranking peek');
   check(html(env, 'labScores').includes('lab-score-blurb'), 'live scores show theory blurbs');
 
   // directional settled trace, verified against an engine mirror of quiz state.
@@ -294,7 +346,7 @@ async function main() {
       check(t.startsWith('Last question: that also decided:') && t.endsWith('they follow from the claim you agreed with.'),
         'affirm trace explains direction: ' + t.slice(0, 110));
     } else {
-      click(env, 'labSkip');
+      click(env, 'labNotSure');
       CE.skip(mirrorA, q.id);
       check(text(env, 'labSettledBy') === 'Last question: skipped — nothing decided.', 'skip line renders');
     }
@@ -335,7 +387,7 @@ async function main() {
   // skip
   if (hidden(env, 'labQuizResult')) {
     const qs = text(env, 'labQText');
-    click(env, 'labSkip');
+    click(env, 'labNotSure');
     check(text(env, 'labQText') !== qs || !hidden(env, 'labQuizResult'), 'skip advances');
   }
 
@@ -344,25 +396,25 @@ async function main() {
   for (let i = 0; i < 11; i++) click(env, 'labAgree');
   check(hidden(env, 'labQuizResult'), '11 answers do not end the round early');
   const skippedQ = text(env, 'labQText');
-  click(env, 'labSkip'); // skip question 12 of 12
+  click(env, 'labNotSure'); // skip question 12 of 12
   check(hidden(env, 'labQuizResult'), 'round does not end on a skipped 12th question');
   check(text(env, 'labQCount') === 'Revisiting a skipped question — 1 of 1',
     'skipped question is re-asked at round end: ' + text(env, 'labQCount'));
   check(text(env, 'labQText') === skippedQ, 'the re-asked question is the skipped one, not a fresh pick');
   check(text(env, 'labSettledBy').includes('another chance'),
     'revisit explains itself: ' + text(env, 'labSettledBy').slice(0, 70));
-  click(env, 'labSkip'); // skip again — final
+  click(env, 'labNotSure'); // skip again — final
   check(!hidden(env, 'labQuizResult'), 'second skip is final and ends the round');
   check(text(env, 'labContinueNote').includes('(1 skipped)'),
     'results name the skip in the basis line: ' + text(env, 'labContinueNote').slice(0, 90));
 
   // two skips: every skipped question gets exactly one more chance, then stays skipped
   restartQuiz(env);
-  click(env, 'labSkip'); click(env, 'labSkip');
+  click(env, 'labNotSure'); click(env, 'labNotSure');
   for (let i = 0; i < 10; i++) click(env, 'labAgree');
   // finish the round however the engine routes it (revisit pass, propagation, or straight to results)
   let rguard = 0;
-  while (hidden(env, 'labQuizResult') && rguard++ < 8) click(env, 'labSkip');
+  while (hidden(env, 'labQuizResult') && rguard++ < 8) click(env, 'labNotSure');
   check(!hidden(env, 'labQuizResult'), 'two skips still end the round');
   check(text(env, 'labContinueNote').includes('(2 skipped)'),
     'both skips named in the basis line: ' + text(env, 'labContinueNote').slice(0, 90));
@@ -397,12 +449,15 @@ async function main() {
   check(CE.contradictions(CLAIMS, mContra).length === 1, 'engine reports the c0/c6 contradiction');
   check(CE.validate(CLAIMS, THEORIES).length === 0, 'claims-engine validation has no problems');
 
-  // rail shows top 8, not all 120
+  // rail shows top 10 with inline load-more, never all 120 at once
   const railRows = (html(env, 'labScores').match(/lab-score-row/g) || []).length;
-  check(railRows === 8, `rail shows top 8 theories during quiz (got ${railRows})`);
-  check(html(env, 'labScores').includes('112 more theories'), 'rail notes the remaining theories');
+  check(railRows === 10, `rail shows top 10 theories during quiz (got ${railRows})`);
+  check(html(env, 'labScores').includes(`Show 10 more (${M - 10} left)`), 'rail offers inline load-more');
   const railFracs = (html(env, 'labScores').match(/<span>\d+ of \d+<\/span>/g) || []).length;
   check(railFracs === railRows, `every rail row shows an X-of-Y fraction (got ${railFracs}/${railRows})`);
+  click(env, 'labScores', { target: { closest: (sel) => sel === '[data-rail-more]' ? {} : null }, preventDefault() {} });
+  const railRows2 = (html(env, 'labScores').match(/lab-score-row/g) || []).length;
+  check(railRows2 === 20, `rail load-more pages in 10 more (got ${railRows2})`);
 
   // round cap + continue + tension notes (all-agree run)
   restartQuiz(env);
@@ -451,8 +506,14 @@ async function main() {
   let guard = 0;
   while (hidden(env, 'labQuizResult') && guard++ < N + 50) click(env, 'labAgree');
   check(!hidden(env, 'labQuizResult'), 'quiz completes to results screen');
-  check(html(env, 'labResultList').includes('You agree with'), 'results use X-of-Y alignment framing');
+  // results collapse: top 10 first, "show all" expands to the full ranking
+  const resCollapsed = html(env, 'labResultList');
+  const resRows0 = (resCollapsed.match(/class="lab-result-row/g) || []).length;
+  check(resRows0 === 10, `results show top 10 theories initially (got ${resRows0})`);
+  check(resCollapsed.includes(`Show all ${M} theories`), 'results offer a show-all control');
   check(html(env, 'labResultList').includes('lab-result-blurb'), 'results rows show theory blurbs');
+  click(env, 'labResultList', { target: { closest: (sel) => sel === '[data-result-more]' ? {} : null }, preventDefault() {} });
+  check(html(env, 'labResultList').includes('You agree with'), 'results use X-of-Y alignment framing');
   check(html(env, 'labResultList').includes('data-inspect'), 'results have inspect-claims buttons');
   check((html(env, 'labResultList').match(/<span class="vh">/g) || []).length === M,
     'inspect buttons carry a screen-reader-only theory name');
@@ -467,8 +528,9 @@ async function main() {
   // untouched theories: a fresh all-skip run leaves every theory untouched
   restartQuiz(env);
   guard = 0;
-  while (hidden(env, 'labQuizResult') && guard++ < N + 50) click(env, 'labSkip');
+  while (hidden(env, 'labQuizResult') && guard++ < N + 50) click(env, 'labNotSure');
   check(!hidden(env, 'labQuizResult'), 'all-skip run completes');
+  click(env, 'labResultList', { target: { closest: (sel) => sel === '[data-result-more]' ? {} : null }, preventDefault() {} });
   const untouched = (html(env, 'labResultList').match(/None of this theory's claims came up/g) || []).length;
   check(untouched === M, `all ${M} theories explain themselves when untouched (got ${untouched})`);
   check(html(env, 'labResultList').includes('No theory matched your answers — nothing you decided lines up'),

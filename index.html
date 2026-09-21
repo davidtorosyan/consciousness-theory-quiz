@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,650&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=36">
+  <link rel="stylesheet" href="styles.css?v=37">
 </head>
 <body>
   <main class="page">
@@ -35,16 +35,17 @@
       <div class="lab-quiz hidden" id="labQuizMain">
         <div class="lab-quiz-grid">
           <div>
-            <div class="count-label">QUESTION <strong id="labQCount">1 of 12</strong></div>
+            <div class="question-head-row">
+              <div class="count-label">QUESTION <strong id="labQCount">1 of 12</strong></div>
+              <div class="progress-pill" id="labProgressPill" role="status">278 of 278 claims still in play</div>
+            </div>
             <h3 id="labQText"></h3>
             <p class="lab-plain" id="labQPlain"></p>
-            <p class="lab-coverage" id="labQCoverage"></p>
-            <p class="lab-settled" id="labSettled"></p>
             <p class="lab-settled-by" id="labSettledBy" aria-live="polite"></p>
             <p class="lab-tension hidden" id="labTension" aria-live="polite"></p>
             <div class="answers">
-              <button class="answer-btn" id="labAgree"><span>Agree</span><small>This is true, as far as I’m concerned.</small></button>
-              <button class="answer-btn" id="labDisagree"><span>Disagree</span><small>This is false, as far as I’m concerned.</small></button>
+              <button class="answer-btn agree" id="labAgree"><span class="verdict" aria-hidden="true">✓</span><span>Agree</span></button>
+              <button class="answer-btn disagree" id="labDisagree"><span class="verdict" aria-hidden="true">✗</span><span>Disagree</span></button>
             </div>
             <div class="question-actions">
               <div class="question-action-left">
@@ -52,7 +53,20 @@
                 <button class="text-btn" id="labQRanking">See current ranking</button>
                 <button class="text-btn" id="labQRestart" title="Start the whole quiz over from question 1">Restart ↺</button>
               </div>
-              <button class="text-btn" id="labSkip">Not sure — skip</button>
+              <div class="skip-actions">
+                <button class="text-btn" id="labNotSure">Not sure</button>
+                <button class="text-btn" id="labDontUnderstand">Don't understand</button>
+              </div>
+            </div>
+            <div class="explain-panel hidden" id="labExplain">
+              <p class="micro">Let’s unpack it</p>
+              <h4 id="labExplainTitle"></h4>
+              <p class="lab-plain" id="labExplainPlain"></p>
+              <div id="labExplainContext"></div>
+              <div class="explain-actions">
+                <button class="primary" id="labExplainStill">Still don't get it — skip</button>
+                <button class="text-btn" id="labExplainBack">← Back to the question</button>
+              </div>
             </div>
           </div>
           <aside class="lab-rail" aria-label="Live alignment">
@@ -123,10 +137,10 @@
     <footer>Based on the <a href="https://loc.closertotruth.com/" target="_blank" rel="noopener">Closer to Truth Landscape of Consciousness</a>. Something seems off? <a href="https://github.com/davidtorosyan/consciousness-theory-quiz/issues" target="_blank" rel="noopener">Raise an issue ↗</a>.</footer>
   </main>
 
-<script>window.SITE_BUILD = 36;</script>
-<script src="data/theories.js?v=36"></script>
-<script src="data/claims.js?v=36"></script>
-<script src="src/claims-engine.js?v=36"></script>
-<script src="src/claims-lab.js?v=36"></script>
+<script>window.SITE_BUILD = 37;</script>
+<script src="data/theories.js?v=37"></script>
+<script src="data/claims.js?v=37"></script>
+<script src="src/claims-engine.js?v=37"></script>
+<script src="src/claims-lab.js?v=37"></script>
 </body>
 </html>

@@ -7,8 +7,10 @@
     // Defensive boot: if the HTML and JS versions disagree (e.g. a deploy
     // landing mid-reload), say so plainly instead of dying silently.
     const need = ['labQuizStart', 'labQuizMain', 'labQuizResult', 'labQuizBegin', 'labQuizRestart', 'labQRestart',
-      'labQuizContinue', 'labContinueNote', 'labAgree', 'labDisagree', 'labSkip', 'labQBack', 'labQText', 'labQPlain', 'labQCount',
-      'labQCoverage', 'labSettled', 'labSettledBy', 'labTension', 'labScores', 'labResultList', 'labClaimGraph',
+      'labQuizContinue', 'labContinueNote', 'labAgree', 'labDisagree', 'labNotSure', 'labDontUnderstand',
+      'labExplain', 'labExplainTitle', 'labExplainPlain', 'labExplainContext', 'labExplainStill', 'labExplainBack',
+      'labQBack', 'labQText', 'labQPlain', 'labQCount', 'labProgressPill',
+      'labSettledBy', 'labTension', 'labScores', 'labResultList', 'labClaimGraph',
       'labQRanking', 'labQuizResume', 'labResultKicker', 'labResultTitle',
       'labClaimDetail', 'labTheoryList', 'labDetail', 'labBack', 'labTabClaims', 'labTabTheories',
       'labClaims', 'labTheories', 'quizCountLine', 'exploreDek', 'updateBanner', 'updateReload'];
@@ -42,6 +44,26 @@
     function claimChip(id, extra) {
       const c = claimById.get(id);
       return `<button class="lab-claim-chip${extra ? ' ' + extra : ''}" data-claim="${id}" title="${escapeHtml(c.text)}">${escapeHtml(shortLabel(c))}</button>`;
+    }
+    // Long theory lists never render hundreds of chips at once: show the
+    // first CHIP_SHOW, hide the rest behind a "Show all N" control.
+    const CHIP_SHOW = 10;
+    function collapsedChips(chips) {
+      const shown = chips.slice(0, CHIP_SHOW).join('');
+      const extra = chips.slice(CHIP_SHOW).map(h =>
+        h.replace('class="lab-theory-chip', 'class="lab-theory-chip extra-chip hidden')).join('');
+      const more = chips.length > CHIP_SHOW
+        ? `<button class="text-btn chip-more" data-chip-more="1">Show all ${chips.length}</button>` : '';
+      return shown + extra + more;
+    }
+    function expandChipsIn(container) {
+      container.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-chip-more]');
+        if (!btn) return;
+        const row = btn.closest('.lab-chip-row');
+        if (row) row.querySelectorAll('.extra-chip.hidden').forEach(el => el.classList.remove('hidden'));
+        btn.remove();
+      });
     }
 
     /* ---------------- explorer views (quiz lives above, always visible) ---------------- */
@@ -242,10 +264,10 @@
           </div>
           <div>
             <p class="micro">Theories affirming this claim</p>
-            <div class="lab-chip-row">${affirming.map(t => {
+            <div class="lab-chip-row">${affirming.length ? collapsedChips(affirming.map(t => {
               const direct = (t.claims || []).includes(id);
               return `<button class="lab-theory-chip${direct ? ' direct' : ''}" data-theory="${t.id}" title="${direct ? 'Stated directly by this theory' : 'Not stated directly — it follows from claims this theory does state'}">${escapeHtml(t.name)}${direct ? '' : ' · implied'}</button>`;
-            }).join('') || ('<p class="lab-empty">None of the ' + E.theories.length + ' theories with claims.</p>')}</div>
+            })) : ('<p class="lab-empty">None of the ' + E.theories.length + ' theories with claims.</p>')}</div>
           </div>
         </div>`;
     }
@@ -266,6 +288,7 @@
         renderTheoryNav();
       }
     });
+    expandChipsIn(claimDetail);
 
     renderGraph();
     requestAnimationFrame(layoutGraph);
@@ -290,6 +313,7 @@
     let theoryNav = [];
 
     let theoryFilter = '';
+    let theoryListLimit = 10;
     function renderTheoryList() {
       const q = theoryFilter.trim().toLowerCase();
       // Word-boundary matching: searching "dualism" must not match
@@ -302,7 +326,8 @@
         || qRe.test(t.family || '')
         || qRe.test(t.blurb || '')
         || qRe.test(t.category || '');
-      const withClaims = E.theories.filter(matches).map(t => {
+      const all = E.theories.filter(matches);
+      const withClaims = all.slice(0, theoryListLimit).map(t => {
         const fullN = E.theoryFullClaims(t).size;
         return `<button class="lab-theory-btn" data-theory="${t.id}">
           <strong>${escapeHtml(t.name)}</strong>
@@ -315,8 +340,12 @@
           <span>${escapeHtml(t.category)} · claims in progress</span>
         </button>`
       ).join('');
+      // Never render hundreds of theory buttons at once: page them in.
+      const moreBtn = all.length > theoryListLimit
+        ? `<button class="text-btn lab-list-more" data-theory-more="1">Show 10 more (${all.length - theoryListLimit} left)</button>`
+        : '';
       theoryList.innerHTML = (withClaims || pending)
-        ? withClaims + (pending ? `<p class="lab-theory-group">More theories — claims in progress</p>${pending}` : '')
+        ? withClaims + moreBtn + (pending ? `<p class="lab-theory-group">More theories — claims in progress</p>${pending}` : '')
         : '<p class="lab-empty">No theories match that filter.</p>';
     }
     function viaWhich(theory, inheritedId) {
@@ -372,7 +401,7 @@
         <h3 class="lab-claim-title">${escapeHtml(c.text)}</h3>
         <p class="lab-plain">Put simply: ${escapeHtml(c.plain)}</p>
         <div class="lab-claim-cols"><div><p class="micro">↑ Broader claims this leads to</p>${ancestors.length ? `<div class="lab-chip-row">${ancestors.map(a => claimChip(a)).join('')}</div>` : '<p class="lab-empty">Nothing — this is a base claim.</p>'}</div><div><p class="micro">↓ More specific claims built on this</p>${descendants.length ? `<div class="lab-chip-row">${descendants.map(d => claimChip(d)).join('')}</div>` : '<p class="lab-empty">Nothing depends on this yet.</p>'}</div></div>
-        <p class="micro">Theories affirming this claim</p><div class="lab-chip-row">${affirming.map(t => `<button class="lab-theory-chip${(t.claims || []).includes(id) ? ' direct' : ''}" data-theory="${t.id}">${escapeHtml(t.name)}${(t.claims || []).includes(id) ? '' : ' · implied'}</button>`).join('') || ('<p class="lab-empty">None of the ' + E.theories.length + ' theories with claims.</p>')}</div>`;
+        <p class="micro">Theories affirming this claim</p><div class="lab-chip-row">${affirming.length ? collapsedChips(affirming.map(t => `<button class="lab-theory-chip${(t.claims || []).includes(id) ? ' direct' : ''}" data-theory="${t.id}">${escapeHtml(t.name)}${(t.claims || []).includes(id) ? '' : ' · implied'}</button>`)) : ('<p class="lab-empty">None of the ' + E.theories.length + ' theories with claims.</p>')}</div>`;
     }
     function renderTheoryNav() {
       const current = theoryNav[theoryNav.length - 1];
@@ -392,7 +421,10 @@
       else return;
       renderTheoryNav();
     });
+    expandChipsIn(detail);
     theoryList.addEventListener('click', (e) => {
+      const more = e.target.closest('[data-theory-more]');
+      if (more) { theoryListLimit += 10; renderTheoryList(); return; }
       const b = e.target.closest('[data-theory]');
       const m = e.target.closest('[data-meta]');
       if (b) theoryNav = [{ kind: 'theory', id: Number(b.dataset.theory) }];
@@ -412,6 +444,7 @@
     renderTheoryNav();
     $('labTheorySearch').addEventListener('input', (e) => {
       theoryFilter = e.target.value;
+      theoryListLimit = 10;
       renderTheoryList();
     });
 
@@ -422,7 +455,9 @@
     // A round is a short series: 12 questions, then results with the option
     // to keep going. The landing promises a short series, so the quiz keeps it.
     const QUIZ_ROUND_LENGTH = 12;
-    const QUIZ_RAIL_TOP = 8;
+    const QUIZ_RAIL_TOP = 10;
+    let railLimit = QUIZ_RAIL_TOP; // inline load-more in the live-alignment rail
+    let resultLimit = 10;          // collapsed results list
     let qstate = null;
     let qhistory = [];
     let forcedQuestionId = null; // Back re-shows the exact popped question instead of re-deriving
@@ -462,6 +497,8 @@
       revisitTotal = 0;
       revisitDone = new Set();
       revisitQueue = [];
+      railLimit = QUIZ_RAIL_TOP;
+      resultLimit = 10;
       lastSettledIds = [];
       lastSettledDir = null;
       qStart.classList.add('hidden');
@@ -554,13 +591,12 @@
           : `${qRoundCount + 1} of ${QUIZ_ROUND_LENGTH}`);
       $('labQText').textContent = claim.text;
       $('labQPlain').textContent = `Put simply: ${claim.plain}`;
-      const both = E.coverageBoth(qstate, q.id);
-      $('labQCoverage').textContent = `Why this question: one answer decides several claims at once — agreeing decides ${both.yes}, disagreeing decides ${both.no}.`;
-      const affN = E.affirmed(qstate).size;
-      const rejN = E.rejected(qstate).size;
-      $('labSettled').textContent = (affN + rejN)
-        ? `Decided so far: ${affN} agreed · ${rejN} ruled out · ${E.claims.length - affN - rejN} open`
-        : '';
+      // Progress pill: claims still in play out of the original total.
+      // Undecided means not affirmed and not rejected; a skipped claim
+      // decides nothing, so skipped-but-unresolved claims stay in play.
+      const open = E.undecided(qstate).length;
+      $('labProgressPill').textContent = `${open} of ${E.claims.length} claims still in play`;
+      $('labExplain').classList.add('hidden');
       $('labQBack').classList.toggle('hidden', qhistory.length === 0);
       disarmRestart();
       renderSettledBy();
@@ -613,6 +649,44 @@
       renderQuestion();
     }
 
+    // "Don't understand" first opens a bigger explanation; only the
+    // "Still don't get it" button inside it skips — and flags the claim as
+    // not understood. The flag is inert for scoring (see the engine).
+    function openExplain() {
+      const id = shownQuestionId;
+      if (!id) return;
+      const c = claimById.get(id);
+      if (!c) return;
+      $('labExplainTitle').textContent = c.text;
+      $('labExplainPlain').textContent = `Put simply: ${c.plain}`;
+      const parents = c.entails || [];
+      const children = directChildren(id);
+      const plainOf = (cid) => { const cc = claimById.get(cid); return cc ? `<li>${escapeHtml(cc.plain)}</li>` : ''; };
+      $('labExplainContext').innerHTML =
+        (parents.length
+          ? `<p class="micro">The bigger ideas behind it</p><ul class="explainer-points">${parents.map(plainOf).join('')}</ul>` : '') +
+        (children.length
+          ? `<p class="micro">What it looks like in practice</p><ul class="explainer-points">${children.slice(0, 4).map(plainOf).join('')}</ul>` : '') +
+        `<p class="explain-note">No wrong answers here — “Not sure” skips without judging, and skipping from here notes that this one was unclear.</p>`;
+      $('labExplain').classList.remove('hidden');
+      jumpTo($('labExplain'));
+    }
+    function closeExplain() {
+      $('labExplain').classList.add('hidden');
+    }
+    function skipNotUnderstood() {
+      const q = shownQuestionId ? { id: shownQuestionId } : currentQuestion();
+      shownQuestionId = null;
+      if (!q) return;
+      E.skipNotUnderstood(qstate, q.id);
+      qhistory.push({ id: q.id, action: 'skipNu' });
+      qRoundCount++;
+      if (revisitLeft > 0) revisitLeft--;
+      lastSettledIds = [];
+      lastSettledDir = 'skip';
+      renderQuestion();
+    }
+
     // Gentle inconsistency note: the quiz measures alignment, not consistency,
     // but a layperson deserves to know when two affirmed claims pull apart.
     // Before any pair exists, flag the question whose affirmation would create
@@ -649,7 +723,7 @@
 
     function renderScores() {
       const ranked = E.score(qstate);
-      const top = ranked.slice(0, QUIZ_RAIL_TOP);
+      const top = ranked.slice(0, railLimit);
       $('labScores').innerHTML = top.map(result => {
         const pct = result.total ? Math.round(100 * result.agreed / result.total) : 0;
         return `<div class="lab-score-row">
@@ -658,8 +732,8 @@
           <div class="lab-score-bar"><span style="width:${pct}%"></span></div>
           ${result.disagreed ? `<small>${result.disagreed} ruled out</small>` : ''}
         </div>`;
-      }).join('') + (ranked.length > QUIZ_RAIL_TOP
-        ? `<button class="lab-scores-more text-btn" data-peek-ranking="1">${ranked.length - QUIZ_RAIL_TOP} more theories — see the full ranking any time.</button>`
+      }).join('') + (ranked.length > railLimit
+        ? `<button class="lab-scores-more text-btn" data-rail-more="1">Show 10 more (${ranked.length - railLimit} left)</button>`
         : '');
     }
 
@@ -688,27 +762,35 @@
         $('labResultTitle').textContent = 'Where your answers land';
         $('labContinueNote').textContent = `${bl} Keep going any time for a sharper picture.`;
       }
-      qMain.classList.add('hidden');
-      qResult.classList.remove('hidden');
+      resultLimit = 10;
+      paintResultList();
+    }
+    function resultRowHtml(result, index) {
+      const line = (result.agreed === 0 && result.disagreed === 0)
+        ? `None of this theory's claims came up in your answers (${result.total} claim${result.total === 1 ? '' : 's'}).`
+        : (result.agreed === 0)
+          ? `You rule out ${result.disagreed} of its ${result.total} claims (agreeing with none).`
+          : `You agree with ${result.agreed} of its ${result.total} claims${result.disagreed ? `, and rule out ${result.disagreed}` : ''}.`;
+      return `
+      <div class="lab-result-row${index === 0 ? ' top' : ''}">
+        <span class="lab-result-rank">#${index + 1}</span>
+        <div><strong>${escapeHtml(result.theory.name)}</strong>
+        ${result.theory.blurb ? `<p class="lab-result-blurb">${escapeHtml(result.theory.blurb)}</p>` : ''}
+        <p>${line}</p>
+        <button class="text-btn" data-inspect="${result.theory.id}">Inspect this theory’s claims <span class="vh">— ${escapeHtml(result.theory.name)}</span></button></div>
+      </div>`;
+    }
+    // The full ranking can be 120 rows: show the top 10, expand on demand.
+    function paintResultList() {
       const scores = E.score(qstate);
       const maxAgreed = scores.length ? scores[0].agreed : 0;
+      const shown = scores.slice(0, resultLimit);
       $('labResultList').innerHTML = (maxAgreed === 0
         ? '<p class="lab-empty">No theory matched your answers — nothing you decided lines up with any theory’s claims. The ranking below leads with the theories your answers ruled out least.</p>'
-        : '') + scores.map((result, index) => {
-        const line = (result.agreed === 0 && result.disagreed === 0)
-          ? `None of this theory's claims came up in your answers (${result.total} claim${result.total === 1 ? '' : 's'}).`
-          : (result.agreed === 0)
-            ? `You rule out ${result.disagreed} of its ${result.total} claims (agreeing with none).`
-            : `You agree with ${result.agreed} of its ${result.total} claims${result.disagreed ? `, and rule out ${result.disagreed}` : ''}.`;
-        return `
-        <div class="lab-result-row${index === 0 ? ' top' : ''}">
-          <span class="lab-result-rank">#${index + 1}</span>
-          <div><strong>${escapeHtml(result.theory.name)}</strong>
-          ${result.theory.blurb ? `<p class="lab-result-blurb">${escapeHtml(result.theory.blurb)}</p>` : ''}
-          <p>${line}</p>
-          <button class="text-btn" data-inspect="${result.theory.id}">Inspect this theory’s claims <span class="vh">— ${escapeHtml(result.theory.name)}</span></button></div>
-        </div>`;
-      }).join('');
+        : '') + shown.map((result, index) => resultRowHtml(result, index)).join('')
+        + (scores.length > resultLimit
+          ? `<div class="result-show-all-wrap"><button class="text-btn" data-result-more="1">Show all ${scores.length} theories</button></div>`
+          : '');
     }
 
     $('labQuizBegin').addEventListener('click', startQuiz);
@@ -755,7 +837,7 @@
     }
     $('labQRanking').addEventListener('click', peekRanking);
     $('labScores').addEventListener('click', (e) => {
-      if (e.target.closest('[data-peek-ranking]')) peekRanking();
+      if (e.target.closest('[data-rail-more]')) { railLimit += 10; renderScores(); }
     });
     $('labQuizResume').addEventListener('click', () => {
       $('labQuizResume').classList.add('hidden');
@@ -765,8 +847,13 @@
     });
     $('labAgree').addEventListener('click', () => answerQuestion('yes'));
     $('labDisagree').addEventListener('click', () => answerQuestion('no'));
-    $('labSkip').addEventListener('click', skipQuestion);
+    $('labNotSure').addEventListener('click', skipQuestion);
+    $('labDontUnderstand').addEventListener('click', openExplain);
+    $('labExplainStill').addEventListener('click', skipNotUnderstood);
+    $('labExplainBack').addEventListener('click', closeExplain);
     $('labResultList').addEventListener('click', (e) => {
+      const more = e.target.closest('[data-result-more]');
+      if (more) { resultLimit = E.score(qstate).length; paintResultList(); return; }
       const b = e.target.closest('[data-inspect]');
       if (b) selectTheory(Number(b.dataset.inspect));
     });
@@ -775,7 +862,7 @@
       if (!last) return;
       const inRevisit = qRoundCount > QUIZ_ROUND_LENGTH && revisitTotal > 0;
       if (last.action === 'skip') E.unskip(qstate, last.id);
-      else E.undo(qstate, last.id);
+      else E.undo(qstate, last.id); // answers and 'skipNu': undo also clears the not-understood flag
       qRoundCount = Math.max(0, qRoundCount - 1);
       if (inRevisit) revisitLeft = Math.min(revisitTotal, revisitLeft + 1);
       // Backing into the round discards the revisit pass: the un-skipped
