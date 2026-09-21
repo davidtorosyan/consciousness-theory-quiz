@@ -588,6 +588,16 @@
     /* Build 38: collapsed settled trace, stable tension slot, rail deltas, detail flash, claim search */
     .lab-settled-by .settled-details { margin: 8px 0 0; padding-left: 20px; color: var(--dim); font-size: 12.5px; }
     .lab-settled-by .settled-details li { margin-bottom: 4px; }
+    /* Build 40: the "details" expander is a real affordance now — pill button
+       with a chevron and a thumb-sized tap target, still secondary to the
+       main answer buttons. */
+    .lab-settled-by .settled-more-btn, .lab-tension .settled-more-btn {
+      display: inline-block; padding: 7px 12px; border: 1px solid var(--dim);
+      border-radius: 999px; font-size: 13px; line-height: 1.2; min-height: 32px;
+    }
+    .lab-settled-by .settled-more-btn:hover, .lab-tension .settled-more-btn:hover {
+      color: var(--ink); border-color: var(--ink);
+    }
     .lab-tension { min-height: 38px; }
     .lab-tension.tension-empty { visibility: hidden; }
     .tension-details { margin: 6px 0 0; }

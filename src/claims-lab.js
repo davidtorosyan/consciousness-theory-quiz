@@ -22,11 +22,24 @@
     }
     const E = window.ClaimsEngine.bound();
     // Freshness check: the HTML shell can lag behind deploys (CDN cache), so
-    // ask the server what the latest build is and offer a reload if newer.
+    // ask the server what the latest build is. The banner is only worth
+    // showing once the visitor has quiz progress to protect — on a truly
+    // fresh first load it just confuses.
+    let newerBuildSeen = false;
+    function quizHasProgress() {
+      if (!qstate) return false;
+      return Object.keys(qstate.answers || {}).length > 0
+        || Object.keys(qstate.skipped || {}).length > 0
+        || Object.keys(qstate.notUnderstood || {}).length > 0;
+    }
+    function maybeShowUpdateBanner() {
+      if (newerBuildSeen && quizHasProgress()) $('updateBanner').classList.remove('hidden');
+    }
     try {
       fetch('version.json?fresh=' + Date.now()).then(r => r.json()).then(v => {
         if (v && typeof v.build === 'number' && v.build > (window.SITE_BUILD || 0)) {
-          $('updateBanner').classList.remove('hidden');
+          newerBuildSeen = true;
+          maybeShowUpdateBanner();
         }
       }).catch(() => {});
     } catch (e) { /* offline or file:// — stay quiet */ }
@@ -479,7 +492,11 @@
     $('labTheorySearch').addEventListener('input', (e) => {
       theoryFilter = e.target.value;
       theoryListLimit = 10;
+      // An open detail panel can show a theory the new filter hides — a
+      // layperson could mistake it for a filtered theory's panel. Close it.
+      theoryNav = [];
       renderTheoryList();
+      renderTheoryNav();
     });
 
     /* ---------------- claim-driven quiz ---------------- */
@@ -644,6 +661,7 @@
       renderSettledBy();
       renderTension();
       renderScores();
+      maybeShowUpdateBanner();
     }
 
     function renderSettledBy() {
@@ -663,7 +681,7 @@
       }).join('');
       el.innerHTML =
         `<span>Last question: that also ${verb} ${n} claim${n === 1 ? '' : 's'}. </span>` +
-        `<button class="text-btn" data-settled-more="1" data-closed="details" aria-expanded="false">details</button>` +
+        `<button class="text-btn settled-more-btn" data-settled-more="1" data-closed="▸ details" aria-expanded="false">▸ details</button>` +
         `<ul class="settled-details hidden">${labels}</ul>`;
     }
 
@@ -782,7 +800,7 @@
       const first = `Worth knowing: ${pairText(pairs[0])} — you affirmed both.`;
       el.innerHTML = pairs.length > 1
         ? `<span>${escapeHtml(first)} </span>` +
-          `<button class="text-btn" data-tension-more="1" data-closed="one more tension" aria-expanded="false">one more tension</button>` +
+          `<button class="text-btn settled-more-btn" data-tension-more="1" data-closed="▸ one more tension" aria-expanded="false">▸ one more tension</button>` +
           `<p class="tension-details hidden">${escapeHtml(`Also: ${pairText(pairs[1])} — you affirmed both.`)}</p>`
         : `<span>${escapeHtml(first)}</span>`;
     }
@@ -945,7 +963,7 @@
       const open = btn.getAttribute('aria-expanded') === 'true';
       btn.setAttribute('aria-expanded', String(!open));
       if (list) list.classList.toggle('hidden', open);
-      btn.textContent = open ? (btn.getAttribute('data-closed') || 'details') : 'hide';
+      btn.textContent = open ? (btn.getAttribute('data-closed') || '▸ details') : '▾ hide';
     });
     $('labResultList').addEventListener('click', (e) => {
       const more = e.target.closest('[data-result-more]');

@@ -251,6 +251,53 @@ async function main() {
   check(read('styles.css').includes('.lab-quiz #labQText') && read('styles.css').includes('min-height: 3.2em'),
     'question text has a min-height to steady the answer buttons');
 
+  // round-4: changing the theory filter closes a stale open detail panel
+  click(env, 'labTheoryList', { target: { closest: (sel) => sel === '[data-theory]' ? { dataset: { theory: '4' } } : null }, preventDefault() {} });
+  check(html(env, 'labDetail').includes('Substance dualism'), 'test setup: theory panel opens for Substance dualism');
+  fireInput(env, 'labTheorySearch', 'integrated information');
+  check(html(env, 'labDetail').includes('Pick a theory on the left'),
+    'changing the filter closes the open theory panel instead of leaving a stale one');
+  fireInput(env, 'labTheorySearch', '');
+
+  // round-4: the settled "details" expander is a real affordance now
+  check(read('src/claims-lab.js').includes('settled-more-btn') && read('src/claims-lab.js').includes('data-closed="▸ details"'),
+    'settled details expander uses a chevron pill-button affordance');
+  check(read('styles.css').includes('.settled-more-btn') && read('styles.css').includes('min-height: 32px'),
+    'details expander has a thumb-sized tap target');
+
+  // round-4: update banner reworded and gated on having progress
+  check(read('index.html').includes('This quiz just updated —'),
+    'update banner reworded for first-time visitors');
+  check(read('src/claims-lab.js').includes('newerBuildSeen') && read('src/claims-lab.js').includes('quizHasProgress()'),
+    'update banner only shows once the visitor has quiz progress');
+
+  // round-4 jargon sweep: tester-flagged taglines rewritten in plain words
+  const theoriesSrc = read('data/theories.js');
+  check(theoriesSrc.includes('not made of matter at all'),
+    'Substance dualism summary avoids the "substance" term-of-art');
+  check(!theoriesSrc.includes('maximally irreducible') && !theoriesSrc.includes('Φ (phi)') &&
+    theoriesSrc.includes('researchers measure this with a quantity they call phi'),
+    'IIT tagline rewritten in plain words, phi glossed');
+  const t62 = byId.get(62), t104 = byId.get(104);
+  check(t62 && t62.blurb.includes('Conscious experience is all-or-nothing'),
+    "Tye's tagline no longer leads with unexplained 'Phenomenal consciousness'");
+  check(t104 && t104.blurb.includes("(the supposed 'felt qualities' of experience)"),
+    "Mandik's tagline glosses 'qualia' inline");
+  // no internal claim ids anywhere in served UI strings
+  check(!/\(c\d+\)/.test(read('data/claims.js')) && !/\(c\d+\)/.test(theoriesSrc),
+    'no parenthesized internal claim ids in served data');
+  const caveatIds = [...read('data/claims.js').matchAll(/caveat: "((?:[^"\\]|\\.)*)"/g)]
+    .flatMap(m => m[1].match(/\bc\d+\b/g) || []);
+  check(caveatIds.length === 0, `no bare internal claim ids in caveats${caveatIds.length ? ' (' + caveatIds.join(',') + ')' : ''}`);
+  // sweep: unglossed phenomenal/qualia left in taglines/descriptions
+  const tagSweep = [];
+  for (const t of THEORIES) {
+    const hay = `${t.name} ${t.blurb || ''}`;
+    if (/\bphenomenal\b/i.test(hay) && !/felt/i.test(hay)) tagSweep.push(`theory${t.id}:phenomenal`);
+    if (/\bqualia\b/i.test(hay) && !/felt qualities|felt experience/i.test(hay)) tagSweep.push(`theory${t.id}:qualia`);
+  }
+  check(tagSweep.length === 0, `no unglossed phenomenal/qualia in theory taglines${tagSweep.length ? ' (' + tagSweep.slice(0, 6).join(', ') + ')' : ''}`);
+
   // theory search filter
   fireInput(env, 'labTheorySearch', 'integrated information');
   const filteredHtml = html(env, 'labTheoryList');
@@ -658,11 +705,17 @@ async function main() {
   click(env, 'updateReload');
   check(env.reloaded, 'reload button triggers location.reload');
 
-  // version freshness banner
+  // version freshness banner: quiet on a fresh first load, shown once the
+  // visitor has quiz progress to protect
   console.log('testing version-freshness banner…');
   const stale = boot({ siteBuild: 4, fetchImpl: () => Promise.resolve({ json: () => Promise.resolve({ build: 6 }) }) });
   await new Promise((r) => setTimeout(r, 50));
-  check(!stale.els.get('updateBanner').classList.contains('hidden'), 'banner appears when server build is newer');
+  check(stale.els.get('updateBanner').classList.contains('hidden'),
+    'banner stays hidden on a fresh first load even when a newer build exists');
+  click(stale, 'labQuizBegin');
+  click(stale, 'labAgree');
+  check(!stale.els.get('updateBanner').classList.contains('hidden'),
+    'banner appears once the visitor has quiz progress and a newer build exists');
   const fresh = boot({ siteBuild: 6, fetchImpl: () => Promise.resolve({ json: () => Promise.resolve({ build: 6 }) }) });
   await new Promise((r) => setTimeout(r, 50));
   check(fresh.els.get('updateBanner').classList.contains('hidden'), 'banner stays hidden when build is current');
