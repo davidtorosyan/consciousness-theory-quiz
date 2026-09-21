@@ -311,7 +311,7 @@
     expandChipsIn(claimDetail);
 
     // Claim explorer search: dim non-matching nodes so a keyword surfaces
-    // the claim in the 278-node graph. A highlight, not a filter — the map
+    // the claim in the 279-node graph. A highlight, not a filter — the map
     // stays whole and the match count says what matched.
     const claimSearch = $('labClaimSearch');
     const claimSearchCount = $('labClaimSearchCount');
