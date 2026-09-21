@@ -455,7 +455,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c53",
     short: "There are no real qualia",
-    text: "There are no private, indescribable inner qualities of experience — the philosophical idea of 'qualia' (supposedly ineffable feels, like the redness of red) is a fiction.",
+    text: "There are no private, indescribable inner qualities of experience — the philosophical idea of 'qualia' is a fiction. ('Qualia' — KWAH-lee-uh — is philosophers' word for those supposedly ineffable feels, like the redness of red.)",
     plain: "'What it's like' isn't a special inner property — that idea is a philosophical fiction.",
     entails: []
   },
@@ -596,7 +596,7 @@ window.CLAIMS = Object.freeze([
   {
     id: "c72",
     short: "Reality is tiny mind-like perceivers",
-    text: "The basic building blocks of reality are tiny mind-like units — Leibniz called them 'monads': simple, partless, non-material, each perceiving the whole universe from its own point of view, changing only from within.",
+    text: "The basic building blocks of reality are tiny mind-like units — Leibniz, a 17th-century philosopher, called them 'monads' (his word for these tiny mind-like units): simple, partless, non-material, each perceiving the whole universe from its own point of view, changing only from within.",
     plain: "Everything is made of tiny mind-like units, each mirroring the whole universe inside itself.",
     entails: []
   },
@@ -767,7 +767,7 @@ window.CLAIMS = Object.freeze([
     id: "c96",
     short: "Three aspects, one substance",
     text: "Brain and mind are a single substance with three inseparable aspects: the physiological (neurons, glia, chemistry), the mental-unconscious (informational patterns like brain waves), and the mental-conscious (felt experience itself).",
-    plain: "Your brain has three inseparable sides: its wetware, its information patterns, and your felt experience.",
+    plain: "Your brain has three inseparable sides: its wetware (the physical brain tissue itself), its information patterns, and your felt experience.",
     entails: []
   },
   {
