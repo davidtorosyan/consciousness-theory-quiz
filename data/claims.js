@@ -88,7 +88,7 @@ window.CLAIMS = Object.freeze([
     short: "Everything is mind",
     text: "Everything that exists is fundamentally consciousness or mind.",
     plain: "Mind isn't made out of something else — it's the basic stuff of reality.",
-    entails: []
+    entails: ["c281"]
   },
   {
     id: "c2",
@@ -124,7 +124,7 @@ window.CLAIMS = Object.freeze([
     text: "Your mind is not made of physical matter at all: it is a wholly different kind of stuff from your body.",
     plain: "Mind and body are two fundamentally different kinds of thing.",
     contradicts: ["c0", "c93"],
-    entails: ["c278"]
+    entails: ["c278", "c286"]
   },
   {
     id: "c7",
@@ -154,7 +154,7 @@ window.CLAIMS = Object.freeze([
     text: "Every physical event has a purely physical cause — minds never move matter.",
     plain: "Everything physical has a purely physical cause; minds don't push neurons.",
     contradicts: ["c8"],
-    entails: []
+    entails: ["c286"]
   },
   {
     id: "c11",
@@ -175,7 +175,7 @@ window.CLAIMS = Object.freeze([
     short: "Integrated structure matters",
     text: "What makes a system conscious is how tightly its parts are woven into one whole of mutual cause and effect — not the computations or functions it performs.",
     plain: "What matters is the parts forming one inseparable web of mutual influence, not running the right program.",
-    entails: ["c0"]
+    entails: ["c0", "c283"]
   },
   {
     id: "c14",
@@ -224,7 +224,7 @@ window.CLAIMS = Object.freeze([
     short: "Mind-body parallelism",
     text: "Mind and body never causally interact — a mind and its body are one and the same thing under two descriptions.",
     plain: "The mind never pushes the brain and the brain never pushes the mind; there's no interaction problem because there was never a gap.",
-    entails: ["c19"]
+    entails: ["c19", "c288"]
   },
   {
     id: "c21",
@@ -238,7 +238,7 @@ window.CLAIMS = Object.freeze([
     short: "Pure experience prior to mind/matter",
     text: "Mind and matter are both built from something more basic — a single neutral stuff, not yet mental or physical, that James called 'pure experience'.",
     plain: "Reality is made of one neutral stuff that isn't mind or matter yet; mind and matter are roles it plays depending on how it's organized.",
-    entails: []
+    entails: ["c288"]
   },
   {
     id: "c23",
@@ -266,7 +266,7 @@ window.CLAIMS = Object.freeze([
     short: "Particles are tiny subjects",
     text: "The smallest building blocks of nature are conscious subjects with their own rudimentary experiences.",
     plain: "Even particles have a flicker of experience — tiny subjects with tiny viewpoints.",
-    entails: ["c9"]
+    entails: ["c9", "c287"]
   },
   {
     id: "c27",
@@ -294,7 +294,7 @@ window.CLAIMS = Object.freeze([
     short: "Subjectless qualities",
     text: "The fundamental ingredients of reality are qualities that belong to no subject — raw, unfelt qualities.",
     plain: "The basic building blocks have qualitative character (like redness or painfulness) but nobody experiences them.",
-    entails: ["c25"]
+    entails: ["c25", "c287"]
   },
   {
     id: "c31",
@@ -308,7 +308,7 @@ window.CLAIMS = Object.freeze([
     short: "Experience = brain process",
     text: "Every conscious experience is one and the same thing as a physical brain process — the experience and the brain process are a single event, not two linked things.",
     plain: "Your pain just is a brain event, the way lightning just is an electrical discharge.",
-    entails: ["c0"]
+    entails: ["c0", "c283"]
   },
   {
     id: "c33",
@@ -359,7 +359,7 @@ window.CLAIMS = Object.freeze([
     short: "Physical yet irreducible",
     text: "Consciousness is wholly physical but genuinely new — a strongly emergent level of brain organization, unpredictable even in principle from its constituents and not reducible to them.",
     plain: "100% physical, but a real new level — not just neurons redescribed.",
-    entails: ["c34"]
+    entails: ["c34", "c284"]
   },
   {
     id: "c40",
@@ -373,7 +373,7 @@ window.CLAIMS = Object.freeze([
     short: "Mind is defined by its role",
     text: "What makes a mental state the state it is is its functional role — its job description: the causal relations among sensory inputs, internal states, and motor outputs — not what it is made of.",
     plain: "Pain is pain because of what it does in the system, not because of the neurons.",
-    entails: []
+    entails: ["c283"]
   },
   {
     id: "c42",
@@ -394,7 +394,7 @@ window.CLAIMS = Object.freeze([
     short: "Attention gates consciousness",
     text: "Attention is a prerequisite for consciousness — the brain does a great deal of processing unconsciously until attention amplifies a signal into awareness.",
     plain: "Your brain works unconsciously most of the time; attention is the gate that lets things into awareness.",
-    entails: []
+    entails: ["c283"]
   },
   {
     id: "c45",
@@ -408,14 +408,14 @@ window.CLAIMS = Object.freeze([
     short: "Qualities can exist unconsciously",
     text: "Mental qualities (the raw feel of red, say) can exist without being conscious; they become conscious only through the mind’s awareness of them.",
     plain: "Your brain can carry the quality of redness without you being conscious of it — consciousness is the noticing.",
-    entails: ["c45"]
+    entails: ["c45", "c283"]
   },
   {
     id: "c47",
     short: "The brain is a prediction engine",
     text: "The brain is fundamentally a prediction machine: top-down predictions (expectations flowing down from higher brain areas) about the causes of sensory input are constantly compared against bottom-up prediction errors (mismatches flowing up from the senses).",
     plain: "Your brain doesn't passively receive the world — it predicts it, then corrects its guesses.",
-    entails: []
+    entails: ["c283"]
   },
   {
     id: "c48",
@@ -443,7 +443,7 @@ window.CLAIMS = Object.freeze([
     short: "Fields bind experience together",
     text: "Electromagnetic fields bind distributed neural activity into unified conscious experience through their physical properties of superposition and interference (waves adding together and canceling out).",
     plain: "The field stitches scattered brain activity into one seamless experience — it's the physical glue.",
-    entails: []
+    entails: ["c283"]
   },
   {
     id: "c52",
@@ -457,7 +457,7 @@ window.CLAIMS = Object.freeze([
     short: "There are no real qualia",
     text: "There are no private, indescribable inner qualities of experience — the philosophical idea of 'qualia' is a fiction. ('Qualia' — KWAH-lee-uh — is philosophers' word for those supposedly ineffable feels, like the redness of red.)",
     plain: "'What it's like' isn't a special inner property — that idea is a philosophical fiction.",
-    entails: []
+    entails: ["c285"]
   },
   {
     id: "c54",
@@ -478,7 +478,7 @@ window.CLAIMS = Object.freeze([
     short: "Soul as bodily form",
     text: "A living thing's soul is its organizing form — not a separate thing inside it, but what makes this matter one living organism.",
     plain: "The soul isn't a ghost in the machine; it's the organized way a living body is alive.",
-    entails: []
+    entails: ["c286"]
   },
   {
     id: "c57",
@@ -513,7 +513,7 @@ window.CLAIMS = Object.freeze([
     short: "Brain filters consciousness",
     text: "The brain does not generate, store, or reconstruct experience; it transmits perception to consciousness and filters the past so we can act in the present.",
     plain: "Your brain doesn't make consciousness — it narrows it down so you can act.",
-    entails: []
+    entails: ["c286"]
   },
   {
     id: "c62",
@@ -541,7 +541,7 @@ window.CLAIMS = Object.freeze([
     short: "Consciousness only watches, never acts",
     text: "Consciousness itself is pure, contentless witnessing: it never acts, changes, thinks, or feels — it only watches.",
     plain: "Consciousness is just the silent watcher; it does nothing and never changes.",
-    entails: ["c9"]
+    entails: ["c9", "c286"]
   },
   {
     id: "c65",
@@ -555,7 +555,7 @@ window.CLAIMS = Object.freeze([
     short: "Three irreducible domains",
     text: "Mind, matter, and at least one further domain — such as their union, objective knowledge, or mathematical reality — are each basic and can't be reduced to the others; reality doesn't split into just one or two kinds.",
     plain: "Reality has three basic realms relevant to consciousness, not one or two.",
-    entails: []
+    entails: ["c286"]
   },
   {
     id: "c67",
@@ -563,7 +563,7 @@ window.CLAIMS = Object.freeze([
     text: "Subjective experience has no causal power of its own: all the work attributed to it — deciding, controlling, steering behavior — is done by nonconscious brain systems.",
     plain: "Your feeling of being in control doesn't actually control anything.",
     contradicts: ["c95"],
-    entails: []
+    entails: ["c283"]
   },
   {
     id: "c68",
@@ -577,7 +577,7 @@ window.CLAIMS = Object.freeze([
     short: "Every event experiences",
     text: "Every basic happening in nature has an inner experiential side — even the simplest events 'feel' something of the rest of reality, though they are not conscious.",
     plain: "Every tiny event in nature has a flicker of inner life, but none of it is conscious.",
-    entails: ["c9"]
+    entails: ["c9", "c288"]
   },
   {
     id: "c70",
@@ -605,7 +605,7 @@ window.CLAIMS = Object.freeze([
     short: "No real interaction",
     text: "No monad ever acts on another; mind and body only seem to interact because God wound every monad up at creation to unfold in perfect sync — a 'pre-established harmony', like two clocks that always agree without ever touching.",
     plain: "Nothing in the universe ever truly affects anything else — it's all choreographed in advance.",
-    entails: []
+    entails: ["c288"]
   },
   {
     id: "c74",
@@ -661,7 +661,7 @@ window.CLAIMS = Object.freeze([
     short: "Nonphysical, not a substance",
     text: "Conscious experience is nonphysical — not describable in physical terms — yet it is not a separate substance that could exist apart from the brain; it is a property of the neural system.",
     plain: "Experience isn't physical, but it isn't a ghost that could float free of the brain either.",
-    entails: ["c278"]
+    entails: ["c278", "c286"]
   },
   {
     id: "c82",
@@ -689,7 +689,7 @@ window.CLAIMS = Object.freeze([
     short: "Experience is where it seems",
     text: "Experiences are located (roughly) where they seem to be: a pain is in the foot, not in the brain — the world you experience is the physical world as experienced, not something inside the head.",
     plain: "Your pain really is in your foot — experience isn't locked inside the skull.",
-    entails: []
+    entails: ["c288"]
   },
   {
     id: "c86",
@@ -703,7 +703,7 @@ window.CLAIMS = Object.freeze([
     short: "Mind-matter complementarity",
     text: "Mind and matter are two complementary aspects — mutually exclusive yet jointly necessary descriptions, like particle and wave — of a single underlying reality that is itself neither mental nor physical.",
     plain: "Mind and matter are two sides of one coin, and you can never see both sides at once.",
-    entails: ["c19"]
+    entails: ["c19", "c288"]
   },
   {
     id: "c88",
@@ -731,7 +731,7 @@ window.CLAIMS = Object.freeze([
     short: "Evolution drawn to Omega",
     text: "Evolution is drawn forward by Omega — the theory's name for the universe's ultimate destination, the absolute whole and original source of everything — toward ever-greater convergence and unity of consciousness, ultimately identified with God.",
     plain: "Evolution is being pulled toward a final unity of all consciousness — Omega.",
-    entails: []
+    entails: ["c288"]
   },
   {
     id: "c92",
@@ -746,7 +746,7 @@ window.CLAIMS = Object.freeze([
     text: "Every particular mental event — this pain, that thought — is one and the same thing as a physical event in the brain: a single event, not two linked things; there is no extra mental stuff.",
     plain: "Each of your thoughts just is a physical brain event.",
     contradicts: ["c6"],
-    entails: []
+    entails: ["c284"]
   },
   {
     id: "c94",
@@ -768,7 +768,7 @@ window.CLAIMS = Object.freeze([
     short: "Three aspects, one substance",
     text: "Brain and mind are a single substance with three inseparable aspects: the physiological (neurons, glia, chemistry), the mental-unconscious (informational patterns like brain waves), and the mental-conscious (felt experience itself).",
     plain: "Your brain has three inseparable sides: its wetware (the physical brain tissue itself), its information patterns, and your felt experience.",
-    entails: []
+    entails: ["c284"]
   },
   {
     id: "c97",
@@ -789,7 +789,7 @@ window.CLAIMS = Object.freeze([
     short: "Information is fundamental",
     text: "Information is a basic building block of reality itself — not just a description we impose, but part of the fundamental furniture of the world.",
     plain: "Information isn't just a human idea — it's woven into reality itself.",
-    entails: []
+    entails: ["c288"]
   },
   {
     id: "c100",
@@ -839,7 +839,7 @@ window.CLAIMS = Object.freeze([
     short: "No higher-order state needed",
     text: "A mental state is conscious just by being a world-directed representation — no higher thought or monitoring of the state is needed.",
     plain: "No inner watcher is required — being conscious doesn't take a second thought.",
-    entails: []
+    entails: ["c283"]
   },
   {
     id: "c108",
@@ -867,7 +867,7 @@ window.CLAIMS = Object.freeze([
     short: "Brainstem, not cortex, is the seat",
     text: "The ancient brainstem and subcortical systems — not the cortex — are the core seat of consciousness; rich cortex without them is empty.",
     plain: "Consciousness lives in the old lower brain, not the fancy outer layer.",
-    entails: []
+    entails: ["c283"]
   },
   {
     id: "c112",
@@ -881,14 +881,14 @@ window.CLAIMS = Object.freeze([
     short: "No brain in a vat",
     text: "A brain in a vat — or any brain cut off from body and world — could not be conscious; body and environment are constitutive of experience, not just its causes.",
     plain: "Cut the body and world away and there's no mind left — they're part of the experience itself.",
-    entails: ["c112"]
+    entails: ["c112", "c283"]
   },
   {
     id: "c114",
     short: "Experience needs noncomputational physics",
     text: "Consciousness is non-computational: no algorithm running on a classical computer could be conscious, because experience depends on quantum-gravity effects in the brain.",
     plain: "A computer running the right program would still miss it — consciousness needs brand-new physics.",
-    entails: []
+    entails: ["c289"]
   },
   {
     id: "c115",
@@ -909,7 +909,7 @@ window.CLAIMS = Object.freeze([
     short: "Awareness is a model of attention",
     text: "The brain builds a simplified informational model of its own attention — an attention schema — to monitor and control it.",
     plain: "Your brain keeps a crude sketch of what it's paying attention to, and uses it to steer.",
-    entails: []
+    entails: ["c283"]
   },
   {
     id: "c118",
@@ -972,7 +972,7 @@ window.CLAIMS = Object.freeze([
     short: "We know only things-as-experienced",
     text: "We can know things only as they appear to us — phenomena; things as they are in themselves are forever beyond our knowledge.",
     plain: "You'll never know reality as it really is — only how it shows up for you.",
-    entails: []
+    entails: ["c281"]
   },
   {
     id: "c127",
@@ -986,7 +986,7 @@ window.CLAIMS = Object.freeze([
     short: "Nature and spirit are one Absolute",
     text: "Nature and mind are not two kinds of being but two poles of one Absolute: nature is visible spirit, spirit is invisible nature.",
     plain: "Nature and mind are the same reality seen from opposite ends.",
-    entails: ["c19"]
+    entails: ["c19", "c281"]
   },
   {
     id: "c129",
@@ -1042,7 +1042,7 @@ window.CLAIMS = Object.freeze([
     short: "Everything exists only dependently",
     text: "Nothing possesses intrinsic nature (existence ‘from its own side,’ independent of everything else): everything, including consciousness, exists only in dependence on causes, parts, relations, and concepts.",
     plain: "Nothing stands alone; everything exists only because of other things — including awareness itself.",
-    entails: []
+    entails: ["c281"]
   },
   {
     id: "c137",
@@ -1084,7 +1084,7 @@ window.CLAIMS = Object.freeze([
     short: "Reality is a computed virtuality",
     text: "The physical universe is a virtual reality computed by a Larger Consciousness System; there is no objective world outside of us — the hard problem dissolves once the belief in a fundamental external reality is dropped.",
     plain: "The world is a shared simulation run by a larger consciousness — not an objective place out there.",
-    entails: []
+    entails: ["c281"]
   },
   {
     id: "c143",
@@ -1126,7 +1126,7 @@ window.CLAIMS = Object.freeze([
     short: "Consciousness is a fundamental field",
     text: "Consciousness is like spacetime: a fundamental field that is everywhere — not something generated only by complex brains, but intrinsic to matter all along.",
     plain: "Awareness is woven through everything the way spacetime is — not switched on by brains.",
-    entails: ["c25"]
+    entails: ["c25", "c287"]
   },
   {
     id: "c149",
@@ -1140,7 +1140,7 @@ window.CLAIMS = Object.freeze([
     short: "A stripped-down precursor of experience is irreducible",
     text: "At the most fundamental level there is 'consciousness*' (the asterisk marks a stripped-down precursor of experience, not full consciousness — what others call protoconsciousness) — and it is irreducible: there is no plausible way physics could explain it.",
     plain: "At rock bottom sits something experience-like that no physical story can reduce away.",
-    entails: ["c34"]
+    entails: ["c34", "c287"]
   },
   {
     id: "c151",
@@ -1161,14 +1161,14 @@ window.CLAIMS = Object.freeze([
     short: "Felt-experience properties have causal powers",
     text: "Felt-experience properties — 'phenomenal' properties, what experiences feel like from the inside — are not causally idle: they are the very things that make matter behave as it does.",
     plain: "How things feel isn't a side-show — feelings are what make matter move.",
-    entails: ["c25"]
+    entails: ["c25", "c287"]
   },
   {
     id: "c154",
     short: "Subjects don't combine",
     text: "Simple subjects do not fuse into a larger subject: complex experience is made what it is by relationships at the micro-level, without any new larger subject ever forming.",
     plain: "Small minds don't merge into a big mind — your full experience is built from relations between them.",
-    entails: []
+    entails: ["c287"]
   },
   {
     id: "c155",
@@ -1203,14 +1203,14 @@ window.CLAIMS = Object.freeze([
     short: "Spacetime emerges from prototime",
     text: "Spacetime is not fundamental: it emerges from a deeper level of reality — 'prototime', the theory's name for this deeper level, outside ordinary space and time — in which quantum entanglement keeps its coherence.",
     plain: "Space and time are not the bottom layer; they grow out of a deeper timeless entanglement.",
-    entails: []
+    entails: ["c287"]
   },
   {
     id: "c160",
     short: "Quantum events have inner feeling",
     text: "Quantum states and events carry an internal experiential aspect: beneath the mathematics of quantum mechanics lies a proto-experiential character to physical events themselves.",
     plain: "Quantum events aren't just numbers — they have an inner, experience-like side.",
-    entails: ["c25"]
+    entails: ["c25", "c287"]
   },
   {
     id: "c161",
@@ -1238,7 +1238,7 @@ window.CLAIMS = Object.freeze([
     short: "Minds can't be computed",
     text: "Mental states are intrinsically hardware-dependent: they cannot be captured by a computer program, so no artificial intelligence running the right algorithm could be conscious.",
     plain: "You can't program consciousness into being — minds need living biology, not software.",
-    entails: []
+    entails: ["c287"]
   },
   {
     id: "c165",
@@ -1266,7 +1266,7 @@ window.CLAIMS = Object.freeze([
     short: "Consciousness acts on physics",
     text: "Consciousness is not merely affected by physics but acts on it: since the physical world manifestly acts on consciousness, a reciprocal influence must exist — and the quantum collapse, the moment a spread-out quantum possibility becomes one definite outcome, is where it shows itself.",
     plain: "Mind doesn't just receive from physics — it pushes back, at the moment quantum possibilities become definite.",
-    entails: []
+    entails: ["c289"]
   },
   {
     id: "c169",
@@ -1308,7 +1308,7 @@ window.CLAIMS = Object.freeze([
     short: "Entanglement binds experience",
     text: "Entanglement is the only true binding agent in physics: it creates holistic states whose parts are fundamentally interconnected, and so it is what binds experience into one unity.",
     plain: "What holds your whole experience together is quantum entanglement.",
-    entails: []
+    entails: ["c289"]
   },
   {
     id: "c175",
@@ -1350,7 +1350,7 @@ window.CLAIMS = Object.freeze([
     short: "Reality is undivided wholeness",
     text: "Reality is an undivided, dynamic, alive wholeness in which observer and observed actively participate with each other — not a machine of independent parts.",
     plain: "Reality is one living whole, not a machine of separate pieces.",
-    entails: []
+    entails: ["c289"]
   },
   {
     id: "c181",
@@ -1371,7 +1371,7 @@ window.CLAIMS = Object.freeze([
     short: "Quantum mind can't be computed",
     text: "Consciousness, free will, and creativity are non-algorithmic properties of quantum reality: no machine can ever have them or create them by mechanical means.",
     plain: "Real creativity and free will aren't algorithms — no machine can ever have them.",
-    entails: []
+    entails: ["c289"]
   },
   {
     id: "c184",
@@ -1392,7 +1392,7 @@ window.CLAIMS = Object.freeze([
     short: "Neural qubits are nuclear spins",
     text: "Nuclear spins of phosphorus atoms can serve as neural qubits — 'qubits' are the basic units of quantum information, like bits but quantum; the brain may store and process quantum information in biochemistry, with phosphate ions carrying the qubits around.",
     plain: "Atoms of phosphorus in the brain could work as quantum bits.",
-    entails: []
+    entails: ["c289"]
   },
   {
     id: "c187",
@@ -1406,7 +1406,7 @@ window.CLAIMS = Object.freeze([
     short: "The zero-point field carries feeling",
     text: "The quantum vacuum's zero-point field (ZPF) — the faint energy that quantum theory says fills even 'empty' space — has an intrinsic side: it carries felt qualities — a sentient background field of potential consciousness.",
     plain: "Empty space isn't empty — the quantum vacuum itself carries the raw stuff of feeling.",
-    entails: ["c25"]
+    entails: ["c25", "c289"]
   },
   {
     id: "c189",
@@ -1420,14 +1420,14 @@ window.CLAIMS = Object.freeze([
     short: "Slow body-wide electric fields hold experience",
     text: "Felt experience — 'phenomenal' experience, what things feel like from the inside — emerges from continuous, slow direct-current electromagnetic fields of the whole body, not merely from discrete synaptic transmissions.",
     plain: "Your experience rides on slow electric currents running through your whole body, not just the brain's on-off neural chatter.",
-    entails: []
+    entails: ["c283"]
   },
   {
     id: "c191",
     short: "Resonance combines micro-consciousness",
     text: "Shared resonance — matched oscillation frequencies in proximity — combines micro-conscious entities into macro-conscious wholes, answering the 'combination problem': how many tiny subjects add up to one unified subject.",
     plain: "Small bits of consciousness merge into yours when their vibrations fall into sync — resonance is the glue.",
-    entails: ["c25"]
+    entails: ["c25", "c287"]
   },
   {
     id: "c192",
@@ -1441,7 +1441,7 @@ window.CLAIMS = Object.freeze([
     short: "Brain computes with traveling waves",
     text: "Traveling brain waves perform analog computations — doing math through wave interference — that organize cortical activity quickly and flexibly.",
     plain: "Brain waves don't just ripple — they compute, like analog computers made of waves.",
-    entails: []
+    entails: ["c283"]
   },
   {
     id: "c194",
@@ -1455,7 +1455,7 @@ window.CLAIMS = Object.freeze([
     short: "Synchrony binds perception",
     text: "Consciousness is transient large-scale neuronal synchronization: distributed processing is bound into unified percepts by synchronized firing, especially gamma-band (fast rhythmic firing).",
     plain: "Brain regions firing in sync — that's what stitches scattered processing into one conscious picture.",
-    entails: []
+    entails: ["c283"]
   },
   {
     id: "c196",
@@ -1469,21 +1469,21 @@ window.CLAIMS = Object.freeze([
     short: "Consciousness is a spatial pattern",
     text: "Consciousness is a thing, not a process: specific 3D spatial electromagnetic patterns, generated by unconscious neural processing; all neural processing itself is unconscious — consciousness is separable from attention and cognition.",
     plain: "Consciousness isn't something the brain does — it's a 3D electric pattern the brain holds; all the doing is unconscious.",
-    entails: ["c50"]
+    entails: ["c50", "c283"]
   },
   {
     id: "c198",
     short: "Oscillations make mind",
     text: "Neurons oscillating in phase (firing in lockstep rhythm), resonating with distant groups, are the neurobiological root of cognition; the brain's internal reality is generated from these oscillations.",
     plain: "When distant brain cells hum in sync, that synchrony is the root of thought — the mind is built from coordinated rhythms.",
-    entails: []
+    entails: ["c283"]
   },
   {
     id: "c199",
     short: "Mind mirrors field architecture",
     text: "The brain builds nested space-and-time patterns from local electromagnetic fields; operational modules (OMs — temporary teams of neurons firing in sync) mirror the structure of experience one-to-one, each presenting specific content.",
     plain: "Brain activity organizes into nested 3D electric patterns — and those patterns mirror the structure of your experience.",
-    entails: []
+    entails: ["c283"]
   },
   {
     id: "c200",
@@ -1497,7 +1497,7 @@ window.CLAIMS = Object.freeze([
     short: "The brain is a selectional system",
     text: "The brain is not an instructional computer but a selectional system: it generates vast numbers of variant neural circuits, and experience differentially selects among them by strengthening the synapses of the variants that match novel signals.",
     plain: "The brain doesn't run programs — it grows lots of candidate circuits and lets experience pick the winners.",
-    entails: ["c0"]
+    entails: ["c0", "c283"]
   },
   {
     id: "c202",
@@ -1525,7 +1525,7 @@ window.CLAIMS = Object.freeze([
     short: "Thousands of cortical columns vote",
     text: "The neocortex does not build one central model of the world: roughly 150,000 cortical columns (small vertical teams of neurons) each learn complete models of objects and concepts using sensorimotor reference frames (maps tied to movement and sensing), and unified perception is the consensus they reach by voting — no central processor anywhere.",
     plain: "Your brain runs thousands of little world-models at once and lets them vote — perception is whatever they agree on.",
-    entails: ["c0"]
+    entails: ["c0", "c283"]
   },
   {
     id: "c206",
@@ -1560,7 +1560,7 @@ window.CLAIMS = Object.freeze([
     short: "The thalamus generates experience",
     text: "Felt consciousness — 'phenomenal' consciousness, what experience feels like from the inside — is generated in the thalamus, the brain's central relay hub: rhythmic, synchronized firing of thalamic neurons — switched on and off by a thin shell of control neurons wrapped around it (the reticular nucleus) — rather than by the cortex alone. The cortex computes what things represent, but the thalamus displays it, and that displaying is the experiencing.",
     plain: "Your cortex does the math, but it's the thalamus — the brain's central hub — where the experiencing actually happens.",
-    entails: ["c0"]
+    entails: ["c0", "c283"]
   },
   {
     id: "c211",
@@ -1574,7 +1574,7 @@ window.CLAIMS = Object.freeze([
     short: "Apical dendrites gate awareness",
     text: "Awareness is gated inside single neurons by a match-detector (something that fires only when two signals arrive at the same moment): when a pyramid-shaped brain cell's far-reaching tip-branches (its 'apical' dendrites, carrying top-down context) receive signals at the same moment as its near branches (carrying bottom-up sensory input), the cell fires an amplified burst — a calcium spike, an extra-strong firing using calcium — and that burst is what lets information into conscious perception.",
     plain: "Inside single brain cells, the branch-tips act as gatekeepers — when top-down and bottom-up signals meet there, perception is born.",
-    entails: ["c0"]
+    entails: ["c0", "c283"]
   },
   {
     id: "c213",
@@ -1588,7 +1588,7 @@ window.CLAIMS = Object.freeze([
     short: "Consciousness resolves action conflicts",
     text: "The evolved function of consciousness is to provide a common arena where otherwise separate brain systems — with conflicting urges about what to do — can jointly settle on one bodily action: integration happens at the shared output channel, not among the content generators.",
     plain: "Consciousness exists for one job: when different brain systems want your body to do opposite things, it gives them one shared stage to settle it.",
-    entails: ["c0"]
+    entails: ["c0", "c283"]
   },
   {
     id: "c215",
@@ -1630,7 +1630,7 @@ window.CLAIMS = Object.freeze([
     short: "Mental states are plastic brain states",
     text: "Mental states form a distinguished subset of brain states — precisely those exhibiting neural plasticity, especially learning — with no separate mental entity anywhere; mind is a collection of functions of an extremely complex central nervous system.",
     plain: "Mind is what a learning brain does — mental states are brain states that learn, full stop, no soul added.",
-    entails: []
+    entails: ["c284"]
   },
   {
     id: "c221",
@@ -1644,7 +1644,7 @@ window.CLAIMS = Object.freeze([
     short: "Sensation is motion in matter",
     text: "Sensation, imagination, memory, thought, emotion, and deliberation are all motions of matter in an embodied organism: external pressure produces inward motion, met by the body's outward endeavor, and that bodily motion is the felt appearance — no immaterial soul, and no unbridgeable mystery between the bodily motion and the feeling.",
     plain: "Everything mental is matter in motion — a feeling is literally a movement in your body, caused by the world's pressure on you.",
-    entails: ["c0"]
+    entails: ["c0", "c283"]
   },
   {
     id: "c223",
@@ -1665,7 +1665,7 @@ window.CLAIMS = Object.freeze([
     short: "Brain scanning itself",
     text: "Introspective consciousness is a perception-like inner sense: one neural process scanning and representing another, producing non-inferential information (information picked up directly, without reasoning it out) about the mind's current states — a first-order state becomes introspectively conscious when it is the object of such a scan.",
     plain: "Part of your brain watches the rest of it — when a brain state gets scanned by this inner sense, you become aware of it.",
-    entails: ["c0"]
+    entails: ["c0", "c283"]
   },
   {
     id: "c226",
@@ -1686,7 +1686,7 @@ window.CLAIMS = Object.freeze([
     short: "States represent themselves",
     text: "A mental state is conscious because it represents itself — the awareness of an experience is built into the experience, not a separate thought aimed at it from outside.",
     plain: "A conscious feeling is aware of itself. You don't need a second thought watching the first.",
-    entails: []
+    entails: ["c283"]
   },
   {
     id: "c229",
@@ -1707,7 +1707,7 @@ window.CLAIMS = Object.freeze([
     short: "Consciousness is learned",
     text: "Consciousness is not an intrinsic property of certain neural states; it is an acquired capacity — the brain learns to be conscious through the same plasticity that produces skill and expertise elsewhere in cognition.",
     plain: "No brain starts out conscious by design. Becoming conscious is something the brain learns to do.",
-    entails: []
+    entails: ["c283"]
   },
   {
     id: "c232",
@@ -1735,7 +1735,7 @@ window.CLAIMS = Object.freeze([
     short: "There is no self",
     text: "There is no such thing as a self — nobody ever had or was one. What exists is a 'self-model': an ongoing process — the brain's transparent model of a self — which refers to nothing real.",
     plain: "The 'me' in your experience is a brain-built model, not a thing. Nobody ever was a self.",
-    entails: []
+    entails: ["c283"]
   },
   {
     id: "c236",
@@ -1749,7 +1749,7 @@ window.CLAIMS = Object.freeze([
     short: "A thought about your own representing",
     text: "Your consciousness of something consists in a thought-like state about your own representing — with content like 'I, myself, am having this representation' — rather than a thought about the sensation directly.",
     plain: "You're conscious of red when your brain holds the claim-like thought 'I myself am representing red' — a thought-like state (not spoken words) about your representing, not about red itself.",
-    entails: ["c45"]
+    entails: ["c45", "c283"]
   },
   {
     id: "c238",
@@ -1770,7 +1770,7 @@ window.CLAIMS = Object.freeze([
     short: "The mind is no place",
     text: "Talking about 'the mind' does not name a second, private thing alongside the body — a ghostly inner theatre. Mental vocabulary describes dispositions, skills, and styles of doing, not hidden episodes in a hidden arena.",
     plain: "'Mind' is no more a place inside you than 'the university' is a building next to the colleges.",
-    entails: []
+    entails: ["c283"]
   },
   {
     id: "c241",
@@ -1791,7 +1791,7 @@ window.CLAIMS = Object.freeze([
     short: "All models are conscious",
     text: "There is no such thing as a conscious brain, animal, or person — only conscious mental models: every predictive model a creature builds has 'something it is like' to be it, while the bat, cat, or human as a whole does not.",
     plain: "Not people or brains are conscious — the models inside them are. There is something it is like to be a model, not to be you.",
-    entails: []
+    entails: ["c285"]
   },
   {
     id: "c244",
@@ -1833,7 +1833,7 @@ window.CLAIMS = Object.freeze([
     short: "Introspection can't be the gold standard",
     text: "Reports of our own experience are unreliable measures of consciousness: they are inconsistent and swayed by non-conscious factors, so introspection should not be the gold standard of consciousness science.",
     plain: "What people say about their own inner experience is a shaky measuring stick — don't trust it as the gold standard.",
-    entails: []
+    entails: ["c285"]
   },
   {
     id: "c250",
@@ -1854,7 +1854,7 @@ window.CLAIMS = Object.freeze([
     short: "Consciousness is competing drafts",
     text: "Consciousness is not a single stream but a competition: parallel brain processes generate multiple drafts of content, continuously edited, and drafts compete so that the winner occupies the conscious moment ('fame in the brain').",
     plain: "Instead of one movie in your head, many rough drafts of what's going on compete, and the winner gets the spotlight.",
-    entails: ["c0"]
+    entails: ["c0", "c285"]
   },
   {
     id: "c253",
@@ -1889,7 +1889,7 @@ window.CLAIMS = Object.freeze([
     short: "The self is a self-referential loop",
     text: "Consciousness and the self emerge from 'strange loops' — abstract, level-crossing feedback loops in which the brain represents itself, recursively representing its own representations; the 'I' is a dynamic, self-inventing pattern, not a substance.",
     plain: "The self is a loop: a system thinking about itself thinking about itself — that loop is you.",
-    entails: ["c0"]
+    entails: ["c0", "c283"]
   },
   {
     id: "c258",
@@ -1903,14 +1903,14 @@ window.CLAIMS = Object.freeze([
     short: "Tools can join the mind",
     text: "When the brain is locked in two-way causal interaction with an external entity, the pair forms a single coupled cognitive system: the external part counts as part of the mind, just as a brain part would.",
     plain: "Your notebook, phone, or tools can literally be part of your thinking — not just aids, but pieces of the mind.",
-    entails: ["c49"]
+    entails: ["c49", "c283"]
   },
   {
     id: "c260",
     short: "Mind is more than brain",
     text: "Mental life is bodily life situated in the world: it ramifies through the body and the environment and cannot be reduced to brain processes inside the head.",
     plain: "The mind isn't a brain in a jar — it's the whole body-and-world life of the organism.",
-    entails: ["c49"]
+    entails: ["c49", "c284"]
   },
   {
     id: "c261",
@@ -1924,7 +1924,7 @@ window.CLAIMS = Object.freeze([
     short: "Consciousness is skilled activity",
     text: "Consciousness is not something the brain produces but a kind of skilled activity: it arises when sentient creatures actively engage the world — keeping tabs, keeping touch — so we are not our brains.",
     plain: "Consciousness is more like dancing than like movie-watching — it's something you do with the world.",
-    entails: ["c49"]
+    entails: ["c49", "c284"]
   },
   {
     id: "c263",
@@ -1959,7 +1959,7 @@ window.CLAIMS = Object.freeze([
     short: "Consciousness evolved gradually",
     text: "Subjective experience arose gradually over deep evolutionary time, not by a sharp on/off event or threshold: organisms have internal goings-on that are more or less experiential, in degrees, rather than consciousness switching on at one bright line.",
     plain: "There was no moment when consciousness flickered on. It dawned slowly, in degrees, across animal evolution.",
-    entails: []
+    entails: ["c283"]
   },
   {
     id: "c268",
@@ -1973,7 +1973,7 @@ window.CLAIMS = Object.freeze([
     short: "Learning capacity marks consciousness",
     text: "'Unlimited associative learning' — the ability to ascribe motivational value to a novel, compound, non-reflex-inducing stimulus or action and use it as the basis for future learning — is the observable evolutionary marker of the transition to minimal consciousness.",
     plain: "The moment animals could learn truly new tricks — linking brand-new situations to good and bad outcomes — was the dawn of consciousness.",
-    entails: []
+    entails: ["c283"]
   },
   {
     id: "c270",
@@ -1987,7 +1987,7 @@ window.CLAIMS = Object.freeze([
     short: "All consciousness is about something",
     text: "Consciousness is always intentional — 'intentional' is philosophers' word for being 'of' or 'about' something: perceiving, judging, imagining, remembering, doubting are all acts that point beyond themselves to an object as it is meant. There is no consciousness without an object.",
     plain: "You can't just be conscious — you're always conscious of something. Every thought points at the world, or at an idea of it.",
-    entails: []
+    entails: ["c282"]
   },
   {
     id: "c272",
@@ -2001,7 +2001,7 @@ window.CLAIMS = Object.freeze([
     short: "The body is the perceiver",
     text: "Consciousness is not an inner theater of mental states but the lived body's pre-reflective openness to a meaningful world: the body is the subject of perception, not an object I happen to have — a bodily power of orientation and grip, 'I can' rather than 'I think.'",
     plain: "You don't perceive the world from inside a control room — you perceive it with your body. Your body is the perceiver, not a vehicle.",
-    entails: ["c112"]
+    entails: ["c112", "c282"]
   },
   {
     id: "c274",
@@ -2015,7 +2015,7 @@ window.CLAIMS = Object.freeze([
     short: "Macro can out-cause micro",
     text: "A macro-scale description of a system can be more causally informative than its most detailed micro-scale description: some systems' causal structure only comes into focus at higher levels, and no amount of microscopic detail captures it fully.",
     plain: "Zooming in doesn't always explain more. Sometimes the bigger picture has more causal power than the tiny details do.",
-    entails: []
+    entails: ["c284"]
   },
   {
     id: "c276",
@@ -2038,6 +2038,106 @@ window.CLAIMS = Object.freeze([
     plain: "Something about experience goes beyond what physics describes.",
     entails: [],
     anti: "c0"
+  },
+  {
+    id: "c279",
+    short: "Consciousness is physical",
+    text: "Consciousness is entirely part of the physical world \u2014 minds are what brains and bodies do.",
+    plain: "Your mind is a physical thing. It\u2019s what your brain and body do, nothing beyond that.",
+    entails: [],
+    anti: "c280"
+  },
+  {
+    id: "c280",
+    short: "Consciousness goes beyond physics",
+    text: "Consciousness involves something beyond the physical world as physics describes it.",
+    plain: "There\u2019s more to consciousness than physics can capture.",
+    entails: [],
+    anti: "c279"
+  },
+  {
+    id: "c281",
+    short: "Everything is mind",
+    text: "Everything that exists is fundamentally mind or consciousness. The physical world is how mind looks from the outside.",
+    plain: "Mind is the basic stuff of reality. Matter is what mind looks like from outside.",
+    entails: []
+  },
+  {
+    id: "c282",
+    short: "Start by describing experience",
+    text: "The right way to understand consciousness starts with carefully describing lived experience \u2014 not with explaining it in terms of brains or metaphysics.",
+    plain: "Before explaining anything, carefully describe what experience is actually like. That\u2019s the foundation.",
+    entails: []
+  },
+  {
+    id: "c283",
+    short: "Physics fully explains experience",
+    text: "Conscious experience is real, and it can be entirely explained by ordinary physics and brain processes.",
+    plain: "Experience is real, and physics can fully explain it. Nothing extra is needed.",
+    entails: ["c279"]
+  },
+  {
+    id: "c284",
+    short: "Physical but not reducible",
+    text: "Consciousness comes from the physical world, but it\u2019s genuinely new \u2014 it can\u2019t be broken down into or fully explained by physics alone.",
+    plain: "It\u2019s all physical, but consciousness is a genuinely new level that physics alone can\u2019t fully explain.",
+    entails: ["c279"]
+  },
+  {
+    id: "c285",
+    short: "Experience is an illusion",
+    text: "Conscious experience isn\u2019t real the way it seems. It\u2019s a kind of illusion produced by the brain.",
+    plain: "What feels like rich inner experience is a trick the brain plays. It\u2019s not really there the way it seems.",
+    entails: ["c279"]
+  },
+  {
+    id: "c286",
+    short: "Mind and matter are different stuff",
+    text: "Mind and matter are two fundamentally different kinds of stuff.",
+    plain: "Your mind isn\u2019t made of matter. It\u2019s a different kind of reality entirely.",
+    entails: ["c280"]
+  },
+  {
+    id: "c287",
+    short: "Experience is built into nature",
+    text: "Conscious experience \u2014 or the basic ingredients of it \u2014 is built into the fundamental stuff of nature, from the smallest scales up.",
+    plain: "Feeling isn\u2019t just in brains. It\u2019s woven into nature at every level.",
+    entails: ["c280"]
+  },
+  {
+    id: "c288",
+    short: "One neutral reality, two sides",
+    text: "Mind and matter are two sides of one deeper reality. That deeper reality is itself neither purely mental nor purely physical.",
+    plain: "There\u2019s one deeper kind of stuff. Mind and matter are two ways it shows up.",
+    entails: ["c280"]
+  },
+  {
+    id: "c289",
+    short: "Consciousness needs quantum physics",
+    text: "Consciousness depends on quantum processes. Ordinary (non-quantum) physics can\u2019t explain it.",
+    plain: "You need quantum physics to explain consciousness. Ordinary physics isn\u2019t enough.",
+    entails: ["c280"]
+  },
+  {
+    id: "c290",
+    short: "Reality\u2019s basis is neutral",
+    text: "The fundamental basis of reality is neither mind nor matter, but something neutral that gives rise to both.",
+    plain: "What\u2019s underneath everything isn\u2019t mental or physical \u2014 it\u2019s neutral.",
+    entails: ["c288"]
+  },
+  {
+    id: "c291",
+    short: "The universe is one conscious subject",
+    text: "The universe as a whole is a single conscious subject. Individual minds are parts or aspects of it.",
+    plain: "The whole universe is conscious, and we\u2019re pieces of it.",
+    entails: ["c287"]
+  },
+  {
+    id: "c292",
+    short: "Biological but irreducible",
+    text: "Consciousness is a biological feature of brains \u2014 caused by neural processes \u2014 but it can\u2019t be reduced to those processes.",
+    plain: "The brain causes consciousness, but consciousness is its own real thing that can\u2019t be reduced away.",
+    entails: ["c284"]
   }
 ]);
 
@@ -2057,12 +2157,12 @@ window.CLAIM_THEORIES = Object.freeze([
   { id:  7, name: "Emergent dualism", blurb: "The soul emerges from the brain but isn't reducible to it.",                family: "Dualism",       aliases: ["Hasker"], claims: ["c17", "c18", "c8"] },
   { id:  8, name: "Spinozan dual-aspect monism", blurb: "Mind and body are two aspects of one single reality.",     family: "Neutral monism",claims: ["c20", "c21"] },
   { id:  9, name: "Jamesian neutral monism", blurb: "Mind and matter are both built from neutral raw experience.",         family: "Neutral monism",claims: ["c23"] },
-  { id: 10, name: "Russellian monism", blurb: "Physics describes behavior; experience is what matter is inside.",               family: "Neutral monism",claims: ["c25"] },
+  { id: 10, name: "Russellian monism", blurb: "Physics describes behavior; experience is what matter is inside.",               family: "Neutral monism",claims: ["c25", "c290"] },
   { id: 11, name: "Micropsychism", blurb: "Tiny particles have tiny bits of experience that combine into ours.",                   family: "Panpsychism",   claims: ["c27"] },
-  { id: 12, name: "Cosmopsychism", blurb: "The whole universe is one conscious mind; we are its parts.",                   family: "Panpsychism",   claims: ["c28"] },
+  { id: 12, name: "Cosmopsychism", blurb: "The whole universe is one conscious mind; we are its parts.",                   family: "Panpsychism",   claims: ["c28", "c291"] },
   { id: 13, name: "Panprotopsychism / panqualityism", blurb: "Matter has proto-experiential ingredients — tiny seeds of experience, not full experiences — that combine into consciousness.",family: "Panpsychism",   aliases: ["Coleman"], claims: ["c31"] },
   { id: 14, name: "Mind–brain identity theory", blurb: "Conscious states just are brain states.",      family: "Materialism",   claims: ["c32"] },
-  { id: 15, name: "Biological naturalism", blurb: "Consciousness is a biological feature of brains, like digestion.",           family: "Materialism",   aliases: ["Searle"], claims: ["c33", "c34"] },
+  { id: 15, name: "Biological naturalism", blurb: "Consciousness is a biological feature of brains, like digestion.",           family: "Materialism",   aliases: ["Searle"], claims: ["c33", "c34", "c292"] },
   { id:  2, name: "Advaita Vedānta nondualism", blurb: "Pure awareness alone is real; the separate self is an illusion.",      family: "Idealism",       claims: ["c36", "c37", "c38"] },
   { id: 16, name: "Non-reductive physicalism / strong emergence", blurb: "Consciousness emerges from matter and is something genuinely new.", family: "Materialism",    aliases: ["Ellis"], claims: ["c39", "c40"] },
   { id: 17, name: "Functionalism / computationalism", blurb: "The mind is what the brain does — its functions, not its stuff.", family: "Materialism",    aliases: ["Putnam"], claims: ["c42"] },

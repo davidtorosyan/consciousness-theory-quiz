@@ -14,7 +14,9 @@
       'labQRanking', 'labQuizResume', 'labResultKicker', 'labResultTitle',
       'labClaimDetail', 'labTheoryList', 'labDetail', 'labBack', 'labTabClaims', 'labTabTheories',
       'labClaims', 'labTheories', 'quizCountLine', 'exploreDek', 'updateBanner', 'updateReload',
-      'labClaimSearch', 'labClaimSearchCount'];
+      'labClaimSearch', 'labClaimSearchCount',
+      'labPickGroup', 'labPickOptions', 'labPickNotSure',
+      'labAnswers', 'labSkipActions'];
     if (!window.ClaimsEngine || !window.CLAIMS || need.some(id => !$(id))) {
       const el = $('quizCountLine') || $('labQuizStart');
       if (el) el.textContent = 'The site just updated — please reload the page to get the latest version.';
@@ -561,7 +563,9 @@
     let qstate = null;
     let qhistory = [];
     let forcedQuestionId = null; // Back re-shows the exact popped question instead of re-deriving
+    let forcedGroupId = null; // Back re-shows the exact popped pick group instead of re-deriving
     let shownQuestionId = null; // the question currently on screen — answers/skips act on it, never re-derive
+    let shownPickGroup = null; // the pick group currently on screen — picks act on it, never re-derive
     let qRoundCount = 0;
     let qRound = 1;
     // Skipped questions get one more chance at round end instead of
@@ -637,6 +641,17 @@
     }
 
     function currentQuestion() {
+      // Back re-shows the exact popped pick group: it is not re-derived.
+      if (forcedGroupId) {
+        const g = (E.PICK_GROUPS || []).find(x => x.id === forcedGroupId);
+        forcedGroupId = null;
+        if (g) return { pickGroup: g.id, claims: g.claims.slice(), revisit: false };
+      }
+      // Pick-one camp questions come before everything else: they are the
+      // fastest way to narrow the field, and the engine only offers a group
+      // while none of its members has been answered or skipped.
+      const pg = E.nextPickGroup(qstate);
+      if (pg) return { pickGroup: pg.id, claims: pg.claims, revisit: false };
       if (forcedQuestionId) {
         const q = { id: forcedQuestionId };
         forcedQuestionId = null;
@@ -665,6 +680,43 @@
     // then does it leave the queue.
     function consumeRevisit(id) {
       if (revisitQueue.length) revisitQueue = revisitQueue.filter(x => x !== id);
+    }
+
+    function renderPickGroup(q) {
+      // Comparative camp question: "which sounds most right?"
+      const isRevisit = false;
+      $('labQCount').textContent = (qRoundCount >= QUIZ_ROUND_LENGTH
+        ? 'A few more claims to sharpen your result'
+        : (qRound > 1
+          ? `${qRoundCount + 1} of ${QUIZ_ROUND_LENGTH} · round ${qRound}`
+          : `${qRoundCount + 1} of ${QUIZ_ROUND_LENGTH}`));
+      $('labQText').textContent = 'Which of these sounds most right to you?';
+      $('labQPlain').textContent = 'Pick one — the others count as disagreed. If none fit, say so.';
+      const open = E.undecided(qstate).length;
+      $('labProgressPill').textContent = `${open} of ${E.claims.length} claims still in play`;
+      $('labExplain').classList.add('hidden');
+      $('labQBack').classList.toggle('hidden', qhistory.length === 0);
+      disarmRestart();
+      // Hide yes/no, show pick options.
+      $('labAnswers').classList.add('hidden');
+      $('labSkipActions').classList.add('hidden');
+      $('labPickGroup').classList.remove('hidden');
+      const opts = $('labPickOptions');
+      opts.innerHTML = '';
+      for (const cid of q.claims) {
+        const c = claimById.get(cid);
+        if (!c) continue;
+        const btn = document.createElement('button');
+        btn.className = 'pick-option';
+        btn.dataset.pickId = cid;
+        btn.innerHTML = `<span>${escapeHtml(c.text)}</span><span class="pick-plain">Put simply: ${escapeHtml(c.plain)}</span>`;
+        btn.addEventListener('click', () => answerPickQuestion(cid));
+        opts.appendChild(btn);
+      }
+      renderSettledBy();
+      renderTension();
+      renderScores();
+      maybeShowUpdateBanner();
     }
 
     function renderQuestion() {
@@ -707,11 +759,25 @@
         }
       }
       const q = currentQuestion();
-      shownQuestionId = q ? q.id : null;
       if (!q) {
+        shownQuestionId = null;
+        shownPickGroup = null;
         renderResults(true);
         return;
       }
+      // Pick-one camp question: comparative format, not yes/no.
+      if (q.pickGroup) {
+        shownQuestionId = null;
+        shownPickGroup = q;
+        renderPickGroup(q);
+        return;
+      }
+      shownQuestionId = q.id;
+      shownPickGroup = null;
+      // Hide pick-one, show yes/no.
+      $('labPickGroup').classList.add('hidden');
+      $('labAnswers').classList.remove('hidden');
+      $('labSkipActions').classList.remove('hidden');
       // Provenance-based labeling: the counter tracks claims actually
       // re-asked this pass (revisitShown), never a countdown that can drift
       // from the queue. A question that is not a genuine revisit is never
@@ -809,6 +875,37 @@
       lastSettledIds = [...E.affirmed(qstate), ...E.rejected(qstate)]
         .filter(id => !before.has(id) && id !== q.id);
       lastSettledDir = yesNo;
+      renderQuestion();
+    }
+
+    function answerPickQuestion(pickedId) {
+      // Act on the pick group on screen, not a re-derived one.
+      const q = shownPickGroup;
+      shownPickGroup = null;
+      shownQuestionId = null;
+      if (!q) return;
+      const before = new Set([...E.affirmed(qstate), ...E.rejected(qstate)]);
+      E.answerPick(qstate, pickedId, q.claims);
+      qhistory.push({ groupId: q.pickGroup, action: 'pick', pickedId, claimIds: q.claims.slice() });
+      qRoundCount++;
+      if (revisitLeft > 0) revisitLeft--;
+      lastSettledIds = [...E.affirmed(qstate), ...E.rejected(qstate)]
+        .filter(id => !before.has(id) && id !== pickedId);
+      lastSettledDir = 'yes';
+      renderQuestion();
+    }
+
+    function skipPickQuestion() {
+      const q = shownPickGroup;
+      shownPickGroup = null;
+      shownQuestionId = null;
+      if (!q) return;
+      E.skipPickGroup(qstate, q.pickGroup);
+      qhistory.push({ groupId: q.pickGroup, action: 'skipPick' });
+      qRoundCount++;
+      if (revisitLeft > 0) revisitLeft--;
+      lastSettledIds = [];
+      lastSettledDir = 'skip';
       renderQuestion();
     }
 
@@ -1067,6 +1164,7 @@
     $('labAgree').addEventListener('click', () => answerQuestion('yes'));
     $('labDisagree').addEventListener('click', () => answerQuestion('no'));
     $('labNotSure').addEventListener('click', skipQuestion);
+    $('labPickNotSure').addEventListener('click', skipPickQuestion);
     $('labDontUnderstand').addEventListener('click', openExplain);
     $('labExplainStill').addEventListener('click', skipNotUnderstood);
     $('labExplainBack').addEventListener('click', closeExplain);
@@ -1094,13 +1192,18 @@
       if (!last) return;
       const inRevisit = qRoundCount > QUIZ_ROUND_LENGTH && revisitTotal > 0;
       if (last.action === 'skip') E.unskip(qstate, last.id);
+      else if (last.action === 'pick') E.undoPickGroup(qstate, last.claimIds);
+      else if (last.action === 'skipPick') {
+        if (qstate.skippedGroups) delete qstate.skippedGroups[last.groupId];
+      }
       else E.undo(qstate, last.id); // answers and 'skipNu': undo also clears the not-understood flag
       qRoundCount = Math.max(0, qRoundCount - 1);
       if (inRevisit) revisitLeft = Math.min(revisitTotal, revisitLeft + 1);
       // Backing into the round discards the revisit pass: the un-skipped
       // claims are simply back in the question pool, so nothing vanishes.
       if (qRoundCount < QUIZ_ROUND_LENGTH) { revisitLeft = 0; revisitTotal = 0; revisitDone = new Set(); revisitQueue = []; revisitShown = new Set(); }
-      forcedQuestionId = last.id;
+      if (last.action === 'pick' || last.action === 'skipPick') forcedGroupId = last.groupId;
+      else forcedQuestionId = last.id;
       lastSettledIds = [];
       lastSettledDir = null;
       renderQuestion();

@@ -20,7 +20,9 @@ const NEED_IDS = ['labQuizStart', 'labQuizMain', 'labQuizResult', 'labQuizBegin'
   'labQRanking', 'labQuizResume', 'labResultKicker', 'labResultTitle', 'labQRestart',
   'labClaimDetail', 'labTheoryList', 'labTheorySearch', 'labDetail', 'labBack', 'labTabClaims', 'labTabTheories',
   'labClaims', 'labTheories', 'quizCountLine', 'exploreDek', 'updateBanner', 'updateReload',
-  'labClaimSearch', 'labClaimSearchCount', 'labClaimOpposites'];
+  'labClaimSearch', 'labClaimSearchCount', 'labClaimOpposites',
+  'labPickGroup', 'labPickOptions', 'labPickNotSure',
+  'labAnswers', 'labSkipActions'];
 
 function matches(el, sel) {
   // Supports single and compound class selectors (".a", ".a.b") as used by
@@ -40,7 +42,8 @@ function matches(el, sel) {
 function makeEl(tag, id) {
   const listeners = {};
   const el = {
-    tag: tag || 'div', id: id || '', className: '', textContent: '', innerHTML: '', title: '',
+    tag: tag || 'div', id: id || '', className: '', textContent: '', title: '',
+    _innerHTML: '',
     dataset: {}, style: {}, children: [], tabIndex: 0,
     _listeners: listeners,
     _classes: new Set(),
@@ -65,6 +68,10 @@ function makeEl(tag, id) {
     toggle: (c, f) => { if (f === undefined) f = !el._classes.has(c); f ? el._classes.add(c) : el._classes.delete(c); },
     contains: (c) => el._classes.has(c),
   };
+  Object.defineProperty(el, 'innerHTML', {
+    get() { return this._innerHTML; },
+    set(v) { this._innerHTML = v; if (v === '') this.children = []; },
+  });
   return el;
 }
 
@@ -111,6 +118,21 @@ function click(env, id, event) {
   const fns = el._listeners.click || [];
   if (!fns.length) throw new Error(`no click listener on #${id}`);
   fns.forEach((fn) => fn(event || { target: { closest: () => null }, preventDefault() {} }));
+}
+function clickPickOption(env, index = 0) {
+  const opts = env.els.get('labPickOptions').querySelectorAll('.pick-option');
+  if (!opts.length) throw new Error('no pick options rendered');
+  const el = opts[index];
+  const fns = el._listeners.click || [];
+  if (!fns.length) throw new Error('no click listener on pick option');
+  fns.forEach((fn) => fn({ target: el, preventDefault() {} }));
+}
+function doPicks(env) {
+  // Answer L1 and L2 pick-ones if showing (first option each).
+  if (!hidden(env, 'labPickGroup')) {
+    clickPickOption(env, 0);
+    if (!hidden(env, 'labPickGroup')) clickPickOption(env, 0);
+  }
 }
 const text = (env, id) => env.els.get(id).textContent;
 const html = (env, id) => env.els.get(id).innerHTML;
@@ -390,9 +412,14 @@ async function main() {
   click(env, 'labQuizBegin');
   check(!hidden(env, 'labQuizMain') && hidden(env, 'labQuizStart'), 'quiz starts');
   check(text(env, 'labQText').length > 20, 'question text renders');
-  check(claimText.get(text(env, 'labQText')) === 'c34', 'first question is the gentle opener (c34), not c0');
+  // First question is now a pick-one camp question, not the c34 opener.
+  check(text(env, 'labQText') === 'Which of these sounds most right to you?', 'first question is the L1 pick-one: ' + text(env, 'labQText'));
+  check(!hidden(env, 'labPickGroup'), 'pick-one options are showing');
+  check(hidden(env, 'labAnswers'), 'yes/no buttons are hidden during pick-one');
+  const pickOpts = env.els.get('labPickOptions').querySelectorAll('.pick-option');
+  check(pickOpts.length === 4, 'L1 pick-one offers 4 camp options (got ' + pickOpts.length + ')');
   check(text(env, 'labQCount') === '1 of 12', 'progress shows question N of 12: ' + text(env, 'labQCount'));
-  check(text(env, 'labQPlain').startsWith('Put simply:'), 'put-simply line renders');
+  check(text(env, 'labQPlain').startsWith('Pick one'), 'pick-one instruction renders');
   check(text(env, 'labProgressPill') === `${N} of ${N} claims still in play`,
     'progress pill shows claims still in play out of the total: ' + text(env, 'labProgressPill'));
   const agreeTag = read('index.html').match(/<button[^>]*id="labAgree"[^>]*>[\s\S]*?<\/button>/);
@@ -407,7 +434,19 @@ async function main() {
     'single skip button replaced by the two small skip buttons');
   check(!hidden(env, 'labQRanking'), 'ranking peek is offered from round 1, not just round 2');
 
-  // back button
+  // Answer the L1 pick-one (pick the first option: physical).
+  clickPickOption(env, 0);
+  // Second question should be L2 pick-one (physical branch: 3 options).
+  check(text(env, 'labQText') === 'Which of these sounds most right to you?', 'second question is the L2 pick-one');
+  const pickOpts2 = env.els.get('labPickOptions').querySelectorAll('.pick-option');
+  check(pickOpts2.length === 3, 'L2 pick-one offers 3 camp options (got ' + pickOpts2.length + ')');
+  clickPickOption(env, 0); // pick reductive
+  // Now we're in yes/no land.
+  check(hidden(env, 'labPickGroup'), 'pick-one hides after L2 answered');
+  check(!hidden(env, 'labAnswers'), 'yes/no buttons show after pick-one done');
+  check(text(env, 'labQCount') === '3 of 12', 'counter advances after pick-ones: ' + text(env, 'labQCount'));
+
+  // back button (on a yes/no question now)
   const q1 = text(env, 'labQText');
   click(env, 'labAgree');
   const q2 = text(env, 'labQText');
@@ -416,10 +455,10 @@ async function main() {
   const pillN = parseInt(pillAfter, 10);
   check(pillAfter.endsWith(`of ${N} claims still in play`) && pillN < N,
     `progress pill counts down as claims are decided (${pillAfter})`);
-  check(text(env, 'labQCount') === '2 of 12', 'counter advances after answering: ' + text(env, 'labQCount'));
+  check(text(env, 'labQCount') === '4 of 12', 'counter advances after answering: ' + text(env, 'labQCount'));
   click(env, 'labQBack');
   check(text(env, 'labQText') === q1, 'back returns to previous question');
-  check(text(env, 'labQCount') === '1 of 12', 'counter decrements on back: ' + text(env, 'labQCount'));
+  check(text(env, 'labQCount') === '3 of 12', 'counter decrements on back: ' + text(env, 'labQCount'));
   click(env, 'labAgree'); // re-answer, move on
 
   // skip -> back must return the exact skipped question, not a re-derived one
@@ -429,7 +468,7 @@ async function main() {
   check(qs1 !== qs2, 'skipping advances to the next question');
   click(env, 'labQBack');
   check(text(env, 'labQText') === qs1, 'back after skip returns the exact skipped question');
-  check(text(env, 'labQCount') === '2 of 12', 'counter decrements on back after skip');
+  check(text(env, 'labQCount') === '4 of 12', 'counter decrements on back after skip');
   click(env, 'labNotSure'); // skip again, move on
 
   // "Don't understand" opens a bigger explanation first; "Still don't get
@@ -535,7 +574,8 @@ async function main() {
   const railNames = () => (html(env, 'labScores').match(/<strong>([^<]*)/g) || []).map(s => s.slice(8).trim());
   let railBefore = railNames(), sawDelta = html(env, 'labScores').includes('rank-delta');
   for (let i = 0; i < 3; i++) {
-    click(env, 'labAgree');
+    if (!hidden(env, 'labPickGroup')) clickPickOption(env, 0);
+    else click(env, 'labAgree');
     const railAfter = railNames();
     check(JSON.stringify(railBefore) === JSON.stringify(railAfter), `rail keeps a stable theory order across answers (pass ${i + 1})`);
     railBefore = railAfter;
@@ -555,6 +595,14 @@ async function main() {
   // Phase A: affirm direction
   const mirrorA = CE.newQuiz();
   while (!sawAffirm && rounds++ < 15) {
+    // Handle pick-one groups in the mirror.
+    const pg = CE.nextPickGroup(CLAIMS, mirrorA);
+    if (pg && !hidden(env, 'labPickGroup')) {
+      // UI should be showing this pick group; answer it in both.
+      clickPickOption(env, 0);
+      CE.answerPick(mirrorA, pg.claims[0], pg.claims);
+      continue;
+    }
     const q = CE.nextQuestion(CLAIMS, mirrorA);
     if (!q || !hidden(env, 'labQuizResult')) break;
     check(claimText.get(text(env, 'labQText')) === q.id, `UI stays in sync with engine (round ${rounds})`);
@@ -582,6 +630,12 @@ async function main() {
   const mirrorB = CE.newQuiz();
   rounds = 0;
   while (!sawReject && rounds++ < 15) {
+    const pg = CE.nextPickGroup(CLAIMS, mirrorB);
+    if (pg && !hidden(env, 'labPickGroup')) {
+      clickPickOption(env, 0);
+      CE.answerPick(mirrorB, pg.claims[0], pg.claims);
+      continue;
+    }
     const q = CE.nextQuestion(CLAIMS, mirrorB);
     if (!q || !hidden(env, 'labQuizResult')) break;
     const settled = settledOf(mirrorB);
@@ -621,7 +675,8 @@ async function main() {
 
   // skipped questions are re-asked at round end instead of vanishing silently
   restartQuiz(env);
-  for (let i = 0; i < 11; i++) click(env, 'labAgree');
+  doPicks(env); // 2 picks
+  for (let i = 0; i < 9; i++) click(env, 'labAgree'); // 9 yes/no = 11 total
   check(hidden(env, 'labQuizResult'), '11 answers do not end the round early');
   const skippedQ = text(env, 'labQText');
   click(env, 'labNotSure'); // skip question 12 of 12
@@ -638,8 +693,9 @@ async function main() {
 
   // two skips: every skipped question gets exactly one more chance, then stays skipped
   restartQuiz(env);
+  doPicks(env);
   click(env, 'labNotSure'); click(env, 'labNotSure');
-  for (let i = 0; i < 10; i++) click(env, 'labAgree');
+  for (let i = 0; i < 8; i++) click(env, 'labAgree'); // 2 picks + 2 skips + 8 agrees = 12
   // finish the round however the engine routes it (revisit pass, propagation, or straight to results)
   let rguard = 0;
   while (hidden(env, 'labQuizResult') && rguard++ < 8) click(env, 'labNotSure');
@@ -761,7 +817,10 @@ async function main() {
   {
     restartQuiz(env);
     let rguard44 = 0;
-    for (let i = 0; i < 12 && rguard44++ < 40; i++) click(env, 'labNotSure');
+    for (let i = 0; i < 12 && rguard44++ < 40; i++) {
+      if (!hidden(env, 'labPickGroup')) click(env, 'labPickNotSure');
+      else click(env, 'labNotSure');
+    }
     const revisitLabel = text(env, 'labQCount');
     check(revisitLabel.includes('Revisiting a skipped claim'), 'revisit pass starts after 12 skips: ' + revisitLabel);
     const qBefore = text(env, 'labQText');
@@ -886,6 +945,8 @@ async function main() {
       exhaustedTitle = text(env, 'labResultTitle');
       if (exhaustedTitle === 'No questions left to ask') break;
       click(env, 'labQuizContinue');
+    } else if (!hidden(env, 'labPickGroup')) {
+      clickPickOption(env, 0);
     } else {
       click(env, 'labDisagree');
     }
@@ -919,6 +980,7 @@ async function main() {
   check(stale.els.get('updateBanner').classList.contains('hidden'),
     'banner stays hidden on a fresh first load even when a newer build exists');
   click(stale, 'labQuizBegin');
+  doPicks(stale);
   click(stale, 'labAgree');
   check(!stale.els.get('updateBanner').classList.contains('hidden'),
     'banner appears once the visitor has quiz progress and a newer build exists');
@@ -933,8 +995,9 @@ async function main() {
     'settled-by marker is direction-aware in CSS (✓ agree / ✗ disagree / • other)');
   const dir = boot();
   click(dir, 'labQuizBegin');
-  check(claimText.get(text(dir, 'labQText')) === 'c34', 'test setup: fresh quiz opens on c34');
-  click(dir, 'labAgree'); // c34 yes -> affirms c278 -> rejects anti-partner c0
+  doPicks(dir); // L1 + L2 pick-ones, then yes/no
+  // After picks, we're on a yes/no question (not c34 anymore).
+  click(dir, 'labAgree');
   check(dir.els.get('labSettledBy').classList.contains('dir-yes') && !dir.els.get('labSettledBy').classList.contains('dir-no'),
     'agreeing marks the settled line dir-yes (✓, not a bare checkmark for every answer)');
   const settledHtml = html(dir, 'labSettledBy');
@@ -958,12 +1021,12 @@ async function main() {
   // 4. anti-claim badges discoverable: marked graph nodes + opposites toggle
   check(read('index.html').includes('id="labClaimOpposites"'), 'claim explorer has a "show opposite claims" control');
   const antiNodes = env.els.get('labClaimGraph').querySelectorAll('.has-anti');
-  check(antiNodes.length === 2, `exactly the anti-pair claims are marked ↔ in the graph (got ${antiNodes.length})`);
+  check(antiNodes.length === 4, `exactly the anti-pair claims are marked ↔ in the graph (got ${antiNodes.length})`);
   click(env, 'labClaimOpposites');
   check(env.els.get('labClaimOpposites').getAttribute('aria-pressed') === 'true',
     'opposites toggle activates');
   const dimmedAnti = env.els.get('labClaimGraph').querySelectorAll('.dimmed-anti');
-  check(dimmedAnti.length === N - 2, `opposites view dims everything except the pair (got ${dimmedAnti.length} dimmed of ${N})`);
+  check(dimmedAnti.length === N - 4, `opposites view dims everything except the pairs (got ${dimmedAnti.length} dimmed of ${N})`);
   check(html(env, 'labClaimDetail').includes('↔ Anti-claim'),
     'opposites view opens a claim detail showing the ↔ anti-claim badge');
   click(env, 'labClaimOpposites');

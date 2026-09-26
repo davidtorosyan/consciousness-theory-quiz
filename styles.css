@@ -580,6 +580,25 @@
     .lab-quiz .answer-btn.disagree { border-color: #74403d; }
     .lab-quiz .answer-btn.disagree .verdict { color: #f08080; }
     .lab-quiz .answer-btn.disagree:hover { border-color: #f08080; background: #281414; }
+    .pick-group { margin-top: 8px; }
+    .pick-prompt { margin-bottom: 12px; }
+    .pick-options { display: grid; gap: 12px; }
+    .pick-option {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 16px 18px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--card);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 17px;
+      line-height: 1.45;
+    }
+    .pick-option:hover { border-color: var(--cyan); background: #192627; }
+    .pick-option .pick-plain { display: block; margin-top: 6px; font-size: 14px; color: var(--muted); }
+    .pick-actions { margin-top: 14px; display: flex; justify-content: center; }
     .skip-actions { display: flex; gap: 16px; align-items: center; }
     .explain-panel {
       margin-top: 20px;

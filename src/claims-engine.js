@@ -71,7 +71,7 @@
   // unclear. It must never feed affirmed()/rejected()/score().
 
   function newQuiz() {
-    return { answers: {}, skipped: {}, notUnderstood: {} };
+    return { answers: {}, skipped: {}, notUnderstood: {}, skippedGroups: {} };
   }
 
   // One worklist propagation over the raw answers: a 'yes' affirms the
@@ -186,6 +186,52 @@
   function answer(state, id, yesNo) {
     if (yesNo !== 'yes' && yesNo !== 'no') throw new Error('answer must be yes or no');
     state.answers[id] = yesNo;
+    return state;
+  }
+
+  // --- Pick-one (comparative) questions -------------------------------------
+  // Camp-level groups: the user picks the claim that "sounds most right."
+  // The pick counts as yes(picked) + no(all other shown options).
+  // "None of these / not sure" skips the group (no signal) and it is not
+  // offered again.
+  const PICK_GROUPS = [
+    { id: 'L1', claims: ['c279', 'c280', 'c281', 'c282'], requires: null },
+    { id: 'L2-phys', claims: ['c283', 'c284', 'c285'], requires: 'c279' },
+    { id: 'L2-nonphys', claims: ['c286', 'c287', 'c288', 'c289'], requires: 'c280' }
+  ];
+
+  function nextPickGroup(claims, state) {
+    const aff = affirmed(claims, state);
+    const skippedGroups = state.skippedGroups || {};
+    for (const g of PICK_GROUPS) {
+      if (skippedGroups[g.id]) continue;
+      if (g.requires && !aff.has(g.requires)) continue;
+      // If any member already has an answer (or was skipped individually),
+      // the group is settled — don't offer it.
+      const done = g.claims.some(id => (state.answers || {})[id] || (state.skipped || {})[id]);
+      if (done) continue;
+      return { id: g.id, claims: g.claims.slice() };
+    }
+    return null;
+  }
+
+  function answerPick(state, pickedId, groupClaimIds) {
+    if (!groupClaimIds.includes(pickedId)) throw new Error('picked claim not in group');
+    state.answers[pickedId] = 'yes';
+    for (const id of groupClaimIds) {
+      if (id !== pickedId) state.answers[id] = 'no';
+    }
+    return state;
+  }
+
+  function skipPickGroup(state, groupId) {
+    if (!state.skippedGroups) state.skippedGroups = {};
+    state.skippedGroups[groupId] = true;
+    return state;
+  }
+
+  function undoPickGroup(state, groupClaimIds) {
+    for (const id of groupClaimIds) delete state.answers[id];
     return state;
   }
 
@@ -338,7 +384,7 @@
     ancestors, descendants, theoryFullClaims,
     newQuiz, affirmed, rejected, undecided, coverage, coverageBoth,
     nextQuestion, answer, undo, skip, skipNotUnderstood, unskip, score, validate,
-    contradictions
+    contradictions, PICK_GROUPS, nextPickGroup, answerPick, skipPickGroup, undoPickGroup
   };
 
   api.bound = function () {
@@ -364,7 +410,12 @@
       unskip: (state, id) => api.unskip(state, id),
       score: (state) => api.score(claims, theories, state),
       contradictions: (state) => api.contradictions(claims, state),
-      validate: () => api.validate(claims, theories)
+      validate: () => api.validate(claims, theories),
+      PICK_GROUPS: api.PICK_GROUPS,
+      nextPickGroup: (state) => api.nextPickGroup(claims, state),
+      answerPick: (state, pickedId, groupClaimIds) => api.answerPick(state, pickedId, groupClaimIds),
+      skipPickGroup: (state, groupId) => api.skipPickGroup(state, groupId),
+      undoPickGroup: (state, groupClaimIds) => api.undoPickGroup(state, groupClaimIds)
     };
   };
 

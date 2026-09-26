@@ -29,7 +29,7 @@
       <div class="lab-quiz" id="labQuizStart">
         <p class="micro" id="quizCountLine">Loading…</p>
         <h3>Answer claims. Watch the alignment move.</h3>
-        <p class="lab-plain">Each round asks about a dozen claims — always the claim where your answer counts the most. Agreeing with a specific claim also agrees with the broader claims it implies; disagreeing with a broad claim also disagrees with the specific claims built on it. A few claims are direct opposites — agreeing with one means disagreeing with the other, and with everything built on it. Theories are scored by how many of their claims you agree with — never by elimination.</p>
+        <p class="lab-plain">It starts with two quick “which sounds most right?” picks to find your neighborhood, then asks yes/no about specific claims — always the claim where your answer counts the most. Agreeing with a specific claim also agrees with the broader claims it implies; disagreeing with a broad claim also disagrees with the specific claims built on it. A few claims are direct opposites — agreeing with one means disagreeing with the other, and with everything built on it. Theories are scored by how many of their claims you agree with — never by elimination.</p>
         <button class="primary" id="labQuizBegin">Start the quiz <span class="arrow">→</span></button>
       </div>
       <div class="lab-quiz hidden" id="labQuizMain">
@@ -43,9 +43,16 @@
             <p class="lab-plain" id="labQPlain"></p>
             <p class="lab-settled-by" id="labSettledBy" aria-live="polite"></p>
             <p class="lab-tension hidden" id="labTension" aria-live="polite"></p>
-            <div class="answers">
+            <div class="answers" id="labAnswers">
               <button class="answer-btn agree" id="labAgree"><span class="verdict" aria-hidden="true">✓</span><span>Agree</span></button>
               <button class="answer-btn disagree" id="labDisagree"><span class="verdict" aria-hidden="true">✗</span><span>Disagree</span></button>
+            </div>
+            <div class="pick-group hidden" id="labPickGroup">
+              <p class="micro pick-prompt">Pick the one that sounds most right to you</p>
+              <div class="pick-options" id="labPickOptions"></div>
+              <div class="pick-actions">
+                <button class="text-btn" id="labPickNotSure">None of these / not sure</button>
+              </div>
             </div>
             <div class="question-actions">
               <div class="question-action-left">
@@ -53,7 +60,7 @@
                 <button class="text-btn" id="labQRanking">See current ranking</button>
                 <button class="text-btn" id="labQRestart" title="Start the whole quiz over from question 1">Restart ↺</button>
               </div>
-              <div class="skip-actions">
+              <div class="skip-actions" id="labSkipActions">
                 <button class="text-btn" id="labNotSure">Not sure</button>
                 <button class="text-btn" id="labDontUnderstand">Don't understand</button>
               </div>
