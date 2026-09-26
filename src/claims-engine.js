@@ -158,6 +158,52 @@
     return { yes, no };
   }
 
+  // --- Topic deprioritization ------------------------------------------------
+  // After a "not sure" / "don't understand" skip, the quiz used to keep
+  // serving claims from the same topic (same vocabulary = same confusion).
+  // Deprioritize undecided claims that share distinctive content words with
+  // skipped claims: a soft penalty on coverage for ordering, never an
+  // exclusion — the claim can still be asked once the pool thins out.
+  const SKIP_TOPIC_STOP = new Set((
+    'a,an,the,of,and,or,to,in,is,are,was,were,be,been,being,by,for,with,that,this,these,' +
+    'those,it,its,as,on,from,at,than,then,so,such,into,about,above,below,under,over,' +
+    'what,when,which,who,whom,whose,how,why,not,no,yes,can,cannot,just,only,also,' +
+    'very,more,most,own,other,others,each,every,both,either,between,through,during,' +
+    'before,after,again,further,once,here,there,their,theirs,them,they,we,you,your,' +
+    'yours,he,she,his,her,hers,our,ours,us,my,mine,me,i,do,does,did,doing,done,' +
+    'have,has,had,having,would,could,should,may,might,must,shall,will,whether,' +
+    'consciousness,conscious,consciously,mind,minds,mental,brain,brains,' +
+    'experience,experiences,experienced,experiencing,reality,real,really,theory,theories'
+  ).split(','));
+  function contentWords(c) {
+    const words = ((c.text || '') + ' ' + (c.plain || '')).toLowerCase().match(/[a-z][a-z'-]{4,}/g) || [];
+    const out = new Set();
+    for (const w of words) {
+      const t = w.replace(/['-]+$/, '');
+      if (t && !SKIP_TOPIC_STOP.has(t)) out.add(t);
+    }
+    return out;
+  }
+  // How many distinctive content words `id` shares with skipped claims.
+  function topicOverlap(claims, state, id, wordCache) {
+    const skipIds = [...Object.keys(state.skipped || {}), ...Object.keys(state.notUnderstood || {})];
+    if (!skipIds.length) return 0;
+    const byId = indexById(claims);
+    const wordsOf = (cid) => {
+      if (!wordCache.has(cid)) {
+        const c = byId.get(cid);
+        wordCache.set(cid, c ? contentWords(c) : new Set());
+      }
+      return wordCache.get(cid);
+    };
+    const skipWords = new Set();
+    for (const sid of skipIds) for (const w of wordsOf(sid)) skipWords.add(w);
+    if (!skipWords.size) return 0;
+    let overlap = 0;
+    for (const w of wordsOf(id)) if (skipWords.has(w)) overlap++;
+    return overlap;
+  }
+
   // Greedy: the undecided, unskipped claim with the highest coverage.
   // Ties -> stable id order.
   // On a completely fresh quiz (no answers or skips yet), prefer a claim
@@ -175,10 +221,13 @@
       const openers = und.filter(id => (byId.get(id) || {}).opener);
       if (openers.length) pool = openers;
     }
-    let best = pool[0], bestCov = -1;
+    const wordCache = new Map();
+    let best = pool[0], bestScore = -Infinity, bestCov = -1;
     for (const id of pool) {
       const cov = coverage(claims, state, id);
-      if (cov > bestCov) { bestCov = cov; best = id; }
+      // Same-topic-as-a-skip claims sink below equally informative ones.
+      const score = cov - 4 * topicOverlap(claims, state, id, wordCache);
+      if (score > bestScore) { bestScore = score; best = id; bestCov = cov; }
     }
     return { id: best, coverage: bestCov };
   }
@@ -195,7 +244,10 @@
   // "None of these / not sure" skips the group (no signal) and it is not
   // offered again.
   const PICK_GROUPS = [
-    { id: 'L1', claims: ['c279', 'c280', 'c281', 'c282'], requires: null },
+    // c282 ("start by describing experience") is a method stance, not a
+    // metaphysics: it is compatible with any of the other camps, so picking
+    // (or being picked over) never affirms or rejects the others.
+    { id: 'L1', claims: ['c279', 'c280', 'c281', 'c282'], requires: null, nonExclusive: ['c282'] },
     { id: 'L2-phys', claims: ['c283', 'c284', 'c285'], requires: 'c279' },
     { id: 'L2-nonphys', claims: ['c286', 'c287', 'c288', 'c289'], requires: 'c280' }
   ];
@@ -215,11 +267,18 @@
     return null;
   }
 
-  function answerPick(state, pickedId, groupClaimIds) {
+  // A non-exclusive option (a method stance, not a metaphysical camp) never
+  // rejects the other options and is never rejected by them: picking it
+  // affirms only itself, and picking another camp leaves it undecided.
+  function answerPick(state, groupId, pickedId, groupClaimIds) {
+    const g = PICK_GROUPS.find(x => x.id === groupId);
+    const nonEx = new Set((g && g.nonExclusive) || []);
     if (!groupClaimIds.includes(pickedId)) throw new Error('picked claim not in group');
     state.answers[pickedId] = 'yes';
-    for (const id of groupClaimIds) {
-      if (id !== pickedId) state.answers[id] = 'no';
+    if (!nonEx.has(pickedId)) {
+      for (const id of groupClaimIds) {
+        if (id !== pickedId && !nonEx.has(id)) state.answers[id] = 'no';
+      }
     }
     return state;
   }
@@ -359,6 +418,14 @@
       done.add(id);
     }
     for (const c of claims) visit(c.id, []);
+    // Pick-group checks: non-exclusive options must be real members of
+    // their group.
+    for (const g of PICK_GROUPS) {
+      for (const id of (g.nonExclusive || [])) {
+        if (!g.claims.includes(id)) problems.push(`pick group ${g.id} marks non-exclusive ${id} which is not a member`);
+        else if (!byId.has(id)) problems.push(`pick group ${g.id} non-exclusive ${id} does not exist`);
+      }
+    }
     for (const t of theories) {
       for (const c of (t.claims || [])) {
         if (!byId.has(c)) problems.push(`theory ${t.name} lists unknown claim ${c}`);
@@ -413,7 +480,7 @@
       validate: () => api.validate(claims, theories),
       PICK_GROUPS: api.PICK_GROUPS,
       nextPickGroup: (state) => api.nextPickGroup(claims, state),
-      answerPick: (state, pickedId, groupClaimIds) => api.answerPick(state, pickedId, groupClaimIds),
+      answerPick: (state, groupId, pickedId, groupClaimIds) => api.answerPick(state, groupId, pickedId, groupClaimIds),
       skipPickGroup: (state, groupId) => api.skipPickGroup(state, groupId),
       undoPickGroup: (state, groupClaimIds) => api.undoPickGroup(state, groupClaimIds)
     };

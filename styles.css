@@ -598,6 +598,15 @@
     }
     .pick-option:hover { border-color: var(--cyan); background: #192627; }
     .pick-option .pick-plain { display: block; margin-top: 6px; font-size: 14px; color: var(--muted); }
+    /* Non-exclusive (method) card note: a stance that combines with the others. */
+    .pick-option .pick-note { display: block; margin-top: 8px; font-size: 13px; color: var(--cyan); }
+    /* "What does this mean?" jargon definitions under a question. */
+    .jargon-term { display: grid; grid-template-columns: minmax(88px, auto) 1fr; gap: 4px 12px; margin: 8px 0; font-size: 14px; }
+    .jargon-term dt { font-weight: 600; color: var(--cyan); }
+    .jargon-term dd { margin: 0; color: var(--muted); }
+    /* Zero-alignment rail rows: dimmed so a ruled-out theory never reads as a recommendation. */
+    .lab-score-zero { opacity: .55; }
+    .rail-legend { color: var(--dim); margin-top: 6px; }
     .pick-actions { margin-top: 14px; display: flex; justify-content: center; }
     .skip-actions { display: flex; gap: 16px; align-items: center; }
     .explain-panel {

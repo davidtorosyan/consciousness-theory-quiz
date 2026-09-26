@@ -54,6 +54,53 @@
     const claimTheoryIds = new Set(E.theories.map(t => t.id));
     const shortLabel = (c) => c.short || c.text;
 
+    // Plain-language definitions for jargon that shows up in claim text.
+    // The "what does this mean?" expander under a question lists only the
+    // terms actually present in that question — never a generic dump.
+    const JARGON = [
+      ['qualia', 'the felt quality of an experience — what red looks like, what pain feels like'],
+      ['reentrant', 'signals looping back and forth between brain areas, each side influencing the other'],
+      ['neuron', 'a nerve cell — the brain\u2019s basic signaling unit'],
+      ['electromagnetic', 'the invisible field of electric and magnetic force — the same kind of field behind magnets and radio waves'],
+      ['emergent', 'a genuinely new level arising from simpler parts — more than a rearrangement of them'],
+      ['reducible', 'fully explainable in terms of something simpler, with nothing left over'],
+      ['operational', 'to do with coordinated activity — what the brain is doing, not just how it is wired'],
+      ['dualism', 'the view that mind and matter are two fundamentally different kinds of stuff'],
+      ['panpsychism', 'the view that experience, or its basic ingredients, is built into nature at every level'],
+      ['epiphenomen', 'a byproduct with no causal power — like a shadow the brain casts'],
+      ['supervenience', 'no mental difference without a physical difference — the mind can\u2019t vary unless the body/brain varies too'],
+      ['intentional', 'being \u2018about\u2019 something — thoughts point at the world beyond themselves'],
+      ['phenomenal', 'to do with what experience feels like from the inside'],
+      ['metaphysic', 'the deepest questions about what reality fundamentally is'],
+      ['monism', 'the view that reality is ultimately one kind of stuff'],
+      ['illusionism', 'the view that conscious experience isn\u2019t real the way it seems — the brain tricks us'],
+      ['functionalism', 'the view that mental states are defined by what they do, not what they are made of'],
+      ['thalamus', 'the brain\u2019s relay hub — most sensory signals pass through it'],
+      ['cortex', 'the brain\u2019s outer layer — where complex thought and perception happen'],
+      ['coherent', 'hanging together as one unified whole'],
+      ['hierarchical', 'organized in layers, with higher levels built on lower ones'],
+      ['mentalistic', 'using mind-words like \u2018belief\u2019 and \u2018desire\u2019'],
+      ['causally closed', 'nothing outside physics ever intervenes — every physical event has a physical cause'],
+      ['wetware', 'the brain\u2019s biological tissue — hardware made of meat'],
+      ['monad', 'an indivisible unit of reality (Leibniz\u2019s idea) — mind-like and sealed off'],
+      ['valence', 'how pleasant or unpleasant something feels'],
+      ['veridical', 'truthful — matching the way things really are'],
+      ['substrate', 'the underlying stuff something is built out of'],
+      ['physicalism', 'the view that everything is ultimately physical'],
+    ];
+    // Terms of the CURRENT claim, in claim-text order, capped so the
+    // expander stays scannable.
+    function jargonTerms(claim) {
+      const hay = `${claim.text || ''} ${claim.short || ''}`.toLowerCase();
+      const out = [];
+      for (const [term, def] of JARGON) {
+        const esc = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        if (new RegExp(`\\b${esc}`).test(hay)) out.push([term, def]);
+        if (out.length >= 4) break;
+      }
+      return out;
+    }
+
     function escapeHtml(s) {
       return String(s).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
     }
@@ -386,21 +433,24 @@
 
     let theoryFilter = '';
     let theoryListLimit = 10;
+    // Dash folding: "Beck-Eccles" (hyphen) must match "Beck–Eccles"
+    // (en dash) and vice versa — theory names mix them.
+    const dashFold = (s) => String(s || '').toLowerCase().replace(/[‐‑‒–—―]/g, '-');
     function renderTheoryList() {
-      const q = theoryFilter.trim().toLowerCase();
+      const q = dashFold(theoryFilter.trim());
       // Word-boundary matching: searching "dualism" must not match
       // "nondualism" — different word, different theory.
       const qRe = q
         ? new RegExp(`(^|[^\\p{L}\\p{N}])${q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'iu')
         : null;
       const matches = t => !qRe
-        || qRe.test(t.name || '')
-        || qRe.test(t.family || '')
-        || qRe.test(t.blurb || '')
-        || qRe.test(t.category || '')
+        || qRe.test(dashFold(t.name))
+        || qRe.test(dashFold(t.family))
+        || qRe.test(dashFold(t.blurb))
+        || qRe.test(dashFold(t.category))
         // Searchable aliases: well-known proponent names / alternative names
         // that don't appear in the title (e.g. "descartes" -> Substance dualism).
-        || (t.aliases || []).some(a => qRe.test(a));
+        || (t.aliases || []).some(a => qRe.test(dashFold(a)));
       const all = E.theories.filter(matches);
       const withClaims = all.slice(0, theoryListLimit).map(t => {
         const fullN = E.theoryFullClaims(t).size;
@@ -568,6 +618,10 @@
     let shownPickGroup = null; // the pick group currently on screen — picks act on it, never re-derive
     let qRoundCount = 0;
     let qRound = 1;
+    // Answers the user actually gave (agree/disagree), excluding skips and
+    // the implicit rejections a pick-one records internally. One pick-one
+    // counts as one answer, not four.
+    let qAnswerCount = 0;
     // Skipped questions get one more chance at round end instead of
     // vanishing silently: revisitLeft counts down the re-asked ones, and a
     // second skip is final (it stays skipped and the results say so).
@@ -597,6 +651,7 @@
       qstate = E.newQuiz();
       qhistory = [];
       qRoundCount = 0;
+      qAnswerCount = 0;
       qRound = 1;
       revisitLeft = 0;
       revisitTotal = 0;
@@ -691,7 +746,10 @@
           ? `${qRoundCount + 1} of ${QUIZ_ROUND_LENGTH} · round ${qRound}`
           : `${qRoundCount + 1} of ${QUIZ_ROUND_LENGTH}`));
       $('labQText').textContent = 'Which of these sounds most right to you?';
-      $('labQPlain').textContent = 'Pick one — the others count as disagreed. If none fit, say so.';
+      // Framing is comparative, never rejective: the unpicked cards do count
+      // as negative signal internally, but the user must never be told they
+      // "disagreed" with something they simply didn't pick.
+      $('labQPlain').textContent = 'Pick the closest — we\u2019ll ask follow-ups to narrow it down. If none fit, say so.';
       const open = E.undecided(qstate).length;
       $('labProgressPill').textContent = `${open} of ${E.claims.length} claims still in play`;
       $('labExplain').classList.add('hidden');
@@ -703,13 +761,20 @@
       $('labPickGroup').classList.remove('hidden');
       const opts = $('labPickOptions');
       opts.innerHTML = '';
+      const group = (E.PICK_GROUPS || []).find(x => x.id === q.pickGroup);
+      const nonEx = new Set((group && group.nonExclusive) || []);
       for (const cid of q.claims) {
         const c = claimById.get(cid);
         if (!c) continue;
         const btn = document.createElement('button');
         btn.className = 'pick-option';
         btn.dataset.pickId = cid;
-        btn.innerHTML = `<span>${escapeHtml(c.text)}</span><span class="pick-plain">Put simply: ${escapeHtml(c.plain)}</span>`;
+        // A non-exclusive option is a method stance, not a competing camp:
+        // say so on the card, or picking it feels like a category error.
+        const methodNote = nonEx.has(cid)
+          ? '<span class="pick-note">A starting point, not a side — it can combine with any of the others.</span>'
+          : '';
+        btn.innerHTML = `<span>${escapeHtml(c.text)}</span><span class="pick-plain">Put simply: ${escapeHtml(c.plain)}</span>${methodNote}`;
         btn.addEventListener('click', () => answerPickQuestion(cid));
         opts.appendChild(btn);
       }
@@ -818,7 +883,6 @@
       // ✓ after Agree, ✗ after Disagree, • for anything else.
       el.classList.add(lastSettledDir === 'yes' ? 'dir-yes' : 'dir-no');
       const n = lastSettledIds.length;
-      if (!n) { el.textContent = 'Last question: that decided just this claim.'; return; }
       // Collapsed by default: one line plus a details expander. A big
       // propagation used to list dozens of claims here and shove the answer
       // buttons below the fold — the full list must never do that again.
@@ -827,37 +891,25 @@
       // number undershoots the progress-pill delta (e.g. 5 shown for a
       // 279 → 273 drop), which testers read as wrong arithmetic.
       const total = n + 1;
-      // Per-bullet disposition: each newly settled claim is either affirmed
-      // or rejected by this answer — mark it (✓/✗) so "settled" is never
-      // ambiguous. A claim settled as the direct opposite of another claim
-      // gets an explicit ↔ note, so the opposites mechanic surfaces in the
-      // quiz itself. This covers both directions: the answered claim may
-      // itself be anti-paired, or (the common case) the answer may affirm a
-      // claim whose entailment chain reaches one side of an anti-pair,
-      // which rejects the other side.
-      const aff = E.affirmed(qstate), rej = E.rejected(qstate);
-      const labels = lastSettledIds.map(id => {
-        const c = claimById.get(id);
-        const dispo = aff.has(id) ? 'yes' : (rej.has(id) ? 'no' : null);
-        const mark = dispo === 'yes'
-          ? '<span class="settled-mark settled-mark-yes" aria-hidden="true">✓</span>'
-          : dispo === 'no'
-            ? '<span class="settled-mark settled-mark-no" aria-hidden="true">✗</span>'
-            : '<span class="settled-mark" aria-hidden="true">•</span>';
-        const dispoWord = dispo === 'yes' ? 'agreed' : dispo === 'no' ? 'ruled out' : 'settled';
-        const antiId = (c || {}).anti;
-        const antiFired = antiId &&
-          ((dispo === 'no' && aff.has(antiId)) || (dispo === 'yes' && rej.has(antiId)));
-        const antiClaim = antiFired ? claimById.get(antiId) : null;
-        const antiNote = antiClaim
-          ? ` <span class="settled-anti-note">↔ direct opposite of “${escapeHtml(shortLabel(antiClaim))}”</span>`
-          : '';
-        return `<li>${mark}<span class="vh">${dispoWord}: </span>${escapeHtml(c ? c.plain : id)}${antiNote}</li>`;
-      }).join('');
-      el.innerHTML =
-        `<span>Last question: that settled ${total} claim${total === 1 ? '' : 's'} — the one you just answered plus the ${n} below. </span>` +
-        `<button class="text-btn settled-more-btn" data-settled-more="1" data-closed="▸ details" aria-expanded="false">▸ details</button>` +
-        `<ul class="settled-details hidden">${labels}</ul>`;
+      // Per-answer fallout used to be listed claim-by-claim here; testers read
+      // that list as describing the question on screen, which was
+      // misleading. The one-line summary above keeps the feedback; the
+      // expander below now explains the CURRENT question instead.
+      const c = shownQuestionId ? claimById.get(shownQuestionId) : null;
+      // The expander explains the CURRENT question — a plain restatement
+      // plus definitions of its jargon terms. Pick-one rounds show no
+      // expander: their cards already carry "Put simply" glosses.
+      const explainer = c
+        ? `<button class="text-btn settled-more-btn" data-settled-more="1" data-closed="▸ what does this mean?" aria-expanded="false">▸ what does this mean?</button>` +
+          `<div class="settled-details hidden"><p class="lab-plain">In other words: ${escapeHtml(c.plain)}</p>` +
+          jargonTerms(c).map(([term, def]) =>
+            `<div class="jargon-term"><dt>${escapeHtml(term)}</dt><dd>${escapeHtml(def)}</dd></div>`).join('') +
+          `</div>`
+        : '';
+      const summary = n
+        ? `<span>Last question: that settled ${total} claims — the one you just answered plus ${n} linked ${n === 1 ? 'claim' : 'claims'}. </span>`
+        : `<span>Last question: that decided just this claim. </span>`;
+      el.innerHTML = summary + explainer;
     }
 
     function answerQuestion(yesNo) {
@@ -870,6 +922,7 @@
       E.answer(qstate, q.id, yesNo);
       qhistory.push({ id: q.id, action: 'answer' });
       qRoundCount++;
+      qAnswerCount++;
       if (revisitLeft > 0) revisitLeft--;
       consumeRevisit(q.id);
       lastSettledIds = [...E.affirmed(qstate), ...E.rejected(qstate)]
@@ -885,9 +938,10 @@
       shownQuestionId = null;
       if (!q) return;
       const before = new Set([...E.affirmed(qstate), ...E.rejected(qstate)]);
-      E.answerPick(qstate, pickedId, q.claims);
+      E.answerPick(qstate, q.pickGroup, pickedId, q.claims);
       qhistory.push({ groupId: q.pickGroup, action: 'pick', pickedId, claimIds: q.claims.slice() });
       qRoundCount++;
+      qAnswerCount++;
       if (revisitLeft > 0) revisitLeft--;
       lastSettledIds = [...E.affirmed(qstate), ...E.rejected(qstate)]
         .filter(id => !before.has(id) && id !== pickedId);
@@ -1031,7 +1085,11 @@
             ? ` <span class="rank-delta up" title="Moved up ${d} since the last question">▲${d}</span>`
             : ` <span class="rank-delta down" title="Moved down ${-d} since the last question">▼${-d}</span>`;
         }
-        return `<div class="lab-score-row">
+        // Zero-alignment rows are dimmed: with the rail's stable order a
+        // theory your answers ruled out can otherwise sit at the top looking
+        // like a recommendation.
+        const zeroCls = result.agreed === 0 ? ' lab-score-zero' : '';
+        return `<div class="lab-score-row${zeroCls}">
           <div class="lab-score-top"><strong>${escapeHtml(result.theory.name)}${delta}</strong><span>${result.agreed} of ${result.total}</span></div>
           ${result.theory.blurb ? `<div class="lab-score-blurb">${escapeHtml(result.theory.blurb)}</div>` : ''}
           <div class="lab-score-bar"><span style="width:${pct}%"></span></div>
@@ -1047,8 +1105,11 @@
     // claims settled — never a bare answer count after a skipped question.
     // The propagation explainer answers the natural follow-up ("why did 12
     // answers settle 70 claims?") wherever the basis line appears.
+    // "Answers" counts the user's actual decisions (agree/disagree taps,
+    // one per pick-one) — never skips, and never the implicit rejections a
+    // pick-one records internally.
     function basisLine() {
-      const answered = Object.keys(qstate.answers).length;
+      const answered = qAnswerCount;
       const decided = E.affirmed(qstate).size + E.rejected(qstate).size;
       const skippedN = Object.keys(qstate.skipped || {}).length;
       return `Based on ${answered} answer${answered === 1 ? '' : 's'} from you${skippedN ? ` (${skippedN} skipped)` : ''} — ${decided} claim${decided === 1 ? '' : 's'} settled in total.`;
@@ -1198,6 +1259,7 @@
       }
       else E.undo(qstate, last.id); // answers and 'skipNu': undo also clears the not-understood flag
       qRoundCount = Math.max(0, qRoundCount - 1);
+      if (last.action === 'answer' || last.action === 'pick') qAnswerCount = Math.max(0, qAnswerCount - 1);
       if (inRevisit) revisitLeft = Math.min(revisitTotal, revisitLeft + 1);
       // Backing into the round discards the revisit pass: the un-skipped
       // claims are simply back in the question pool, so nothing vanishes.

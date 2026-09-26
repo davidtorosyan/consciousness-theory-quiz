@@ -285,9 +285,12 @@ async function main() {
     'changing the filter closes the open theory panel instead of leaving a stale one');
   fireInput(env, 'labTheorySearch', '');
 
-  // round-4: the settled "details" expander is a real affordance now
-  check(read('src/claims-lab.js').includes('settled-more-btn') && read('src/claims-lab.js').includes('data-closed="▸ details"'),
-    'settled details expander uses a chevron pill-button affordance');
+  // build-49: the settled "details" expander now explains the CURRENT
+  // question (jargon definitions) instead of listing the previous
+  // answer's fallout — testers read the old list as describing the
+  // question on screen.
+  check(read('src/claims-lab.js').includes('settled-more-btn') && read('src/claims-lab.js').includes('data-closed="▸ what does this mean?"'),
+    'settled expander is a chevron pill-button labeled "what does this mean?"');
   check(read('styles.css').includes('.settled-more-btn') && read('styles.css').includes('min-height: 32px'),
     'details expander has a thumb-sized tap target');
 
@@ -419,7 +422,9 @@ async function main() {
   const pickOpts = env.els.get('labPickOptions').querySelectorAll('.pick-option');
   check(pickOpts.length === 4, 'L1 pick-one offers 4 camp options (got ' + pickOpts.length + ')');
   check(text(env, 'labQCount') === '1 of 12', 'progress shows question N of 12: ' + text(env, 'labQCount'));
-  check(text(env, 'labQPlain').startsWith('Pick one'), 'pick-one instruction renders');
+  // Build 49: comparative framing — "Pick the closest", never "Pick one —
+  // the others count as disagreed".
+  check(text(env, 'labQPlain').startsWith('Pick the closest'), 'pick-one instruction renders');
   check(text(env, 'labProgressPill') === `${N} of ${N} claims still in play`,
     'progress pill shows claims still in play out of the total: ' + text(env, 'labProgressPill'));
   const agreeTag = read('index.html').match(/<button[^>]*id="labAgree"[^>]*>[\s\S]*?<\/button>/);
@@ -600,7 +605,7 @@ async function main() {
     if (pg && !hidden(env, 'labPickGroup')) {
       // UI should be showing this pick group; answer it in both.
       clickPickOption(env, 0);
-      CE.answerPick(mirrorA, pg.claims[0], pg.claims);
+      CE.answerPick(mirrorA, pg.id, pg.claims[0], pg.claims);
       continue;
     }
     const q = CE.nextQuestion(CLAIMS, mirrorA);
@@ -633,7 +638,7 @@ async function main() {
     const pg = CE.nextPickGroup(CLAIMS, mirrorB);
     if (pg && !hidden(env, 'labPickGroup')) {
       clickPickOption(env, 0);
-      CE.answerPick(mirrorB, pg.claims[0], pg.claims);
+      CE.answerPick(mirrorB, pg.id, pg.claims[0], pg.claims);
       continue;
     }
     const q = CE.nextQuestion(CLAIMS, mirrorB);
@@ -649,6 +654,10 @@ async function main() {
       const total = settledOf(mirrorB).size - before; // answered claim included
       check(h.includes(`Last question: that settled ${total} claims`) && h.includes('data-settled-more="1"') && h.includes('settled-details hidden'),
         `reject trace collapses to a one-line summary with a details expander, and the count (${total}) matches the engine-settled delta: ` + h.slice(0, 120));
+      // Build 49: the expander explains the CURRENT question (plain
+      // restatement + jargon definitions), not the last answer's fallout.
+      check(h.includes('what does this mean?') && h.includes('In other words:'),
+        'explainer expander restates the current question in plain language');
     } else {
       const newAnc = [...CE.ancestors(CLAIMS, q.id)].filter((id) => !settled.has(id));
       const before = settled.size; // engine-side delta mirror for the invariant
@@ -660,7 +669,7 @@ async function main() {
         check(h2.includes(`Last question: that settled ${total} claims`) && h2.includes('settled-details hidden'),
           `affirm trace collapses to a one-line summary, and the count (${total}) matches the engine-settled delta: ` + h2.slice(0, 120));
       } else {
-        check(text(env, 'labSettledBy') === 'Last question: that decided just this claim.', 'no-propagation line renders');
+        check(text(env, 'labSettledBy').includes('Last question: that decided just this claim.'), 'no-propagation line renders');
       }
     }
   }
@@ -1001,16 +1010,36 @@ async function main() {
   check(dir.els.get('labSettledBy').classList.contains('dir-yes') && !dir.els.get('labSettledBy').classList.contains('dir-no'),
     'agreeing marks the settled line dir-yes (✓, not a bare checkmark for every answer)');
   const settledHtml = html(dir, 'labSettledBy');
-  const lis = (settledHtml.match(/<li>/g) || []).length;
-  const marks = (settledHtml.match(/settled-mark-/g) || []).length;
-  check(lis > 0 && marks >= lis, `every settled bullet carries an agree/ruled-out mark (got ${marks} marks on ${lis} bullets)`);
-  check(settledHtml.includes('↔ direct opposite of'),
-    'anti-partner firing is annotated in the settled list (c0 ruled out via c278)');
-  check(/settled-mark-no" aria-hidden="true">✗<\/span><span class="vh">ruled out: <\/span>/.test(settledHtml) || settledHtml.includes('settled-mark-no'),
-    'ruled-out bullets show ✗ (screen readers hear "ruled out")');
+  // Build 49: the expander explains the CURRENT question — a plain
+  // restatement plus jargon definitions — not the last answer's fallout.
+  check(settledHtml.includes('what does this mean?'),
+    'settled line offers a "what does this mean?" explainer for the current question');
+  check(settledHtml.includes('In other words:'),
+    'explainer restates the current question in plain language');
   click(dir, 'labDisagree');
   check(dir.els.get('labSettledBy').classList.contains('dir-no'),
     'disagreeing marks the settled line dir-no (✗ instead of the misleading ✓)');
+  // Build 49: when the current question contains a glossary term, the
+  // explainer defines it. Fresh run — check the property on each question
+  // until one with a glossary term appears.
+  {
+    const e = boot();
+    click(e, 'labQuizBegin');
+    const terms49 = ['electromagnetic', 'reentrant', 'qualia', 'neuron', 'dualism', 'emergent', 'supervenience', 'epiphenomen', 'intentional', 'metaphysic', 'monism', 'illusionism'];
+    let sawDef = false, guard49 = 0;
+    while (!sawDef && guard49++ < 25 && hidden(e, 'labQuizResult')) {
+      if (hidden(e, 'labPickGroup')) {
+        const qt = text(e, 'labQText').toLowerCase();
+        const expected = terms49.filter(t => new RegExp('\\b' + t).test(qt)).slice(0, 4);
+        const h = html(e, 'labSettledBy');
+        if (expected.length && expected.every(t => h.includes('<dt>' + t + '</dt>'))) sawDef = expected.join(',');
+      }
+      if (!hidden(e, 'labPickGroup')) clickPickOption(e, 0);
+      else if (!hidden(e, 'labQuizMain')) click(e, 'labAgree');
+      else break;
+    }
+    check(!!sawDef, `explainer defines the jargon in the current question${sawDef ? ' (' + sawDef + ')' : ''}`);
+  }
 
   // 2. live-alignment header copy is a complete sentence
   check(read('index.html').includes('show movement since your last answer'),
@@ -1144,6 +1173,52 @@ async function main() {
       check(!!c && ((c.text || '').includes(phrase) || (c.plain || '').includes(phrase)),
         `round-4 jargon: ${label} (${id})`);
     }
+  }
+
+  // ---- Build 49: round-1 tester feedback ----
+  console.log('testing build-49 fixes…');
+  // 1. c282 (describe-experience method card) is non-exclusive in L1
+  {
+    const g = (CE.PICK_GROUPS || []).find(x => x.id === 'L1');
+    check(!!g && (g.nonExclusive || []).includes('c282'), 'c282 is marked non-exclusive in L1');
+    const s = CE.newQuiz();
+    CE.answerPick(s, 'L1', 'c282', g.claims);
+    const othersRejected = g.claims.filter(c => c !== 'c282').some(c => CE.rejected(CLAIMS, s).has(c));
+    check(!othersRejected, 'picking c282 affirms only it — no metaphysical camp is rejected');
+    check(CE.affirmed(CLAIMS, s).has('c282'), 'picking c282 affirms c282 itself');
+    const s2 = CE.newQuiz();
+    CE.answerPick(s2, 'L1', 'c279', g.claims);
+    check(!CE.rejected(CLAIMS, s2).has('c282') && CE.affirmed(CLAIMS, s2).has('c279'),
+      'picking another L1 camp (c279) does not reject c282');
+    check(CE.validate(CLAIMS, THEORIES).length === 0, 'validate() is clean with the non-exclusive member');
+  }
+  // 2. pick-one framing never says unpicked cards count as disagreed
+  check(read('src/claims-lab.js').includes('Pick the closest') && !read('src/claims-lab.js').includes('the others count as disagreed'),
+    'pick-one framed as comparative ("Pick the closest"), never as rejection');
+  // 3. rail legend + zero-alignment dimming
+  check(read('index.html').includes('“N of M”') && read('src/claims-lab.js').includes('lab-score-zero'),
+    'rail legend explains N of M; zero-alignment rows dimmed');
+  // 4. non-exclusive card carries a method note
+  check(read('src/claims-lab.js').includes('A starting point, not a side'),
+    'non-exclusive card notes it can combine with the others');
+  // 5. dash folding in theory search
+  check(read('src/claims-lab.js').includes('dashFold'),
+    'theory search normalizes hyphens/en–em dashes');
+  // 6. results basis counts real answers only (skips and implicit pick
+  //    rejections excluded). Full run: picks + agree taps, no skips.
+  {
+    const r = boot();
+    click(r, 'labQuizBegin');
+    doPicks(r); // L1 + L2 picks = 2 answers
+    let answers = 2, guard49 = 0;
+    while (hidden(r, 'labQuizResult') && guard49++ < 60) {
+      if (!hidden(r, 'labPickGroup')) { clickPickOption(r, 0); answers++; continue; }
+      click(r, 'labAgree'); answers++;
+    }
+    check(!hidden(r, 'labQuizResult'), 'full agree-run reaches results');
+    const basis = text(r, 'labContinueNote');
+    check(basis.includes(`Based on ${answers} answers`),
+      `results basis counts the ${answers} real answers given (no skips in this run): ` + basis.slice(0, 80));
   }
 
   console.log(failures ? `\n${failures} FAILURES` : '\nALL SMOKE TESTS PASSED');
